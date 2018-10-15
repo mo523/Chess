@@ -8,14 +8,30 @@ public class Player {
 	public Player(boolean white, String name) {
 		this.white = white;
 		this.name = name;
-		if(isWhite())
+		if(white)
 			setWhitePieces();
 		else
 			setBlackPieces();
 	}
 	
-	public void movePiece(){
+	public boolean isInCheckMate(){
 		
+	}
+	
+	public boolean isNotInCheckMate(){
+		return !isInCheckMate();
+	}
+	
+	public boolean movePiece(String from, String to){
+		boolean pieceFoundAndMoveIsLegal = false;
+		for(int i = 0; i < 15; i++){
+			if(pieces[i].getPosition().equalsIgnoreCase(from) && pieces[i].isLegalMove(from, to)){
+				pieceFoundAndMoveIsLegal = true;
+				pieces[i].setPosition(to);
+				break;
+			}	
+		}
+		return pieceFoundAndMoveIsLegal;
 	}
 	
 	public void setWhitePieces(){

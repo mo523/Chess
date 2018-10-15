@@ -6,16 +6,21 @@ public abstract class Piece {
 	boolean white;
 	char displayCharacter;
 	
-	public boolean canPieceMoveLikeThat(){
-	
-	}
-	public boolean pieceInTheWay(){
+	public boolean isLegalMove(String from, String to){
 		
 	}
-	public boolean inCheck(){
+	public boolean canPieceMoveLikeThat(String from, String to){
+	
+	}
+	public boolean pieceInTheWay(String from, String to){
 		
 	}
-	
+	public boolean inCheck(String from, String to){
+		
+	}
+	public void move(String from, String to){
+		
+	}
 	public Piece(String position, boolean white) {
 		this.position = position;
 		this.white = white;
@@ -30,6 +35,9 @@ public abstract class Piece {
 		this.name = name;
 	}
 	public String getPosition() {
+		return position;
+	}
+	public String getPositionForBoard() {
 		return convertPositionToNumbers();
 	}
 	public void setPosition(String position) {
