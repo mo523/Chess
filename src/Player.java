@@ -14,14 +14,6 @@ public class Player {
 			setBlackPieces();
 	}
 	
-	public boolean isInCheckMate(){
-		
-	}
-	
-	public boolean isNotInCheckMate(){
-		return !isInCheckMate();
-	}
-	
 	public boolean movePiece(String from, String to){
 		boolean pieceFoundAndMoveIsLegal = false;
 		for(int i = 0; i < 15; i++){
@@ -33,6 +25,16 @@ public class Player {
 		}
 		return pieceFoundAndMoveIsLegal;
 	}
+	
+	public boolean isInCheckMate(){
+		
+	}
+	
+	public boolean isNotInCheckMate(){
+		return !isInCheckMate();
+	}
+	
+	
 	
 	public void setWhitePieces(){
 		pieces[0] = new King("e8", white);

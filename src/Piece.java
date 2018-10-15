@@ -2,7 +2,7 @@
 public abstract class Piece {
 
 	String position; // this is the position as seen on the game board (e.g. b6 or h3)
-	String positionForBoard; // this is the position that has the actual values used in the arrays of the game board
+	//String positionForBoard; // this is the position that has the actual values used in the arrays of the game board
 	String name; // name of the piece
 	boolean white; // boolean to test if the piece is white or black
 	char displayCharacter; // this is the character that will be displayed on the screen in the board
@@ -16,12 +16,10 @@ public abstract class Piece {
 	public Piece(String position, boolean white) {
 		this.position = position;
 		this.white = white;
-		this.positionForBoard = convertPositionToNumbers();
+		//this.positionForBoard = convertPositionToNumbers();
 	}
-
-	public void setPositionForBoard(String positionForBoard) {
-		this.positionForBoard = positionForBoard;
-	}
+	
+	
 	//all other methods go in this one
 	public boolean isLegalMove(String from, String to){
 		
@@ -54,9 +52,7 @@ public abstract class Piece {
 	public String getPosition() {
 		return position;
 	}
-	public String getPositionForBoard() {
-		return positionForBoard;
-	}
+	
 	public void setPosition(String position) {
 		this.position = position;
 	}
@@ -94,5 +90,12 @@ public abstract class Piece {
 		positionInNumbers += Integer.toString((Integer.parseInt(position.substring(1)) - 1));
 		return positionInNumbers;
 	}
+	/*
+	public void setPositionForBoard(String positionForBoard) {
+		this.positionForBoard = positionForBoard;
+	}
+	public String getPositionForBoard() {
+		return positionForBoard;
+	}*/
 	
 }

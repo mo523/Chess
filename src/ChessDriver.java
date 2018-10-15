@@ -36,11 +36,42 @@ public class ChessDriver {
 			if(!legalMove){
 				System.out.println("Illegal move, try again");
 			}
-			legalMove = p.movePiece(kyb.next(), kyb.next());
+			legalMove = p.movePiece(convertPositionToNumbers(kyb.next()),convertPositionToNumbers( kyb.next()));
 		}while(!legalMove);
 	}
 	public static void displayBoard(){
 		
+	}
+	public static String convertPositionToNumbers(String move){
+		String positionInNumbers = "";
+		switch(move.charAt(0)){
+		case 'a' :
+			positionInNumbers += "0";
+			break;
+		case 'b' :
+			positionInNumbers += "1";
+			break;
+		case 'c' :
+			positionInNumbers += "2";
+			break;
+		case 'd' :
+			positionInNumbers += "3";
+			break;
+		case 'e' :
+			positionInNumbers += "4";
+			break;
+		case 'f' :
+			positionInNumbers += "5";
+			break;
+		case 'g' :
+			positionInNumbers += "6";
+			break;
+		case 'h' :
+			positionInNumbers += "7";
+			break;
+		}
+		positionInNumbers += Integer.toString((Integer.parseInt(move.substring(1)) - 1));
+		return positionInNumbers;
 	}
 
 }
