@@ -2,18 +2,20 @@
 public class Player {
 
 	private boolean white;
-	private boolean black = !white;
 	private String name;
 	private Piece[] pieces = new Piece[16];
 	
-	public Player(boolean white) {
-		super();
+	public Player(boolean white, String name) {
 		this.white = white;
-		
+		this.name = name;
 		if(isWhite())
 			setWhitePieces();
 		else
 			setBlackPieces();
+	}
+	
+	public void movePiece(){
+		
 	}
 	
 	public void setWhitePieces(){
@@ -36,26 +38,24 @@ public class Player {
 	}
 	
 	public void setBlackPieces(){
-		pieces[0] = new King("e1", black);
-		pieces[1] = new Queen("d1", black);
-		pieces[2] = new Bishop("f1", black);
-		pieces[3] = new Bishop("c1", black);
-		pieces[4] = new Horse("g1", black);
-		pieces[5] = new Horse("b1", black);
-		pieces[6] = new Rook("a1", black);
-		pieces[7] = new Rook("h1", black);
-		pieces[8] = new BlackPawn("a2", black);
-		pieces[9] = new BlackPawn("b2", black);
-		pieces[10] = new BlackPawn("c2", black);
-		pieces[11] = new BlackPawn("d2", black);
-		pieces[12] = new BlackPawn("e2", black);
-		pieces[13] = new BlackPawn("f2", black);
-		pieces[14] = new BlackPawn("g2", black);
-		pieces[15] = new BlackPawn("h2", black);
+		pieces[0] = new King("e1", !white);
+		pieces[1] = new Queen("d1", !white);
+		pieces[2] = new Bishop("f1", !white);
+		pieces[3] = new Bishop("c1", !white);
+		pieces[4] = new Horse("g1", !white);
+		pieces[5] = new Horse("b1", !white);
+		pieces[6] = new Rook("a1", !white);
+		pieces[7] = new Rook("h1", !white);
+		pieces[8] = new BlackPawn("a2", !white);
+		pieces[9] = new BlackPawn("b2", !white);
+		pieces[10] = new BlackPawn("c2", !white);
+		pieces[11] = new BlackPawn("d2", !white);
+		pieces[12] = new BlackPawn("e2", !white);
+		pieces[13] = new BlackPawn("f2", !white);
+		pieces[14] = new BlackPawn("g2", !white);
+		pieces[15] = new BlackPawn("h2", !white);
 	}
-	public boolean isBlack() {
-		return black;
-	}
+	
 
 
 	public boolean isWhite() {
