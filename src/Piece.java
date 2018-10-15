@@ -36,9 +36,7 @@ public abstract class Piece {
 	public boolean leavesKingInCheck(String from, String to){
 		
 	}
-	public void move(String from, String to){
-		
-	}
+	public abstract void move(String from, String to);
 	
 	public boolean isWhite() {
 		return white;
@@ -59,7 +57,7 @@ public abstract class Piece {
 	public char getDisplayCharacter() {
 		return white ? Character.toUpperCase(displayCharacter) : Character.toLowerCase(displayCharacter);
 	}
-	public String convertPositionToNumbers(){
+	/*public String convertPositionToNumbers(){
 		String positionInNumbers = "";
 		switch(position.charAt(0)){
 		case 'a' :
@@ -90,7 +88,7 @@ public abstract class Piece {
 		positionInNumbers += Integer.toString((Integer.parseInt(position.substring(1)) - 1));
 		return positionInNumbers;
 	}
-	/*
+	
 	public void setPositionForBoard(String positionForBoard) {
 		this.positionForBoard = positionForBoard;
 	}
