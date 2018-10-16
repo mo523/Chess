@@ -21,31 +21,42 @@ public class ChessDriver {
 	public static void playGame(Player p1, Player p2){
 		
 		do{
-			if(p1.isNotInCheckMate())
+			//if(p1.isNotInCheckMate())
 				eachPlayersMove(p1, p2);
-			if(p2.isNotInCheckMate())
+			//if(p2.isNotInCheckMate())
 				eachPlayersMove(p2, p1);
 		}while(p1.isNotInCheckMate() && p2.isNotInCheckMate());
 	}
 	
 	public static void eachPlayersMove(Player movingPlayer, Player passivePlayer){
 		boolean legalMove = true;
+		String from = null;
+		String to = null;
+		
 		displayBoard();
 		
-		System.out.println(movingPlayer.getName() + ", what is your move?");
 		do{
-			if(!legalMove){
-				System.out.println("Illegal move, try again");
-			}
-			
-			String from = convertPositionToNumbers(kyb.next());
-			String to = convertPositionToNumbers(kyb.next());
+			if(!legalMove)
+				System.out.println("Illegal complete move, try again");
+			System.out.println(movingPlayer.getName() + ", what is your moves first position?");
+			from = getMoveValuesAndTestThem(from);
+			System.out.println(movingPlayer.getName() + ", what is your moves second position?");
+			to = getMoveValuesAndTestThem(to);
 			legalMove = movingPlayer.movePiece(from, to);
-			
 			if(legalMove)
 				killPiece(passivePlayer, to);
-			
 		}while(!legalMove);
+	}
+	
+	public static String getMoveValuesAndTestThem(String moveValue) {
+		boolean goodMove = true;
+		do {
+			if(!goodMove)
+				System.out.println("Illegal individual position, try again");
+			moveValue = convertPositionToNumbers(kyb.next());
+			goodMove = (moveValue.charAt(0) >= 48 && moveValue.charAt(0) <= 55 && moveValue.charAt(1) >= 48 && moveValue.charAt(1) <= 55);
+		}while(!goodMove);
+		return moveValue;
 	}
 	
 	public static void killPiece(Player p, String to) {
@@ -85,6 +96,9 @@ public class ChessDriver {
 			break;
 		case 'h' :
 			positionInNumbers += "7";
+			break;
+		default :
+			positionInNumbers += "8";
 			break;
 		}
 		positionInNumbers += Integer.toString((Integer.parseInt(move.substring(1)) - 1));
