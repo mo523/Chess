@@ -37,41 +37,41 @@ public class Player {
 	
 	
 	public void setWhitePieces(){
-		pieces[0] = new King("e7", white);
-		pieces[1] = new Queen("d7", white);
-		pieces[2] = new Bishop("f7", white);
-		pieces[3] = new Bishop("c7", white);
-		pieces[4] = new Horse("g7", white);
-		pieces[5] = new Horse("b7", white);
-		pieces[6] = new Rook("a7", white);
-		pieces[7] = new Rook("h7", white);
-		pieces[8] = new WhitePawn("a6", white);
-		pieces[9] = new WhitePawn("b6", white);
-		pieces[10] = new WhitePawn("c6", white);
-		pieces[11] = new WhitePawn("d6", white);
-		pieces[12] = new WhitePawn("e6", white);
-		pieces[13] = new WhitePawn("f6", white);
-		pieces[14] = new WhitePawn("g6", white);
-		pieces[15] = new WhitePawn("h6", white);
+		pieces[0] = new King("47", white);
+		pieces[1] = new Queen("37", white);
+		pieces[2] = new Bishop("57", white);
+		pieces[3] = new Bishop("27", white);
+		pieces[4] = new Horse("67", white);
+		pieces[5] = new Horse("17", white);
+		pieces[6] = new Rook("07", white);
+		pieces[7] = new Rook("77", white);
+		pieces[8] = new WhitePawn("06", white);
+		pieces[9] = new WhitePawn("16", white);
+		pieces[10] = new WhitePawn("26", white);
+		pieces[11] = new WhitePawn("36", white);
+		pieces[12] = new WhitePawn("46", white);
+		pieces[13] = new WhitePawn("56", white);
+		pieces[14] = new WhitePawn("66", white);
+		pieces[15] = new WhitePawn("76", white);
 	}
 	
 	public void setBlackPieces(){
-		pieces[0] = new King("e0", !white);
-		pieces[1] = new Queen("d0", !white);
-		pieces[2] = new Bishop("f0", !white);
-		pieces[3] = new Bishop("c0", !white);
-		pieces[4] = new Horse("g0", !white);
-		pieces[5] = new Horse("b0", !white);
-		pieces[6] = new Rook("a0", !white);
-		pieces[7] = new Rook("h0", !white);
-		pieces[8] = new BlackPawn("a1", !white);
-		pieces[9] = new BlackPawn("b1", !white);
-		pieces[10] = new BlackPawn("c1", !white);
-		pieces[11] = new BlackPawn("d1", !white);
-		pieces[12] = new BlackPawn("e1", !white);
-		pieces[13] = new BlackPawn("f1", !white);
-		pieces[14] = new BlackPawn("g1", !white);
-		pieces[15] = new BlackPawn("h1", !white);
+		pieces[0] = new King("40", !white);
+		pieces[1] = new Queen("30", !white);
+		pieces[2] = new Bishop("50", !white);
+		pieces[3] = new Bishop("20", !white);
+		pieces[4] = new Horse("60", !white);
+		pieces[5] = new Horse("10", !white);
+		pieces[6] = new Rook("00", !white);
+		pieces[7] = new Rook("70", !white);
+		pieces[8] = new BlackPawn("01", !white);
+		pieces[9] = new BlackPawn("11", !white);
+		pieces[10] = new BlackPawn("21", !white);
+		pieces[11] = new BlackPawn("31", !white);
+		pieces[12] = new BlackPawn("41", !white);
+		pieces[13] = new BlackPawn("51", !white);
+		pieces[14] = new BlackPawn("61", !white);
+		pieces[15] = new BlackPawn("71", !white);
 	}
 	
 
