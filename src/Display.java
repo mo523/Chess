@@ -2,9 +2,9 @@
 //Will remove eventually and just run it from the driver
 public class Display
 {
-
 	public static void main( String[] args )
 	{
+		
 		//int pieces[][] = {{
 		for (int i = 0; i < 7; i++)
 		{
