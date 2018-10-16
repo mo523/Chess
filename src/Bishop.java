@@ -1,7 +1,17 @@
 public class Bishop extends Piece {
-	public Bishop(String position, boolean white) {
-		super(position, white);
+	private String icon[] = { "            ", "    bishop    ", "            ", "            ", "            "};
+	
+	public Bishop( boolean white) {
+		super(white);
 		this.name = "Bishop";
 		displayCharacter = 'b';
+	}
+	public String getIcon(int row)
+	{
+		return icon[row];
+	}
+	public boolean isWhite()
+	{
+		return white;
 	}
 }

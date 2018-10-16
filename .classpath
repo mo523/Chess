@@ -6,7 +6,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/moshe/eclipse-workspace/Chess/Notes for display/jansi-1.17.1.jar">
+	<classpathentry kind="lib" path="C:/Users/moshe/eclipse-workspace/jars/jansi.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
