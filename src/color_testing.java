@@ -14,10 +14,11 @@ import static org.fusesource.jansi.Ansi.Color.*;public class color_testing
 
 	public static void main( String[] args )
 	{
-		//AnsiConsole.systemInstall();
+		AnsiConsole.systemInstall();
 
-		System.out.println(ANSI_PURPLE + "Hello" + ANSI_PURPLE);
-		System.out.println(ansi().eraseScreen().fg(RED).a("Hello").fg(GREEN).a(" World").reset());
+		//System.out.println(ANSI_PURPLE + "Hello" + ANSI_PURPLE);
+		System.out.println(ansi().bg(GREEN).fg(BLUE).a("Hi").reset());
+		//System.out.println(ansi().eraseScreen().fg(RED).a("Hello").fg(GREEN).a(" World").reset());
 		AnsiConsole.systemUninstall();
 
 	}
