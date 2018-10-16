@@ -1,7 +1,7 @@
 
 public class Player {
 
-	private boolean white;
+	/*private boolean white;
 	private String name;
 	private Piece[] pieces = new Piece[16];
 	static final  int Max_Num_Of_Pieces = 16;
@@ -98,6 +98,6 @@ public class Player {
 	}
 
 
-
+*/
 	
 }

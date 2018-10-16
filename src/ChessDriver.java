@@ -54,7 +54,7 @@ public class ChessDriver
 			}
 			System.out.println();
 		}
-		
+
 		display(CB);
 		// boolean white = true;
 		// System.out.println("Player 1 (white), what is your name?");
@@ -65,7 +65,7 @@ public class ChessDriver
 		// playGame(p1, p2);
 	}
 
-	public static void playGame( Player p1, Player p2 )
+	/*public static void playGame( Player p1, Player p2 )
 	{
 
 		do
@@ -166,7 +166,7 @@ public class ChessDriver
 		positionInNumbers += Integer.toString(( Integer.parseInt(move.substring(1)) - 1 ));
 		return positionInNumbers;
 	}
-
+*/
 	public static void display( Piece[][] CB )
 	{
 		AnsiConsole.systemInstall();
@@ -177,14 +177,34 @@ public class ChessDriver
 			{
 				if (j%2 == 0)
 					if (i/6%2==0)
-						System.out.print(ansi().bg(YELLOW).fgBright(WHITE).a(PieceSection(i%6,j)).reset());
+						if (CB[i/6][j] == null)
+							System.out.print(ansi().bg(YELLOW).fg(BLUE).a("              ").reset());
+						else if(CB[i/6][j].isWhite())
+							System.out.print(ansi().bg(YELLOW).fgBright(WHITE).a(PieceSection(i,j, CB)).reset());
+						else
+							System.out.print(ansi().bg(YELLOW).fg(BLACK).a(PieceSection(i,j, CB)).reset());
 					else
-						System.out.print(ansi().bg(WHITE).fgBright(WHITE).a(PieceSection(i%6,j)).reset());
+						if (CB[i/6][j] == null)
+							System.out.print(ansi().bg(WHITE).fg(BLUE).a("              ").reset());
+						else if (CB[i/6][j].isWhite())
+							System.out.print(ansi().bg(WHITE).fgBright(WHITE).a(PieceSection(i,j, CB)).reset());
+						else
+							System.out.print(ansi().bg(WHITE).fg(BLACK).a(PieceSection(i,j, CB)).reset());
 				else
 					if (i/6%2==0)
-						System.out.print(ansi().bg(WHITE).fg(BLACK).a(PieceSection(i%6,j)).reset());
+						if (CB[i/6][j] == null)
+							System.out.print(ansi().bg(WHITE).fg(BLUE).a("              ").reset());
+						else if (CB[i/6][j].isWhite())
+							System.out.print(ansi().bg(WHITE).fgBright(WHITE).a(PieceSection(i,j, CB)).reset());
+						else
+							System.out.print(ansi().bg(WHITE).fg(BLACK).a(PieceSection(i,j, CB)).reset());
 					else
-						System.out.print(ansi().bg(YELLOW).fg(BLACK).a(PieceSection(i%6,j)).reset());
+						if (CB[i/6][j] == null)
+							System.out.print(ansi().bg(YELLOW).fg(BLUE).a("              ").reset());
+						else if (CB[i/6][j].isWhite())
+							System.out.print(ansi().bg(YELLOW).fgBright(WHITE).a(PieceSection(i,j, CB)).reset());
+						else
+							System.out.print(ansi().bg(YELLOW).fg(BLACK).a(PieceSection(i,j, CB)).reset());
 
 			}
 			System.out.println();
@@ -192,16 +212,16 @@ public class ChessDriver
 		System.out.println("test");
 		AnsiConsole.systemUninstall();
 	}
-	public static String PieceSection(int i, int j)
+
+	public static String PieceSection( int i, int j, Piece[][] cb )
 	{
 		String fourteen;
-		i %= 6;
-		if (i == 0 || i == 5 )//|| j == 0 || j ==5)
+		if ( i%6 == 0 || i%6 == 5 )
 		{
 			fourteen = "              ";
 		}
-		else 
-			fourteen = "  xxxxxxxxxx  ";
+		else
+			fourteen = cb[i/6][j].getIcon(1);
 		return fourteen;
 	}
 }
