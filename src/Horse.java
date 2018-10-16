@@ -1,7 +1,7 @@
 
 public class Horse extends Piece {
-	public Horse(String position, boolean white) {
-		super(position, white);
+	public Horse(boolean white) {
+		super( white);
 		this.name = "Horse";
 		displayCharacter = 'h';
 	}

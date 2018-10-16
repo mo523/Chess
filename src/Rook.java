@@ -1,8 +1,9 @@
 
 public class Rook extends Piece {
-	public Rook(String position, boolean white) {
-		super(position, white);
+	public Rook(boolean white) {
+		super(white);
 		this.name = "Rook";
 		displayCharacter = 'r';
 	}
+
 }

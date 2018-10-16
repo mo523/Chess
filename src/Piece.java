@@ -5,15 +5,14 @@ public abstract class Piece {
 	String name; // name of the piece
 	boolean white; // boolean to test if the piece is white or black
 	char displayCharacter; // this is the character that will be displayed on the screen in the board
-	
+	String icon[] = new String[5];
 	
 	/**
 	 * 
 	 * @param position is the position of the piece
 	 * @param white tells if the piece is white or black
 	 */
-	public Piece(String position, boolean white) {
-		this.position = position;
+	public Piece(boolean white) {
 		this.white = white;
 	}
 	
@@ -37,7 +36,7 @@ public abstract class Piece {
 	public boolean willNotKillSameColor(String from, String to) {
 		
 	}
-	public abstract void move(String from, String to);
+	//public abstract void move(String from, String to);
 	
 	public boolean isWhite() {
 		return white;
