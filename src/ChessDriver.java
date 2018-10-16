@@ -21,9 +21,9 @@ public class ChessDriver {
 	public static void playGame(Player p1, Player p2){
 		
 		do{
-			//if(p1.isNotInCheckMate())
+			if(p1.isNotInCheckMate())
 				eachPlayersMove(p1, p2);
-			//if(p2.isNotInCheckMate())
+			if(p2.isNotInCheckMate())
 				eachPlayersMove(p2, p1);
 		}while(p1.isNotInCheckMate() && p2.isNotInCheckMate());
 	}
