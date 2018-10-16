@@ -9,7 +9,6 @@ public class ChessDriver
 
 	public static void main( String[] args )
 	{
-
 		Piece CB[][] = new Piece[8][8];
 		CB[1][0] = new Pawn(true);
 		CB[1][1] = new Pawn(true);
