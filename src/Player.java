@@ -4,7 +4,7 @@ public class Player {
 	private boolean white;
 	private String name;
 	private Piece[] pieces = new Piece[16];
-	
+	static final  int Max_Num_Of_Pieces = 16;
 	public Player(boolean white, String name) {
 		this.white = white;
 		this.name = name;
@@ -16,7 +16,7 @@ public class Player {
 	
 	public boolean movePiece(String from, String to){
 		boolean pieceFoundAndMoveIsLegal = false;
-		for(int i = 0; i < 15; i++){
+		for(int i = 0; i < Max_Num_Of_Pieces; i++){
 			if(pieces[i].getPosition().equalsIgnoreCase(from) && pieces[i].isLegalMove(from, to)){
 				pieceFoundAndMoveIsLegal = true;
 				pieces[i].setPosition(to);

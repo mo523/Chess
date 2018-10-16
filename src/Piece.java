@@ -34,6 +34,9 @@ public abstract class Piece {
 	public boolean leavesKingInCheck(String from, String to){
 		
 	}
+	public boolean willNotKillSameColor(String from, String to) {
+		
+	}
 	public abstract void move(String from, String to);
 	
 	public boolean isWhite() {
