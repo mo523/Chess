@@ -1,6 +1,6 @@
 
 public class Rook extends Piece {
-	private String icon[] = { "            ", "     rook     ", "            ", "            ", "            "};
+	private String icon[] = { "              ", "     rook     ", "              ", "              ", "              "};
 	public Rook(boolean white) {
 		super(white);
 		this.name = "Rook";

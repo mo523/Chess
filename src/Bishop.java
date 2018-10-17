@@ -1,5 +1,5 @@
 public class Bishop extends Piece {
-	private String icon[] = { "            ", "    bishop    ", "            ", "            ", "            "};
+	private String icon[] = { "              ", "    bishop    ", "              ", "              ", "              "};
 	
 	public Bishop( boolean white) {
 		super(white);

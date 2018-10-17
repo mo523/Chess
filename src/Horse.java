@@ -1,6 +1,6 @@
 
 public class Horse extends Piece {
-	private String icon[] = { "            ", "     horse    ", "            ", "            ", "            "};
+	private String icon[] = { "              ", "     horse    ", "              ", "              ", "              "};
 	
 	public Horse(boolean white) {
 		super( white);
