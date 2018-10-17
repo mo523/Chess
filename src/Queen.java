@@ -1,6 +1,6 @@
 
 public class Queen extends Piece {
-	private String icon[] = { "              ", "     queen    ", "              ", "              ", "              "};
+	private String icon[] = {"     queen    ", "              ", "              ", "              "};
 	
 	public Queen( boolean white) {
 		super(white);

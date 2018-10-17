@@ -10,6 +10,7 @@ public class ChessDriver
 
 	public static void main( String[] args ) throws InterruptedException, IOException
 	{
+		      
 		Piece CB[][] = new Piece[8][8];
 		setUpPieces(CB);
 		/*
@@ -185,13 +186,13 @@ public class ChessDriver
 			fourteen = "              ";
 		}
 		else
-			fourteen = cb[i / 6][j].getIcon(i%6);
+			fourteen = cb[i / 6][j].getIcon(i % 6 - 1);
 		return fourteen;
 	}
 
 	public static void display( Piece[][] CB )
 	{
-		
+
 		AnsiConsole.systemInstall();
 		System.out.println();
 		System.out.print(" ");
@@ -233,7 +234,7 @@ public class ChessDriver
 					System.out.print(ansi().bgBright(BLACK).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
 				else
 					System.out.print(ansi().bgBright(BLACK).fg(BLACK).a(PieceSection(i, j, CB)).reset());
-				
+
 			}
 			System.out.print(ansi().bgBright(WHITE).a("  ").reset());
 			System.out.println();
@@ -244,6 +245,7 @@ public class ChessDriver
 		System.out.println();
 		AnsiConsole.systemUninstall();
 	}
+
 
 	public static void clear() throws InterruptedException, IOException
 	{
