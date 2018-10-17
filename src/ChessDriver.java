@@ -23,15 +23,15 @@ public class ChessDriver
 
 	public static void playGame( String p1, String p2, Piece[][] CB ) throws InterruptedException, IOException
 	{
-		Piece wk = CB[0][4];
-		Piece bk = CB[7][4];
+		Piece whiteKing = CB[0][4];
+		Piece blackKing = CB[7][4];
 		do
 		{
-			if ( notInCheckMate(wk) )
+			if ( notInCheckMate(whiteKing) )
 				movePiece(true, CB, p1);
 			else
 				break;
-			if ( notInCheckMate(bk) )
+			if ( notInCheckMate(blackKing) )
 				movePiece(false, CB, p2);
 			else
 				break;
