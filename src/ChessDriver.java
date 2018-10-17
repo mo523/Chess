@@ -53,7 +53,7 @@ public class ChessDriver
 		}
 
 		display(CB);
-		System.out.println("Player 1 (white), what is your name?");
+		System.out.println("Player 1 (white), what is your name?");//
 		// Player p1 = new Player(white, kyb.next());
 		// System.out.println("Player 2 (black), what is your name?");
 		// Player p2 = new Player(!white, kyb.next());
