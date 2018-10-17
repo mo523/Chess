@@ -18,7 +18,7 @@ public class ChessDriver
 		 * kyb.nextLine(); System.out.println("Player 2 (black), what is your name?");
 		 * String p2 = kyb.nextLine();
 		 */
-		playGame("p1", "p2", CB);
+		playGame("p1", "p2", CB);//remember to take out the literal p1 and p2
 		kyb.close();
 	}
 
