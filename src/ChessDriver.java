@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 import org.fusesource.jansi.AnsiConsole;
 import static org.fusesource.jansi.Ansi.*;
@@ -11,15 +12,6 @@ public class ChessDriver
 	{
 		Piece CB[][] = new Piece[8][8];
 		setUpPieces(CB);
-
-		for ( int i = 0; i < 8; i++ )
-		{
-			for ( int j = 0; j < 8; j++ )
-			{
-				System.out.print(CB[i][j] + " ");
-			}
-			System.out.println();
-		}
 
 		display(CB);
 		System.out.println("Player 1 (white), what is your name?");//
@@ -165,5 +157,20 @@ public class ChessDriver
 		else
 			fourteen = cb[i / 6][j].getIcon(1);
 		return fourteen;
+	}
+	public static void clear() throws InterruptedException, IOException
+	{
+		new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+	}
+	public static void debugBoard(Piece[][] CB)
+	{
+		for ( int i = 0; i < 8; i++ )
+		{
+			for ( int j = 0; j < 8; j++ )
+			{
+				System.out.print(CB[i][j] + " ");
+			}
+			System.out.println();
+		}
 	}
 }
