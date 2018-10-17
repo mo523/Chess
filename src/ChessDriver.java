@@ -10,6 +10,27 @@ public class ChessDriver
 	public static void main( String[] args )
 	{
 		Piece CB[][] = new Piece[8][8];
+		setUpPieces(CB);
+
+		for ( int i = 0; i < 8; i++ )
+		{
+			for ( int j = 0; j < 8; j++ )
+			{
+				System.out.print(CB[i][j] + " ");
+			}
+			System.out.println();
+		}
+
+		display(CB);
+		System.out.println("Player 1 (white), what is your name?");//
+		// Player p1 = new Player(white, kyb.next());
+		// System.out.println("Player 2 (black), what is your name?");
+		// Player p2 = new Player(!white, kyb.next());
+		//
+		// playGame(p1, p2);
+	}
+	
+	public static void setUpPieces(Piece[][] CB){
 		CB[1][0] = new Pawn(true);
 		CB[1][1] = new Pawn(true);
 		CB[1][2] = new Pawn(true);
@@ -42,23 +63,6 @@ public class ChessDriver
 		CB[7][5] = new Bishop(false);
 		CB[7][6] = new Horse(false);
 		CB[7][7] = new Rook(false);
-
-		for ( int i = 0; i < 8; i++ )
-		{
-			for ( int j = 0; j < 8; j++ )
-			{
-				System.out.print(CB[i][j] + " ");
-			}
-			System.out.println();
-		}
-
-		display(CB);
-		System.out.println("Player 1 (white), what is your name?");//
-		// Player p1 = new Player(white, kyb.next());
-		// System.out.println("Player 2 (black), what is your name?");
-		// Player p2 = new Player(!white, kyb.next());
-		//
-		// playGame(p1, p2);
 	}
 
 	/*
