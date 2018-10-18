@@ -1,6 +1,6 @@
 /bin/
 *.class
-/classpath
-/project
+.classpath
+.project
 /.settings
 /test
