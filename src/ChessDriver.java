@@ -51,10 +51,11 @@ public class ChessDriver
 			if ( !legalMove )
 				System.out.println(name + ", You do not have a piece there\nPlease try again;");
 			System.out.println(name + ", Which piece would you like to move?");
-			from = kyb.nextLine();
-			fx = convertPositionToNumbers(from);
-			fy = from.charAt(1) - 48;
-			legalMove = isValidPieceThere(fx, fy, CB, white);
+			from = kyb.nextLine().toLowerCase();
+			fx = from.charAt(0) - 97;
+			fy = from.charAt(1) - 49;
+			
+			legalMove = isValidPieceThere(from, fx, fy, CB, white, true);
 		} while ( !legalMove );
 		do
 		{
@@ -63,13 +64,12 @@ public class ChessDriver
 			if ( !legalMove )
 				System.out.println("Illegal complete move, try again");
 			System.out.println(name + ", Where would you like to move your piece to?");
-			to = kyb.nextLine();
-			tx = convertPositionToNumbers(to);
-			ty = from.charAt(1) - 48;
-			legalMove = true;
-		} while ( !legalMove );
-		CB[tx][ty] = CB[fx][fy];
-		CB[fx][fy] = null;
+			to = kyb.nextLine().toLowerCase();
+			tx = to.charAt(0) - 97;
+			ty = to.charAt(1) - 49;
+			legalMove = isValidPieceThere(from, fx, fy, CB, white, false);		} while ( !legalMove );
+		CB[ty][tx] = CB[fy][fx];
+		CB[fy][fx] = null;
 	}
 
 	public static boolean canMoveThere( int fx, int fy, int tx, int ty, Piece[][] CB )
@@ -77,11 +77,13 @@ public class ChessDriver
 		return true;
 	}
 
-	public static boolean isValidPieceThere( int x, int y, Piece[][] CB, boolean white )
+	public static boolean isValidPieceThere( String input, int x, int y, Piece[][] CB, boolean white, boolean from )
 	{
-		System.out.println(x + " " + y);
-		if ( x == -1 || y == -1 || CB[x][y] == null || CB[x][y].white != white )
+		
+		if (input.length() != 2 || x < 0 || x > 7 || y < 0 || y > 7)
 			return false;
+		else if (from && (CB[y][x] == null || CB[y][x].white != white ))
+				return false;
 		else
 			return true;
 
@@ -100,42 +102,6 @@ public class ChessDriver
 	// } while ( !goodMove );
 	// return moveValue;
 	// }
-
-	public static int convertPositionToNumbers( String move )
-	{
-		int position;
-		switch ( move.charAt(0) )
-		{
-		case 'a':
-			position = 0;
-			break;
-		case 'b':
-			position = 1;
-			break;
-		case 'c':
-			position = 2;
-			break;
-		case 'd':
-			position = 3;
-			break;
-		case 'e':
-			position = 4;
-			break;
-		case 'f':
-			position = 5;
-			break;
-		case 'g':
-			position = 6;
-			break;
-		case 'h':
-			position = 7;
-			break;
-		default:
-			position = -1;
-			break;
-		}
-		return position;
-	}
 
 	public static boolean notInCheckMate( Piece king )
 	{
