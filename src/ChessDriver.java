@@ -40,7 +40,7 @@ public class ChessDriver
 		} while (notInCheckMate(whiteKing) && notInCheckMate(blackKing));
 	}
 
-	public static void movePiece( boolean white, Piece[][] CB, String name ) throws InterruptedException, IOException
+	public static void movePiece( boolean localWhite, Piece[][] CB, String name ) throws InterruptedException, IOException
 	{
 		//method needs to be cut in half
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
@@ -63,7 +63,7 @@ public class ChessDriver
 				from_Y_Coordinate = from.charAt(0) - 97;
 				from_X_Coordinate = from.charAt(1) - 49;
 				
-				legalMove = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, white, IS_FROM);
+				legalMove = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, localWhite, IS_FROM);
 			} while ( !legalMove );
 			do
 			{
@@ -75,7 +75,7 @@ public class ChessDriver
 				to = kyb.nextLine().toLowerCase();
 				to_Y_Coordinate = to.charAt(0) - 97;
 				to_X_Coordinate = to.charAt(1) - 49;
-				legalMove = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, white, IS_TO);		
+				legalMove = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, localWhite, IS_TO);		
 			} while ( !legalMove );
 		//make sure its not the same space
 		}while(!canPieceMoveThereBasedOnAllItsRules);
@@ -88,12 +88,12 @@ public class ChessDriver
 		return true;
 	}
 
-	public static boolean isValidPieceThere( String inputPosition, int x, int y, Piece[][] CB, boolean white, boolean from )
+	public static boolean isValidPieceThere( String inputPosition, int y_Coordinate, int x_Coordinate, Piece[][] CB, boolean localWhite, boolean from )
 	{
 		
-		if (inputPosition.length() != 2 || x < 0 || x > 7 || y < 0 || y > 7)
+		if (inputPosition.length() != 2 || y_Coordinate < 0 || y_Coordinate > 7 || x_Coordinate < 0 || x_Coordinate > 7)
 			return false;
-		else if (from && (CB[y][x] == null || CB[y][x].white != white ))
+		else if (from && (CB[x_Coordinate][y_Coordinate] == null || CB[x_Coordinate][y_Coordinate].white != localWhite ))
 				return false;
 		else
 			return true;
