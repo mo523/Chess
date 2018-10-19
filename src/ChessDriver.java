@@ -7,7 +7,8 @@ import static org.fusesource.jansi.Ansi.Color.*;
 public class ChessDriver
 {
 	static Scanner kyb = new Scanner(System.in);
-
+	static final boolean IS_WHITE = true;// this is to make what color the pieces are more clear (rather than using true and false)
+	static final boolean IS_BLACK = false;// this is to make what color the pieces are more clear (rather than using true and false)
 	public static void main( String[] args ) throws InterruptedException, IOException
 	{
 		      
@@ -29,11 +30,11 @@ public class ChessDriver
 		do
 		{
 			if ( notInCheckMate(whiteKing) )
-				movePiece(true, CB, p1);
+				movePiece(IS_WHITE, CB, p1);
 			else
 				break;
 			if ( notInCheckMate(blackKing) )
-				movePiece(false, CB, p2);
+				movePiece(IS_BLACK, CB, p2);
 			else
 				break;
 		} while ( true );
@@ -41,7 +42,7 @@ public class ChessDriver
 
 	public static void movePiece( boolean white, Piece[][] CB, String name ) throws InterruptedException, IOException
 	{
-		String to, from;
+		String from, to;
 		boolean legalMove = true;
 		int fx, fy, tx, ty;
 		do
@@ -110,38 +111,38 @@ public class ChessDriver
 
 	public static void setUpPieces( Piece[][] CB )
 	{
-		CB[1][0] = new Pawn(true);
-		CB[1][1] = new Pawn(true);
-		CB[1][2] = new Pawn(true);
-		CB[1][3] = new Pawn(true);
-		CB[1][4] = new Pawn(true);
-		CB[1][5] = new Pawn(true);
-		CB[1][6] = new Pawn(true);
-		CB[1][7] = new Pawn(true);
-		CB[6][0] = new Pawn(false);
-		CB[6][1] = new Pawn(false);
-		CB[6][2] = new Pawn(false);
-		CB[6][3] = new Pawn(false);
-		CB[6][4] = new Pawn(false);
-		CB[6][5] = new Pawn(false);
-		CB[6][6] = new Pawn(false);
-		CB[6][7] = new Pawn(false);
-		CB[0][0] = new Rook(true);
-		CB[0][1] = new Horse(true);
-		CB[0][2] = new Bishop(true);
-		CB[0][3] = new Queen(true);
-		CB[0][4] = new King(true);
-		CB[0][5] = new Bishop(true);
-		CB[0][6] = new Horse(true);
-		CB[0][7] = new Rook(true);
-		CB[7][0] = new Rook(false);
-		CB[7][1] = new Horse(false);
-		CB[7][2] = new Bishop(false);
-		CB[7][3] = new Queen(false);
-		CB[7][4] = new King(false);
-		CB[7][5] = new Bishop(false);
-		CB[7][6] = new Horse(false);
-		CB[7][7] = new Rook(false);
+		CB[1][0] = new Pawn(IS_WHITE);
+		CB[1][1] = new Pawn(IS_WHITE);
+		CB[1][2] = new Pawn(IS_WHITE);
+		CB[1][3] = new Pawn(IS_WHITE);
+		CB[1][4] = new Pawn(IS_WHITE);
+		CB[1][5] = new Pawn(IS_WHITE);
+		CB[1][6] = new Pawn(IS_WHITE);
+		CB[1][7] = new Pawn(IS_WHITE);
+		CB[6][0] = new Pawn(IS_BLACK);
+		CB[6][1] = new Pawn(IS_BLACK);
+		CB[6][2] = new Pawn(IS_BLACK);
+		CB[6][3] = new Pawn(IS_BLACK);
+		CB[6][4] = new Pawn(IS_BLACK);
+		CB[6][5] = new Pawn(IS_BLACK);
+		CB[6][6] = new Pawn(IS_BLACK);
+		CB[6][7] = new Pawn(IS_BLACK);
+		CB[0][0] = new Rook(IS_WHITE);
+		CB[0][1] = new Horse(IS_WHITE);
+		CB[0][2] = new Bishop(IS_WHITE);
+		CB[0][3] = new Queen(IS_WHITE);
+		CB[0][4] = new King(IS_WHITE);
+		CB[0][5] = new Bishop(IS_WHITE);
+		CB[0][6] = new Horse(IS_WHITE);
+		CB[0][7] = new Rook(IS_WHITE);
+		CB[7][0] = new Rook(IS_BLACK);
+		CB[7][1] = new Horse(IS_BLACK);
+		CB[7][2] = new Bishop(IS_BLACK);
+		CB[7][3] = new Queen(IS_BLACK);
+		CB[7][4] = new King(IS_BLACK);
+		CB[7][5] = new Bishop(IS_BLACK);
+		CB[7][6] = new Horse(IS_BLACK);
+		CB[7][7] = new Rook(IS_BLACK);
 	}
 
 	public static String PieceSection( int i, int j, Piece[][] cb )
