@@ -37,7 +37,7 @@ public class ChessDriver
 				movePiece(IS_BLACK, CB, p2);
 			else
 				break;
-		} while ( true );
+		} while (notInCheckMate(whiteKing) &&  notInCheckMate(blackKing));
 	}
 
 	public static void movePiece( boolean white, Piece[][] CB, String name ) throws InterruptedException, IOException
@@ -68,7 +68,8 @@ public class ChessDriver
 			to = kyb.nextLine().toLowerCase();
 			tx = to.charAt(0) - 97;
 			ty = to.charAt(1) - 49;
-			legalMove = isValidPieceThere(from, fx, fy, CB, white, false);		} while ( !legalMove );
+			legalMove = isValidPieceThere(from, fx, fy, CB, white, false);		
+		} while ( !legalMove );
 		CB[ty][tx] = CB[fy][fx];
 		CB[fy][fx] = null;
 	}
@@ -78,16 +79,15 @@ public class ChessDriver
 		return true;
 	}
 
-	public static boolean isValidPieceThere( String input, int x, int y, Piece[][] CB, boolean white, boolean from )
+	public static boolean isValidPieceThere( String inputPosition, int x, int y, Piece[][] CB, boolean white, boolean from )
 	{
 		
-		if (input.length() != 2 || x < 0 || x > 7 || y < 0 || y > 7)
+		if (inputPosition.length() != 2 || x < 0 || x > 7 || y < 0 || y > 7)
 			return false;
 		else if (from && (CB[y][x] == null || CB[y][x].white != white ))
 				return false;
 		else
 			return true;
-
 	}
 	// public static String getMoveValuesAndTestThem( String moveValue )
 	// {
