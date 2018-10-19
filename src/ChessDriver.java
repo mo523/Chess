@@ -37,44 +37,51 @@ public class ChessDriver
 				movePiece(IS_BLACK, CB, p2);
 			else
 				break;
-		} while (notInCheckMate(whiteKing) &&  notInCheckMate(blackKing));
+		} while (notInCheckMate(whiteKing) && notInCheckMate(blackKing));
 	}
 
 	public static void movePiece( boolean white, Piece[][] CB, String name ) throws InterruptedException, IOException
 	{
+		boolean canPieceMoveThereBasedOnAllItsRules = true;
 		String from, to;
 		boolean legalMove = true;
-		int fx, fy, tx, ty;
-		do
-		{
-			clear();
-			display(CB);
-			if ( !legalMove )
-				System.out.println(name + ", You do not have a piece there\nPlease try again;");
-			System.out.println(name + ", Which piece would you like to move?");
-			from = kyb.nextLine().toLowerCase();
-			fx = from.charAt(0) - 97;
-			fy = from.charAt(1) - 49;
-			
-			legalMove = isValidPieceThere(from, fx, fy, CB, white, true);
-		} while ( !legalMove );
-		do
-		{
-			clear();
-			display(CB);
-			if ( !legalMove )
-				System.out.println("Illegal complete move, try again");
-			System.out.println(name + ", Where would you like to move your piece to?");
-			to = kyb.nextLine().toLowerCase();
-			tx = to.charAt(0) - 97;
-			ty = to.charAt(1) - 49;
-			legalMove = isValidPieceThere(from, fx, fy, CB, white, false);		
-		} while ( !legalMove );
-		CB[ty][tx] = CB[fy][fx];
-		CB[fy][fx] = null;
-	}
+		int from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate;
+		do{
+			if(!canPieceMoveThereBasedOnAllItsRules)
+				System.out.println("Bad Move, try again");
 
-	public static boolean canMoveThere( int fx, int fy, int tx, int ty, Piece[][] CB )
+			do
+			{
+				clear();
+				display(CB);
+				if ( !legalMove )
+					System.out.println(name + ", You do not have a piece there\nPlease try again;");
+				System.out.println(name + ", Which piece would you like to move?");
+				from = kyb.nextLine().toLowerCase();
+				from_Y_Coordinate = from.charAt(0) - 97;
+				from_X_Coordinate = from.charAt(1) - 49;
+				
+				legalMove = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, white, true);
+			} while ( !legalMove );
+			do
+			{
+				clear();
+				display(CB);
+				if ( !legalMove )
+					System.out.println("Illegal complete move, try again");
+				System.out.println(name + ", Where would you like to move your piece to?");
+				to = kyb.nextLine().toLowerCase();
+				to_Y_Coordinate = to.charAt(0) - 97;
+				to_X_Coordinate = to.charAt(1) - 49;
+				legalMove = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, white, false);		
+		} while ( !legalMove );
+		//make sure its not the same space
+		}while(!canPieceMoveThereBasedOnAllItsRules);
+		CB[to_X_Coordinate][to_Y_Coordinate] = CB[from_X_Coordinate][from_Y_Coordinate];
+		CB[from_X_Coordinate][from_Y_Coordinate] = null;
+	}
+	//call to piece method if valid move, add do while loop in last method
+	public static boolean canMoveThere( int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate, Piece[][] CB )
 	{
 		return true;
 	}
