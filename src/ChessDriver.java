@@ -42,6 +42,7 @@ public class ChessDriver
 
 	public static void movePiece( boolean white, Piece[][] CB, String name ) throws InterruptedException, IOException
 	{
+		//method needs to be cut in half
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
 		String from, to;
 		boolean legalMove = true;
