@@ -45,11 +45,12 @@ public class ChessDriver
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
 		String from, to;
 		boolean legalMove = true;
+		final boolean IS_FROM = true;
+		final boolean IS_TO = false;
 		int from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate;
 		do{
 			if(!canPieceMoveThereBasedOnAllItsRules)
 				System.out.println("Bad Move, try again");
-
 			do
 			{
 				clear();
@@ -61,7 +62,7 @@ public class ChessDriver
 				from_Y_Coordinate = from.charAt(0) - 97;
 				from_X_Coordinate = from.charAt(1) - 49;
 				
-				legalMove = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, white, true);
+				legalMove = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, white, IS_FROM);
 			} while ( !legalMove );
 			do
 			{
@@ -73,8 +74,8 @@ public class ChessDriver
 				to = kyb.nextLine().toLowerCase();
 				to_Y_Coordinate = to.charAt(0) - 97;
 				to_X_Coordinate = to.charAt(1) - 49;
-				legalMove = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, white, false);		
-		} while ( !legalMove );
+				legalMove = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, white, IS_TO);		
+			} while ( !legalMove );
 		//make sure its not the same space
 		}while(!canPieceMoveThereBasedOnAllItsRules);
 		CB[to_X_Coordinate][to_Y_Coordinate] = CB[from_X_Coordinate][from_Y_Coordinate];
