@@ -19,4 +19,12 @@ public class Bishop extends Piece {
 	{
 		return white;
 	}
+	@Override
+	public boolean canPieceMoveLikeThat(int from_Y_Coordinate,int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate) {
+		int xDiff = Math.abs(to_X_Coordinate - from_X_Coordinate);
+		int yDiff = Math.abs(to_Y_Coordinate - from_Y_Coordinate);
+		if(xDiff == yDiff)
+			return true;
+		return false;
+	}
 }
