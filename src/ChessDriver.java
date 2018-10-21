@@ -167,10 +167,10 @@ public class ChessDriver
 	public static String PieceSection( int i, int j, Piece[][] cb )
 	{
 		String fourteen;
-		if ( i % 6 == 0 )
+		if ( i % 6 == 5 )
+			fourteen = "            " + (char) ( j + 65 ) + ( i / 6 + 1 );
+		else if ( cb[i / 6][j] == null || i % 6 == 0 )
 			fourteen = "              ";
-		else if (i % 6 == 5)
-			fourteen = "            " +  (char)(j+65) + (i/6+1);
 		else
 			fourteen = cb[i / 6][j].getIcon(i % 6 - 1);
 		return fourteen;
@@ -191,54 +191,47 @@ public class ChessDriver
 		{
 			System.out.print(" ");
 			if ( i % 6 + 1 == 3 )
-				System.out.print(ansi().bgBright(WHITE).fg(BLACK).a((i/6+1) + " ").reset());
+				System.out.print(ansi().bgBright(WHITE).fg(BLACK).a(( i / 6 + 1 ) + " ").reset());
 			else
 				System.out.print(ansi().bgBright(WHITE).a("  ").reset());
+
 			for ( int j = 0; j < 8; j++ )
 			{
-				if ( j % 2 == 0 )
-					if ( i / 6 % 2 == 0 )
+
+				if ( i / 6 % 2 == 0 )
+					if ( j % 2 == 0 )
 						if ( CB[i / 6][j] == null )
-							if (i%6==5)
-								System.out.print(ansi().bgBright(BLACK).fg(BLUE).a(PieceSection(i, j, CB)).reset());
-							else
-								System.out.print(ansi().bgBright(BLACK).fg(BLUE).a("              ").reset());
+							System.out.print(ansi().bg(WHITE).fg(BLUE).a(PieceSection(i, j, CB)).reset());
+						else if ( CB[i / 6][j].isWhite() )
+							System.out.print(ansi().bg(WHITE).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
+						else
+							System.out.print(ansi().bg(WHITE).fg(BLACK).a(PieceSection(i, j, CB)).reset());
+					else
+						if ( CB[i / 6][j] == null )
+							System.out.print(ansi().bgBright(BLACK).fg(BLUE).a(PieceSection(i, j, CB)).reset());
 						else if ( CB[i / 6][j].isWhite() )
 							System.out.print(ansi().bgBright(BLACK).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
 						else
 							System.out.print(ansi().bgBright(BLACK).fg(BLACK).a(PieceSection(i, j, CB)).reset());
-					else if ( CB[i / 6][j] == null )
-						if (i%6==5)
-							System.out.print(ansi().bg(WHITE).fg(BLUE).a(PieceSection(i, j, CB)).reset());
-						else
-							System.out.print(ansi().bg(WHITE).fg(BLUE).a("              ").reset());
-					else if ( CB[i / 6][j].isWhite() )
-						System.out.print(ansi().bg(WHITE).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
-					else
-						System.out.print(ansi().bg(WHITE).fg(BLACK).a(PieceSection(i, j, CB)).reset());
-				else if ( i / 6 % 2 == 0 )
-					if ( CB[i / 6][j] == null )
-						if (i%6==5)
-							System.out.print(ansi().bg(WHITE).fg(BLUE).a(PieceSection(i, j, CB)).reset());
-						else
-							System.out.print(ansi().bg(WHITE).fg(BLUE).a("              ").reset());
-					else if ( CB[i / 6][j].isWhite() )
-						System.out.print(ansi().bg(WHITE).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
-					else
-						System.out.print(ansi().bg(WHITE).fg(BLACK).a(PieceSection(i, j, CB)).reset());
-				else if ( CB[i / 6][j] == null )
-					if (i%6==5)
-						System.out.print(ansi().bgBright(BLACK).fg(BLUE).a(PieceSection(i, j, CB)).reset());
-					else
-						System.out.print(ansi().bgBright(BLACK).fg(BLUE).a("              ").reset());
-				else if ( CB[i / 6][j].isWhite() )
-					System.out.print(ansi().bgBright(BLACK).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
 				else
-					System.out.print(ansi().bgBright(BLACK).fg(BLACK).a(PieceSection(i, j, CB)).reset());
+					if ( j % 2 == 0 )
+						if ( CB[i / 6][j] == null )
+							System.out.print(ansi().bgBright(BLACK).fg(BLUE).a(PieceSection(i, j, CB)).reset());
+						else if ( CB[i / 6][j].isWhite() )
+							System.out.print(ansi().bgBright(BLACK).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
+						else
+							System.out.print(ansi().bgBright(BLACK).fg(BLACK).a(PieceSection(i, j, CB)).reset());
+					else
+						if ( CB[i / 6][j] == null )
+							System.out.print(ansi().bg(WHITE).fg(BLUE).a(PieceSection(i, j, CB)).reset());
+						else if ( CB[i / 6][j].isWhite() )
+							System.out.print(ansi().bg(WHITE).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
+						else
+							System.out.print(ansi().bg(WHITE).fg(BLACK).a(PieceSection(i, j, CB)).reset());
 
 			}
 			if ( i % 6 == 3 )
-				System.out.print(ansi().bgBright(WHITE).fg(BLACK).a(" " + (i/6+1)).reset());
+				System.out.print(ansi().bgBright(WHITE).fg(BLACK).a(" " + ( i / 6 + 1 )).reset());
 			else
 				System.out.print(ansi().bgBright(WHITE).a("  ").reset());
 			System.out.println();
