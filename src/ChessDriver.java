@@ -7,11 +7,14 @@ import static org.fusesource.jansi.Ansi.Color.*;
 public class ChessDriver
 {
 	static Scanner kyb = new Scanner(System.in);
-	static final boolean IS_WHITE = true;// this is to make what color the pieces are more clear (rather than using true and false)
-	static final boolean IS_BLACK = false;// this is to make what color the pieces are more clear (rather than using true and false)
+	static final boolean IS_WHITE = true;// this is to make what color the pieces are more clear (rather than using true
+											// and false)
+	static final boolean IS_BLACK = false;// this is to make what color the pieces are more clear (rather than using
+											// true and false)
+
 	public static void main( String[] args ) throws InterruptedException, IOException
 	{
-		      
+
 		Piece CB[][] = new Piece[8][8];
 		setUpPieces(CB);
 		/*
@@ -19,7 +22,7 @@ public class ChessDriver
 		 * kyb.nextLine(); System.out.println("Player 2 (black), what is your name?");
 		 * String p2 = kyb.nextLine();
 		 */
-		playGame("p1", "p2", CB);//remember to take out the literal p1 and p2
+		playGame("p1", "p2", CB);// remember to take out the literal p1 and p2
 		kyb.close();
 	}
 
@@ -37,20 +40,22 @@ public class ChessDriver
 				movePiece(IS_BLACK, CB, p2);
 			else
 				break;
-		} while (notInCheckMate(whiteKing) && notInCheckMate(blackKing));
+		} while ( notInCheckMate(whiteKing) && notInCheckMate(blackKing) );
 	}
 
-	public static void movePiece( boolean localWhite, Piece[][] CB, String name ) throws InterruptedException, IOException
+	public static void movePiece( boolean localWhite, Piece[][] CB, String name )
+			throws InterruptedException, IOException
 	{
-		//method needs to be cut in half
+		// method needs to be cut in half
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
 		String from, to;
 		boolean legalMoveInput = true;
 		final boolean IS_FROM = true;
 		final boolean IS_TO = false;
 		int from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate;
-		do{
-			if(!canPieceMoveThereBasedOnAllItsRules)
+		do
+		{
+			if ( !canPieceMoveThereBasedOnAllItsRules )
 				System.out.println("Bad Move, try again");
 			do
 			{
@@ -62,7 +67,7 @@ public class ChessDriver
 				from = kyb.nextLine().toLowerCase();
 				from_Y_Coordinate = from.charAt(0) - 97;
 				from_X_Coordinate = from.charAt(1) - 49;
-				
+
 				legalMoveInput = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, localWhite, IS_FROM);
 			} while ( !legalMoveInput );
 			do
@@ -75,26 +80,31 @@ public class ChessDriver
 				to = kyb.nextLine().toLowerCase();
 				to_Y_Coordinate = to.charAt(0) - 97;
 				to_X_Coordinate = to.charAt(1) - 49;
-				legalMoveInput = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, localWhite, IS_TO);		
+				legalMoveInput = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, localWhite, IS_TO);
 			} while ( !legalMoveInput );
-		//make sure its not the same space and canmovethere
-		}while(!canPieceMoveThereBasedOnAllItsRules);
+			// make sure its not the same space and canmovethere
+		} while ( !canPieceMoveThereBasedOnAllItsRules );
 		CB[to_X_Coordinate][to_Y_Coordinate] = CB[from_X_Coordinate][from_Y_Coordinate];
 		CB[from_X_Coordinate][from_Y_Coordinate] = null;
 	}
-	//call to piece method if valid move, add do while loop in last method
-	public static boolean canMoveThere( int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate, Piece[][] CB )
+
+	// call to piece method if valid move, add do while loop in last method
+	public static boolean canMoveThere( int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate,
+			int to_X_Coordinate, Piece[][] CB )
 	{
 		return true;
 	}
 
-	public static boolean isValidPieceThere( String inputPosition, int y_Coordinate, int x_Coordinate, Piece[][] CB, boolean localWhite, boolean from )
+	public static boolean isValidPieceThere( String inputPosition, int y_Coordinate, int x_Coordinate, Piece[][] CB,
+			boolean localWhite, boolean from )
 	{
-		
-		if (inputPosition.length() != 2 || y_Coordinate < 0 || y_Coordinate > 7 || x_Coordinate < 0 || x_Coordinate > 7)
+
+		if ( inputPosition.length() != 2 || y_Coordinate < 0 || y_Coordinate > 7 || x_Coordinate < 0
+				|| x_Coordinate > 7 )
 			return false;
-		else if (from && (CB[x_Coordinate][y_Coordinate] == null || CB[x_Coordinate][y_Coordinate].white != localWhite ))
-				return false;
+		else if ( from
+				&& ( CB[x_Coordinate][y_Coordinate] == null || CB[x_Coordinate][y_Coordinate].white != localWhite ) )
+			return false;
 		else
 			return true;
 	}
@@ -157,10 +167,10 @@ public class ChessDriver
 	public static String PieceSection( int i, int j, Piece[][] cb )
 	{
 		String fourteen;
-		if ( i % 6 == 0 || i % 6 == 5 )
-		{
+		if ( i % 6 == 0 )
 			fourteen = "              ";
-		}
+		else if (i % 6 == 5)
+			fourteen = "            " +  (char)(j+65) + (i/6+1);
 		else
 			fourteen = cb[i / 6][j].getIcon(i % 6 - 1);
 		return fourteen;
@@ -172,56 +182,74 @@ public class ChessDriver
 		AnsiConsole.systemInstall();
 		System.out.println();
 		System.out.print(" ");
-		for ( int i = 0; i < 116; i++ )
-		{
-			System.out.print(ansi().bgBright(WHITE).a(" ").reset());
-		}
+
+		System.out.print(ansi().bgBright(WHITE).fg(BLACK).a(
+				"        A             B             C             D             E             F             G             H         ")
+				.reset());
 		System.out.println(ansi().reset());
 		for ( int i = 0; i < 48; i++ )
 		{
 			System.out.print(" ");
-			System.out.print(ansi().bgBright(WHITE).a("  ").reset());
+			if ( i % 6 + 1 == 3 )
+				System.out.print(ansi().bgBright(WHITE).fg(BLACK).a((i/6+1) + " ").reset());
+			else
+				System.out.print(ansi().bgBright(WHITE).a("  ").reset());
 			for ( int j = 0; j < 8; j++ )
 			{
 				if ( j % 2 == 0 )
 					if ( i / 6 % 2 == 0 )
 						if ( CB[i / 6][j] == null )
-							System.out.print(ansi().bgBright(BLACK).fg(BLUE).a("              ").reset());
+							if (i%6==5)
+								System.out.print(ansi().bgBright(BLACK).fg(BLUE).a(PieceSection(i, j, CB)).reset());
+							else
+								System.out.print(ansi().bgBright(BLACK).fg(BLUE).a("              ").reset());
 						else if ( CB[i / 6][j].isWhite() )
 							System.out.print(ansi().bgBright(BLACK).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
 						else
 							System.out.print(ansi().bgBright(BLACK).fg(BLACK).a(PieceSection(i, j, CB)).reset());
 					else if ( CB[i / 6][j] == null )
-						System.out.print(ansi().bg(WHITE).fg(BLUE).a("              ").reset());
+						if (i%6==5)
+							System.out.print(ansi().bg(WHITE).fg(BLUE).a(PieceSection(i, j, CB)).reset());
+						else
+							System.out.print(ansi().bg(WHITE).fg(BLUE).a("              ").reset());
 					else if ( CB[i / 6][j].isWhite() )
 						System.out.print(ansi().bg(WHITE).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
 					else
 						System.out.print(ansi().bg(WHITE).fg(BLACK).a(PieceSection(i, j, CB)).reset());
 				else if ( i / 6 % 2 == 0 )
 					if ( CB[i / 6][j] == null )
-						System.out.print(ansi().bg(WHITE).fg(BLUE).a("              ").reset());
+						if (i%6==5)
+							System.out.print(ansi().bg(WHITE).fg(BLUE).a(PieceSection(i, j, CB)).reset());
+						else
+							System.out.print(ansi().bg(WHITE).fg(BLUE).a("              ").reset());
 					else if ( CB[i / 6][j].isWhite() )
 						System.out.print(ansi().bg(WHITE).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
 					else
 						System.out.print(ansi().bg(WHITE).fg(BLACK).a(PieceSection(i, j, CB)).reset());
 				else if ( CB[i / 6][j] == null )
-					System.out.print(ansi().bgBright(BLACK).fg(BLUE).a("              ").reset());
+					if (i%6==5)
+						System.out.print(ansi().bgBright(BLACK).fg(BLUE).a(PieceSection(i, j, CB)).reset());
+					else
+						System.out.print(ansi().bgBright(BLACK).fg(BLUE).a("              ").reset());
 				else if ( CB[i / 6][j].isWhite() )
 					System.out.print(ansi().bgBright(BLACK).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
 				else
 					System.out.print(ansi().bgBright(BLACK).fg(BLACK).a(PieceSection(i, j, CB)).reset());
 
 			}
-			System.out.print(ansi().bgBright(WHITE).a("  ").reset());
+			if ( i % 6 == 3 )
+				System.out.print(ansi().bgBright(WHITE).fg(BLACK).a(" " + (i/6+1)).reset());
+			else
+				System.out.print(ansi().bgBright(WHITE).a("  ").reset());
 			System.out.println();
 		}
 		System.out.print(" ");
-		for ( int i = 0; i < 116; i++ )
-			System.out.print(ansi().bgBright(WHITE).a(" ").reset());
+		System.out.print(ansi().bgBright(WHITE).fg(BLACK).a(
+				"         A             B             C             D             E             F             G             H        ")
+				.reset());
 		System.out.println();
 		AnsiConsole.systemUninstall();
 	}
-
 
 	public static void clear() throws InterruptedException, IOException
 	{
