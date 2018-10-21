@@ -1,11 +1,10 @@
 import java.io.IOException;
 import java.util.Scanner;
 import org.fusesource.jansi.AnsiConsole;
-import static org.fusesource.jansi.Ansi.*;
-import static org.fusesource.jansi.Ansi.Color.*;
 
 public class ChessDriver
 {
+
 	static Scanner kyb = new Scanner(System.in);
 	static final boolean IS_WHITE = true;// this is to make what color the pieces are more clear (rather than using true
 											// and false)
@@ -14,7 +13,7 @@ public class ChessDriver
 
 	public static void main( String[] args ) throws InterruptedException, IOException
 	{
-
+		AnsiConsole.systemInstall();
 		Piece CB[][] = new Piece[8][8];
 		setUpPieces(CB);
 		/*
@@ -24,6 +23,7 @@ public class ChessDriver
 		 */
 		playGame("p1", "p2", CB);// remember to take out the literal p1 and p2
 		kyb.close();
+		AnsiConsole.systemUninstall();
 	}
 
 	public static void playGame( String p1, String p2, Piece[][] CB ) throws InterruptedException, IOException
@@ -178,86 +178,37 @@ public class ChessDriver
 
 	public static void display( Piece[][] CB )
 	{
-
-		AnsiConsole.systemInstall();
-		System.out.println();
-		System.out.print(" ");
-
-		System.out.print(ansi().bgBright(WHITE).fg(BLACK).a(
-				"        A             B             C             D             E             F             G             H         ")
-				.reset());
-		System.out.println(ansi().reset());
+		String letters = "        A             B             C             D             E             F             G             H        ";
+		String reset = "\u001B[0m";
+		//String test = "\u001B[38;2;255;135;0m";
+		String bxWhite = "\u001B[107m";
+		String bgWhite = "\u001B[47m";
+		String bgBlack = "\u001B[100m";
+		String fgWhite = "\u001B[97m";
+		String fgBlack = "\u001B[30m";
+		String fgBlue = "\u001B[34m";
+		System.out.println(bxWhite + fgBlack + letters + " " + reset);
 		for ( int i = 0; i < 48; i++ )
 		{
-			System.out.print(" ");
-			if ( i % 6 + 1 == 3 )
-				System.out.print(ansi().bgBright(WHITE).fg(BLACK).a(( i / 6 + 1 ) + " ").reset());
-			else
-				System.out.print(ansi().bgBright(WHITE).a("  ").reset());
+			boolean numRow = i % 6 + 1 == 3;
+			System.out.print(bxWhite + fgBlack + (numRow? i/6+1 + " " : "  ") + reset);
 
 			for ( int j = 0; j < 8; j++ )
 			{
-
-				if ( i / 6 % 2 == 0 )
-					if ( j % 2 == 0 )
-						if ( CB[i / 6][j] == null )
-							System.out.print(ansi().bg(WHITE).fg(BLUE).a(PieceSection(i, j, CB)).reset());
-						else if ( CB[i / 6][j].isWhite() )
-							System.out.print(ansi().bg(WHITE).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
-						else
-							System.out.print(ansi().bg(WHITE).fg(BLACK).a(PieceSection(i, j, CB)).reset());
-					else
-						if ( CB[i / 6][j] == null )
-							System.out.print(ansi().bgBright(BLACK).fg(BLUE).a(PieceSection(i, j, CB)).reset());
-						else if ( CB[i / 6][j].isWhite() )
-							System.out.print(ansi().bgBright(BLACK).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
-						else
-							System.out.print(ansi().bgBright(BLACK).fg(BLACK).a(PieceSection(i, j, CB)).reset());
-				else
-					if ( j % 2 == 0 )
-						if ( CB[i / 6][j] == null )
-							System.out.print(ansi().bgBright(BLACK).fg(BLUE).a(PieceSection(i, j, CB)).reset());
-						else if ( CB[i / 6][j].isWhite() )
-							System.out.print(ansi().bgBright(BLACK).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
-						else
-							System.out.print(ansi().bgBright(BLACK).fg(BLACK).a(PieceSection(i, j, CB)).reset());
-					else
-						if ( CB[i / 6][j] == null )
-							System.out.print(ansi().bg(WHITE).fg(BLUE).a(PieceSection(i, j, CB)).reset());
-						else if ( CB[i / 6][j].isWhite() )
-							System.out.print(ansi().bg(WHITE).fgBright(WHITE).a(PieceSection(i, j, CB)).reset());
-						else
-							System.out.print(ansi().bg(WHITE).fg(BLACK).a(PieceSection(i, j, CB)).reset());
-
+				Boolean isWhite = CB[i / 6][j] != null ? CB[i / 6][j].isWhite() : null;
+				boolean ijTheSame = i / 6 % 2 == j % 2;
+				boolean isNull = CB[i / 6][j] == null;
+				System.out.print(( ijTheSame ? bgWhite : bgBlack ) + ( isNull ? fgBlue : isWhite ? fgWhite : fgBlack )
+						+ PieceSection(i, j, CB) + reset);
 			}
-			if ( i % 6 == 3 )
-				System.out.print(ansi().bgBright(WHITE).fg(BLACK).a(" " + ( i / 6 + 1 )).reset());
-			else
-				System.out.print(ansi().bgBright(WHITE).a("  ").reset());
+			System.out.print(bxWhite + fgBlack + (numRow? " " + (i/6+1) : "  ") + reset);
 			System.out.println();
 		}
-		System.out.print(" ");
-		System.out.print(ansi().bgBright(WHITE).fg(BLACK).a(
-				"         A             B             C             D             E             F             G             H        ")
-				.reset());
-		System.out.println();
-		AnsiConsole.systemUninstall();
+		System.out.println(bxWhite + fgBlack + " " + letters + reset);
 	}
 
 	public static void clear() throws InterruptedException, IOException
 	{
 		new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-	}
-
-	public static void debugBoard( Piece[][] CB )
-	{
-		for ( int i = 0; i < 8; i++ )
-		{
-			for ( int j = 0; j < 8; j++ )
-			{
-				System.out.print(CB[i][j] + " ");
-			}
-			System.out.println();
-		}
-	}
+	}  
 }
