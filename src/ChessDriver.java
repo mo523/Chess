@@ -8,8 +8,7 @@ public class ChessDriver
 	static Scanner kyb = new Scanner(System.in);
 	static final boolean IS_WHITE = true;// this is to make what color the pieces are more clear (rather than using true
 											// and false)
-	static final boolean IS_BLACK = false;// this is to make what color the pieces are more clear (rather than using
-											// true and false)
+	static final boolean IS_BLACK = false;// this is to make what color the pieces are more clear (rather than using// true and false)
 
 	public static void main( String[] args ) throws InterruptedException, IOException
 	{
@@ -92,7 +91,7 @@ public class ChessDriver
 	public static boolean canMoveThere( int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate,
 			int to_X_Coordinate, Piece[][] CB )
 	{
-		return true;
+		return CB[from_X_Coordinate][from_Y_Coordinate].isLegalMove(from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate, CB);
 	}
 
 	public static boolean isValidPieceThere( String inputPosition, int y_Coordinate, int x_Coordinate, Piece[][] CB,
@@ -108,21 +107,8 @@ public class ChessDriver
 		else
 			return true;
 	}
-	// public static String getMoveValuesAndTestThem( String moveValue )
-	// {
-	// boolean goodMove = true;
-	// do
-	// {
-	// if ( !goodMove )
-	// System.out.println("Illegal individual position, try again");
-	// moveValue = convertPositionToNumbers(kyb.next());
-	// goodMove = ( moveValue.charAt(0) >= 48 && moveValue.charAt(0) <= 55 &&
-	// moveValue.charAt(1) >= 48
-	// && moveValue.charAt(1) <= 55 );
-	// } while ( !goodMove );
-	// return moveValue;
-	// }
 
+	//needs work
 	public static boolean notInCheckMate( Piece king )
 	{
 		return true;
