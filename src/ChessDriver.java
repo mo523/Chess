@@ -9,9 +9,12 @@ public class ChessDriver
 	static final boolean IS_WHITE = true;// this is to make what color the pieces are more clear (rather than using true
 											// and false)
 	static final boolean IS_BLACK = false;// this is to make what color the pieces are more clear (rather than using// true and false)
-
+	static boolean debug;
 	public static void main( String[] args ) throws InterruptedException, IOException
 	{
+		System.out.println("(R)egular mode\n(D)ebug mode");
+		debug = kyb.nextLine() == "D"  ? false: true;
+		
 		AnsiConsole.systemInstall();
 		Piece CB[][] = new Piece[8][8];
 		setUpPieces(CB);
