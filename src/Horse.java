@@ -1,13 +1,13 @@
 
 public class Horse extends Piece {
 	private String icon[] = {
-			"   \u2584\u263A\u2588\u2584\u2584  ",
-			"  \u2588\u2588\u2588\u2580\u2580\u2588\u2588 ",
-			"  \u2580\u2588\u2588\u2588\u2584   ",
-			"  \u2584\u2588\u2588\u2588\u2588\u2584  "
-			};
-	private boolean white;
-	
+			"    \u2584\u2584    ",
+			"  \u2584\u2588\u2588\u2588\u2588\u2584  ",
+			" \u2588\u2588\u2588\u2588\u2588\u2584\u2588\u2588 ",
+			" \u2580\u2588\u2588\u2588\u2588\u2584   ",
+			" \u2584\u2584\u2588\u2588\u2588\u2588\u2588\u2584 ",
+			" \u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580"
+			};	
 	public Horse(boolean white) {
 		super( white);
 		this.name = "Horse";
@@ -15,7 +15,7 @@ public class Horse extends Piece {
 	}
 	public String getIcon(int row)
 	{
-		return "  " + icon[row] + "  ";
+		return "  " + icon[row] + (row == 5 ? " " :"  ");
 	}
 	public boolean isWhite()
 	{

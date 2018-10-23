@@ -162,11 +162,14 @@ public class ChessDriver
 	{
 		String fourteen;
 		if ( i % 6 == 5 )
-			fourteen = "            " + (char) ( j + 65 ) + ( i / 6 + 1 );
-		else if ( cb[i / 6][j] == null || i % 6 == 0 )
+			if (cb[i / 6][j] == null)
+				fourteen = "            " + (char) ( j + 65 ) + ( i / 6 + 1 );
+			else
+				fourteen = cb[i / 6][j].getIcon(i % 6) + (char) ( j + 65 ) + ( i / 6 + 1 );
+		else if ( cb[i / 6][j] == null)
 			fourteen = "              ";
 		else
-			fourteen = cb[i / 6][j].getIcon(i % 6 - 1);
+			fourteen = cb[i / 6][j].getIcon(i % 6 );
 		return fourteen;
 	}
 

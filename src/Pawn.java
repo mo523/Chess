@@ -2,10 +2,12 @@
 public class Pawn extends Piece
 {
 	private String icon[] = {
-			"    \u2584\u2584    ",
-			"   \u2580\u2588\u2588\u2580   ",
-			"  \u2584\u2588\u2588\u2588\u2588\u2584  ",
-			"  \u2580\u2580\u2580\u2580\u2580\u2580  "
+			"              ",
+			"      \u2584\u2584      ",
+			"     \u2580\u2588\u2588\u2580     ",
+			"    \u2584\u2588\u2588\u2588\u2588\u2584    ",
+			"    \u2580\u2580\u2580\u2580\u2580\u2580    ",
+			"            ",
 			};
 	public Pawn( boolean white )
 	{
@@ -13,11 +15,16 @@ public class Pawn extends Piece
 	}
 	public String getIcon(int row)
 	{
-		return "  " + icon[row] + "  ";
+		return icon[row];
 	}
 	public boolean isWhite()
 	{
 		return white;
+	}
+	@Override
+	public boolean canPieceMoveLikeThat(int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate) 
+	{
+		return true;
 	}
 
 }
