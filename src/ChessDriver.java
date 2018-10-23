@@ -4,7 +4,7 @@ import org.fusesource.jansi.AnsiConsole;
 
 public class ChessDriver
 {
-	//test for git explanation
+
 	static Scanner kyb = new Scanner(System.in);
 	static final boolean IS_WHITE = true;// this is to make what color the pieces are more clear (rather than using true
 											// and false)
@@ -13,7 +13,7 @@ public class ChessDriver
 	public static void main( String[] args ) throws InterruptedException, IOException
 	{
 		System.out.println("(R)egular mode\n(D)ebug mode");
-		debug = kyb.nextLine() == "D"  ? false: true;
+		debug = kyb.nextLine().toUpperCase().equals("D") ? true : false;
 		
 		AnsiConsole.systemInstall();
 		Piece CB[][] = new Piece[8][8];
@@ -62,7 +62,10 @@ public class ChessDriver
 			do
 			{
 				clear();
-				display(CB);
+				if (debug)
+					displayDebug(CB);
+				else
+					display(CB);
 				if ( !legalMoveInput )
 					System.out.println(name + ", You do not have a piece there\nPlease try again;");
 				System.out.println(name + ", Which piece would you like to move?");
@@ -74,8 +77,7 @@ public class ChessDriver
 			} while ( !legalMoveInput );
 			do
 			{
-				//clear();
-				//display(CB);
+				
 				if ( !legalMoveInput )
 					System.out.println("Illegal complete move, try again");
 				System.out.println(name + ", Where would you like to move your piece to?");
@@ -168,7 +170,7 @@ public class ChessDriver
 		return fourteen;
 	}
 
-	public static void display( Piece[][] CB ){
+	public static void displayDebug( Piece[][] CB ){
 		for(Piece[] x: CB){
 			for(Piece y: x){
 				if(y!=null)
@@ -179,7 +181,7 @@ public class ChessDriver
 			System.out.println();
 		}
 	}
-	/*public static void display( Piece[][] CB )
+	public static void display( Piece[][] CB )
 	{
 		String letters = "        A             B             C             D             E             F             G             H        ";
 		String reset = "\u001B[0m";
@@ -208,7 +210,7 @@ public class ChessDriver
 			System.out.println();
 		}
 		System.out.println(bxWhite + fgBlack + " " + letters + reset);
-	}*/
+	}
 
 	public static void clear() throws InterruptedException, IOException
 	{
