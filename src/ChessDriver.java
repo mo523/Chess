@@ -4,7 +4,7 @@ import org.fusesource.jansi.AnsiConsole;
 
 public class ChessDriver
 {
-
+	//test for git explanation
 	static Scanner kyb = new Scanner(System.in);
 	static final boolean IS_WHITE = true;// this is to make what color the pieces are more clear (rather than using true
 											// and false)
