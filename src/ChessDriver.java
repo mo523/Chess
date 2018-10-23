@@ -61,7 +61,7 @@ public class ChessDriver
 				System.out.println("Bad Move, try again");
 			do
 			{
-				clear();
+				//clear();
 				if (debug)
 					displayDebug(CB);
 				else
@@ -174,15 +174,20 @@ public class ChessDriver
 	}
 
 	public static void displayDebug( Piece[][] CB ){
-		for(Piece[] x: CB){
-			for(Piece y: x){
-				if(y!=null)
-				System.out.print(y.toString().charAt(0) + " ");
+		System.out.println("  A  B  C  D  E  D  G  H");
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				if (CB[i][j] == null)
+					System.out.print((j == 0 ? (i+1)  + " ": "" ) + "nn ");		
 				else
-					System.out.print("n ");
+					System.out.print((j == 0 ? (i+1) + " " : "" ) + (CB[i][j].white ? "w" : "b") + CB[i][j].toString().charAt(0) + " ");										
 			}
 			System.out.println();
 		}
+		System.out.println();
+		
 	}
 	public static void display( Piece[][] CB )
 	{
