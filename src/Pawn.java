@@ -9,9 +9,12 @@ public class Pawn extends Piece
 			"    \u2580\u2580\u2580\u2580\u2580\u2580    ",
 			"            ",
 			};
+	private int verticalMoveAmount;
+	private boolean firstMove;
 	public Pawn( boolean white )
 	{
-		super( white);
+		super(white);
+		verticalMoveAmount = white ? 1 : -1;
 	}
 	public String getIcon(int row)
 	{

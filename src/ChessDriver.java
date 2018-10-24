@@ -10,6 +10,7 @@ public class ChessDriver
 											// and false)
 	static final boolean IS_BLACK = false;// this is to make what color the pieces are more clear (rather than using// true and false)
 	static boolean debug;
+	
 	public static void main( String[] args ) throws InterruptedException, IOException
 	{
 		System.out.println("(R)egular mode\n(D)ebug mode");
@@ -81,7 +82,11 @@ public class ChessDriver
 				if ( !legalMoveInput )
 					System.out.println("Illegal complete move, try again");
 				System.out.println(name + ", Where would you like to move your piece to?");
-				to = kyb.nextLine().toLowerCase();
+				do {
+					to = kyb.nextLine().toLowerCase();
+					if(to.equalsIgnoreCase(from))
+						System.out.println("Can't move to same place. Try again.");
+				}while(to.equalsIgnoreCase(from));
 				to_Y_Coordinate = to.charAt(0) - 97;
 				to_X_Coordinate = to.charAt(1) - 49;
 				legalMoveInput = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, localWhite, IS_TO);
