@@ -29,14 +29,14 @@ public class Pawn extends Piece
 	{
 		int yDiff = to_Y_Coordinate - from_Y_Coordinate;
 		int xDiff = Math.abs(to_X_Coordinate - from_X_Coordinate);
-		boolean goodSoFar = true;
+		//boolean goodSoFar = true;
 		int tempY;
 		
 		if(xDiff > 1)
 			return false;
-		if(xDiff == 1 && CB[to_X_Coordinate][to_Y_Coordinate] == null)
+		if(xDiff == 1 && CB[to_Y_Coordinate][to_X_Coordinate] == null)
 			return false;
-		if((xDiff == 1 && CB[to_X_Coordinate][to_Y_Coordinate].isWhite() == this.isWhite()))
+		if((xDiff == 1 && CB[to_Y_Coordinate][to_X_Coordinate].isWhite() == this.isWhite()))
 			return false;
 		
 		if(firstMove)
