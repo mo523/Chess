@@ -19,8 +19,9 @@ public abstract class Piece {
 	
 	//all other methods go in this one
 	public boolean isLegalMove(int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate, Piece[][] CB ){
-		return canPieceMoveLikeThat(from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate);
-		//&& willNotKillSameColor(from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate, CB );
+		return canPieceMoveLikeThat(from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate, CB);
+		//&& 
+		//return willNotKillSameColor(from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate, CB );
 	}
 		
 	public abstract boolean canPieceMoveLikeThat(int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate, Piece[][] CB );
@@ -39,7 +40,7 @@ public abstract class Piece {
 	public boolean willNotKillSameColor(int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate, Piece[][] CB ) {
 		if(CB[to_X_Coordinate][to_Y_Coordinate] == null)
 			return true;
-		if(CB[from_X_Coordinate][from_Y_Coordinate].isWhite() == CB[to_X_Coordinate][to_Y_Coordinate].isWhite())
+		if(this.isWhite() == CB[to_X_Coordinate][to_Y_Coordinate].isWhite())
 			return false;
 		return true;
 	}

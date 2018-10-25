@@ -29,7 +29,12 @@ public class Pawn extends Piece
 	{
 		int xDiff = Math.abs(to_X_Coordinate - from_X_Coordinate);
 		int yDiff = Math.abs(to_Y_Coordinate - from_Y_Coordinate);
-		if(xDiff > 0)
+		if(xDiff > 1)
+			return false;
+		if(xDiff > 0 && CB[to_X_Coordinate][to_Y_Coordinate].isWhite() != this.isWhite())
+			
+			
+			
 		int tempVerticalMoveAmount = firstMove ? (2) : 1;
 		if(yDiff )
 		
