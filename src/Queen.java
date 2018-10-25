@@ -30,7 +30,7 @@ public class Queen extends Piece {
 		Bishop bishop = new Bishop(white);
 		
 		
-		return (rook.canPieceMoveLikeThat(from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate)||
-				bishop.canPieceMoveLikeThat(from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate));
+		return (rook.canPieceMoveLikeThat(from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate, CB)||
+				bishop.canPieceMoveLikeThat(from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate, CB));
 	}
 }

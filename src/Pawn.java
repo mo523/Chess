@@ -14,7 +14,7 @@ public class Pawn extends Piece
 	public Pawn( boolean white )
 	{
 		super(white);
-		verticalMoveAmount = white ? 1 : -1;
+		verticalMoveMax = white ? 1 : -1;
 	}
 	public String getIcon(int row)
 	{
@@ -34,7 +34,9 @@ public class Pawn extends Piece
 		
 		if(xDiff > 1)
 			return false;
-		
+		if(CB[to_X_Coordinate][to_Y_Coordinate] == null)
+			return false;
+			
 		if(xDiff == 1 && CB[to_X_Coordinate][to_Y_Coordinate].isWhite() != this.isWhite())
 			goodSoFar = true;	
 		else
@@ -45,8 +47,10 @@ public class Pawn extends Piece
 		else
 			tempY = verticalMoveMax;
 			
-		if(yDiff == tempY || yDiff == verticalMoveMax)
+		if(yDiff == tempY || yDiff == verticalMoveMax) {
+			firstMove = false;
 			return true;
+		}	
 		else 
 			return false;
 		

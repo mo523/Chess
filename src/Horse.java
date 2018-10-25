@@ -26,7 +26,7 @@ public class Horse extends Piece {
 	public boolean canPieceMoveLikeThat(int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate, Piece[][] CB )
 	{
 		Queen queen = new Queen(white);
-		if (!queen.canPieceMoveLikeThat(from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate)&&
+		if (!queen.canPieceMoveLikeThat(from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate, CB)&&
 				Math.abs(from_Y_Coordinate - to_Y_Coordinate) < 3 && Math.abs(from_X_Coordinate - to_X_Coordinate) < 3 )
 							return true;
 		else
