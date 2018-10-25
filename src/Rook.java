@@ -23,7 +23,7 @@ public class Rook extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate) {
+	public boolean canPieceMoveLikeThat(int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate, Piece[][] CB ) {
 		int xDiff = Math.abs(to_X_Coordinate - from_X_Coordinate);
 		int yDiff = Math.abs(to_Y_Coordinate - from_Y_Coordinate);
 		if(xDiff > 0 && yDiff > 0)

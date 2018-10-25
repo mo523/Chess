@@ -106,7 +106,7 @@ public class ChessDriver
 	{
 		return CB[from_X_Coordinate][from_Y_Coordinate].isLegalMove(from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate, CB);
 	}
-
+	
 	public static boolean isValidPieceThere( String inputPosition, int y_Coordinate, int x_Coordinate, Piece[][] CB,
 			boolean localWhite, boolean from )
 	{

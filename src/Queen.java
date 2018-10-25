@@ -24,7 +24,7 @@ public class Queen extends Piece {
 	}
 	
 	@Override
-	public boolean canPieceMoveLikeThat(int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate) 
+	public boolean canPieceMoveLikeThat(int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate, Piece[][] CB ) 
 	{
 		Rook rook = new Rook(white);
 		Bishop bishop = new Bishop(white);
