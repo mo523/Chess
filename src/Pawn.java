@@ -9,7 +9,7 @@ public class Pawn extends Piece
 			"    \u2580\u2580\u2580\u2580\u2580\u2580    ",
 			"            ",
 			};
-	private int verticalMoveAmount;
+	private int verticalMoveMax;
 	private boolean firstMove = true;
 	public Pawn( boolean white )
 	{
@@ -28,17 +28,28 @@ public class Pawn extends Piece
 	public boolean canPieceMoveLikeThat(int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate, Piece[][] CB ) 
 	{
 		int xDiff = Math.abs(to_X_Coordinate - from_X_Coordinate);
-		int yDiff = Math.abs(to_Y_Coordinate - from_Y_Coordinate);
+		int yDiff = (to_Y_Coordinate - from_Y_Coordinate);
+		boolean goodSoFar = true;
+		int tempY;
+		
 		if(xDiff > 1)
 			return false;
-		if(xDiff > 0 && CB[to_X_Coordinate][to_Y_Coordinate].isWhite() != this.isWhite())
-			
-			
-			
-		int tempVerticalMoveAmount = firstMove ? (2) : 1;
-		if(yDiff )
 		
-		return true;
+		if(xDiff == 1 && CB[to_X_Coordinate][to_Y_Coordinate].isWhite() != this.isWhite())
+			goodSoFar = true;	
+		else
+			return false;
+		
+		if(firstMove)
+			tempY = verticalMoveMax * 2;
+		else
+			tempY = verticalMoveMax;
+			
+		if(yDiff == tempY || yDiff == verticalMoveMax)
+			return true;
+		else 
+			return false;
+		
 	}
 
 }
