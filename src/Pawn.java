@@ -30,24 +30,23 @@ public class Pawn extends Piece
 		int yDiff = Math.abs(to_Y_Coordinate - from_Y_Coordinate);
 		int xDiff = (to_X_Coordinate - from_X_Coordinate);
 		boolean goodSoFar = true;
-		int tempX;
+		int tempY;
 		
-		if(yDiff > 1)
+		if(xDiff > 1)
 			return false;
-		if(CB[to_Y_Coordinate][to_X_Coordinate] == null)
+		if(xDiff == 1 && CB[to_X_Coordinate][to_Y_Coordinate] == null)
 			return false;
-			
-		if(yDiff == 1 && CB[to_Y_Coordinate][to_X_Coordinate].isWhite() != this.isWhite())
-			goodSoFar = true;	
-		else
-			return false;
+//		if(xDiff == 1 && CB[to_X_Coordinate][to_Y_Coordinate].isWhite() != this.isWhite())
+//			goodSoFar = true;	
+//		else
+//			return false;
 		
 		if(firstMove)
-			tempX = verticalMoveMax * 2;
+			tempY = verticalMoveMax * 2;
 		else
-			tempX = verticalMoveMax;
+			tempY = verticalMoveMax;
 			
-		if(xDiff == tempX || xDiff == verticalMoveMax) {
+		if(yDiff == tempY || yDiff == verticalMoveMax) {
 			firstMove = false;
 			return true;
 		}	
