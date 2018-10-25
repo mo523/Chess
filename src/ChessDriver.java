@@ -55,7 +55,7 @@ public class ChessDriver
 		boolean legalMoveInput = true;
 		final boolean IS_FROM = true;
 		final boolean IS_TO = false;
-		int from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate;
+		int from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate;
 		do
 		{
 			if ( !canPieceMoveThereBasedOnAllItsRules )
@@ -68,13 +68,13 @@ public class ChessDriver
 				else
 					display(CB);
 				if ( !legalMoveInput )
-					System.out.println(name + ", You do not have a piece there\nPlease try again;");
+					System.out.println(name + ", Xou do not have a piece there\nPlease try again;");
 				System.out.println(name + ", Which piece would you like to move?");
 				from = kyb.nextLine().toLowerCase();
-				from_Y_Coordinate = from.charAt(0) - 97;
-				from_X_Coordinate = from.charAt(1) - 49;
+				from_X_Coordinate = from.charAt(0) - 97;
+				from_Y_Coordinate = from.charAt(1) - 49;
 
-				legalMoveInput = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, localWhite, IS_FROM);
+				legalMoveInput = isValidPieceThere(from, from_X_Coordinate, from_Y_Coordinate, CB, localWhite, IS_FROM);
 			} while ( !legalMoveInput );
 			do
 			{
@@ -87,24 +87,24 @@ public class ChessDriver
 					if(to.equalsIgnoreCase(from))
 						System.out.println("Can't move to same place. Try again.");
 				}while(to.equalsIgnoreCase(from));
-				to_Y_Coordinate = to.charAt(0) - 97;
-				to_X_Coordinate = to.charAt(1) - 49;
-				legalMoveInput = isValidPieceThere(from, from_Y_Coordinate, from_X_Coordinate, CB, localWhite, IS_TO);
+				to_X_Coordinate = to.charAt(0) - 97;
+				to_Y_Coordinate = to.charAt(1) - 49;
+				legalMoveInput = isValidPieceThere(from, from_X_Coordinate, from_Y_Coordinate, CB, localWhite, IS_TO);
 			} while ( !legalMoveInput );
 			
 			// make sure its not the same space and canmovethere
-			canPieceMoveThereBasedOnAllItsRules = canMoveThere( from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate, CB );
+			canPieceMoveThereBasedOnAllItsRules = canMoveThere( from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB );
 			
 		} while ( !canPieceMoveThereBasedOnAllItsRules );
-		CB[to_X_Coordinate][to_Y_Coordinate] = CB[from_X_Coordinate][from_Y_Coordinate];
-		CB[from_X_Coordinate][from_Y_Coordinate] = null;
+		CB[to_Y_Coordinate][to_X_Coordinate] = CB[from_Y_Coordinate][from_X_Coordinate];
+		CB[from_Y_Coordinate][from_X_Coordinate] = null;
 	}
 
 	// call to piece method if valid move, add do while loop in last method
-	public static boolean canMoveThere( int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate,
-			int to_X_Coordinate, Piece[][] CB )
+	public static boolean canMoveThere( int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate,
+			int to_Y_Coordinate, Piece[][] CB )
 	{
-		return CB[from_X_Coordinate][from_Y_Coordinate].isLegalMove(from_Y_Coordinate, from_X_Coordinate, to_Y_Coordinate, to_X_Coordinate, CB);
+		return CB[from_Y_Coordinate][from_X_Coordinate].isLegalMove(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB);
 	}
 	
 	public static boolean isValidPieceThere( String inputPosition, int y_Coordinate, int x_Coordinate, Piece[][] CB,

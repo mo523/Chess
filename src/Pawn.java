@@ -25,29 +25,29 @@ public class Pawn extends Piece
 		return white;
 	}
 	@Override
-	public boolean canPieceMoveLikeThat(int from_Y_Coordinate, int from_X_Coordinate, int to_Y_Coordinate, int to_X_Coordinate, Piece[][] CB ) 
+	public boolean canPieceMoveLikeThat(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB ) 
 	{
-		int xDiff = Math.abs(to_X_Coordinate - from_X_Coordinate);
-		int yDiff = (to_Y_Coordinate - from_Y_Coordinate);
+		int yDiff = Math.abs(to_Y_Coordinate - from_Y_Coordinate);
+		int xDiff = (to_X_Coordinate - from_X_Coordinate);
 		boolean goodSoFar = true;
-		int tempY;
+		int tempX;
 		
-		if(xDiff > 1)
+		if(yDiff > 1)
 			return false;
-		if(CB[to_X_Coordinate][to_Y_Coordinate] == null)
+		if(CB[to_Y_Coordinate][to_X_Coordinate] == null)
 			return false;
 			
-		if(xDiff == 1 && CB[to_X_Coordinate][to_Y_Coordinate].isWhite() != this.isWhite())
+		if(yDiff == 1 && CB[to_Y_Coordinate][to_X_Coordinate].isWhite() != this.isWhite())
 			goodSoFar = true;	
 		else
 			return false;
 		
 		if(firstMove)
-			tempY = verticalMoveMax * 2;
+			tempX = verticalMoveMax * 2;
 		else
-			tempY = verticalMoveMax;
+			tempX = verticalMoveMax;
 			
-		if(yDiff == tempY || yDiff == verticalMoveMax) {
+		if(xDiff == tempX || xDiff == verticalMoveMax) {
 			firstMove = false;
 			return true;
 		}	
