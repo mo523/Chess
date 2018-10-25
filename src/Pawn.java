@@ -27,8 +27,8 @@ public class Pawn extends Piece
 	@Override
 	public boolean canPieceMoveLikeThat(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB ) 
 	{
-		int yDiff = Math.abs(to_Y_Coordinate - from_Y_Coordinate);
-		int xDiff = (to_X_Coordinate - from_X_Coordinate);
+		int yDiff = to_Y_Coordinate - from_Y_Coordinate;
+		int xDiff = Math.abs(to_X_Coordinate - from_X_Coordinate);
 		boolean goodSoFar = true;
 		int tempY;
 		
@@ -36,10 +36,8 @@ public class Pawn extends Piece
 			return false;
 		if(xDiff == 1 && CB[to_X_Coordinate][to_Y_Coordinate] == null)
 			return false;
-//		if(xDiff == 1 && CB[to_X_Coordinate][to_Y_Coordinate].isWhite() != this.isWhite())
-//			goodSoFar = true;	
-//		else
-//			return false;
+		if((xDiff == 1 && CB[to_X_Coordinate][to_Y_Coordinate].isWhite() == this.isWhite()))
+			return false;
 		
 		if(firstMove)
 			tempY = verticalMoveMax * 2;
