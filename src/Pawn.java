@@ -38,18 +38,16 @@ public class Pawn extends Piece
 			return false;
 		if((xDiff == 1 && CB[to_Y_Coordinate][to_X_Coordinate].isWhite() == this.isWhite()))
 			return false;
+		if(xDiff == 0 && CB[to_Y_Coordinate][to_X_Coordinate] != null)
+			return false;
 		
-		if(firstMove)
-			tempY = verticalMoveMax * 2;
-		else
-			tempY = verticalMoveMax;
-			
+		tempY = verticalMoveMax * (firstMove ? 2 : 1);
+
 		if(yDiff == tempY || yDiff == verticalMoveMax) {
 			firstMove = false;
 			return true;
 		}	
-		else 
-			return false;
+		return false;
 		
 	}
 
