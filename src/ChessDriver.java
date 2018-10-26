@@ -51,7 +51,7 @@ public class ChessDriver
 	{
 		// method needs to be cut in half
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
-		String from, to;
+		String from = "", to = "";
 		boolean legalMoveInput = true;
 		final boolean IS_FROM = true;
 		final boolean IS_TO = false;
@@ -68,9 +68,13 @@ public class ChessDriver
 				else
 					display(CB);
 				if ( !legalMoveInput )
-					System.out.println(name + ", Xou do not have a piece there\nPlease try again;");
+					System.out.println(name + ", You do not have a piece there\nPlease try again;");
 				System.out.println(name + ", Which piece would you like to move?");
-				from = kyb.nextLine().toLowerCase();
+				do{
+					from = kyb.nextLine().toLowerCase();
+					if(from.length() != 2)
+						System.out.println("Position must be 2 characters");
+				}while(from.length() != 2);
 				from_X_Coordinate = from.charAt(0) - 97;
 				from_Y_Coordinate = from.charAt(1) - 49;
 
@@ -83,7 +87,11 @@ public class ChessDriver
 					System.out.println("Illegal complete move, try again");
 				System.out.println(name + ", Where would you like to move your piece to?");
 				do {
-					to = kyb.nextLine().toLowerCase();
+					do{
+						to = kyb.nextLine().toLowerCase();
+						if(to.length() != 2)
+							System.out.println("Position must be 2 characters");
+					}while(from.length() != 2);
 					if(to.equalsIgnoreCase(from))
 						System.out.println("Can't move to same place. Try again.");
 				}while(to.equalsIgnoreCase(from));
@@ -92,7 +100,6 @@ public class ChessDriver
 				legalMoveInput = isValidPieceThere(from, from_X_Coordinate, from_Y_Coordinate, CB, localWhite, IS_TO);
 			} while ( !legalMoveInput );
 			
-			// make sure its not the same space and canmovethere
 			canPieceMoveThereBasedOnAllItsRules = canMoveThere( from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB );
 			
 		} while ( !canPieceMoveThereBasedOnAllItsRules );
