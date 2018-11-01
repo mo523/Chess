@@ -50,5 +50,11 @@ public class Pawn extends Piece
 		return false;
 		
 	}
+	@Override
+	public boolean pieceInTheWay(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
+			Piece[][] CB) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }
