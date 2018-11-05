@@ -41,7 +41,6 @@ public class King extends Piece {
 	public boolean noPieceInTheWay(int from_X_Coordinate,
 			int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
 			Piece[][] CB) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 	
