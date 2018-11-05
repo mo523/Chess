@@ -43,7 +43,16 @@ public class Queen extends Piece {
 	public boolean noPieceInTheWay(int from_X_Coordinate,
 			int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
 			Piece[][] CB) {
-		// TODO Auto-generated method stub
-		return true;
+		
+		Rook rook = new Rook(white);
+		Bishop bishop = new Bishop(white);
+		
+		int yDiff = Math.abs(to_Y_Coordinate - from_Y_Coordinate);
+		int xDiff = Math.abs(to_X_Coordinate - from_X_Coordinate);
+		if(yDiff == xDiff)
+			return bishop.noPieceInTheWay(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB);
+		else
+			return rook.noPieceInTheWay(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB);
+		
 	}
 }
