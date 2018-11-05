@@ -37,8 +37,8 @@ public class Bishop extends Piece {
 		
 		do
 		{
-			if(CB[from_Y_Coordinate-to_Y_Coordinate+YMoveDistance][from_X_Coordinate-to_X_Coordinate+XMoveDistance] != null)
-				return true;
+			if(CB[from_Y_Coordinate-YMoveDistance][from_X_Coordinate-XMoveDistance] != null)
+				return false;
 			
 			else 
 			{
@@ -59,7 +59,7 @@ public class Bishop extends Piece {
 		}
 		while (XMoveDistance!=0);
 		
-		return false;
+		return true;
 		
 		
 		
