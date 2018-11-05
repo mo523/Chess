@@ -29,7 +29,7 @@ public class Bishop extends Piece {
 			return true;
 		return false;
 	}
-	@Override
+	//@Override
 	public boolean pieceInTheWay(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
 			Piece[][] CB) {
 		int  XMoveDistance =(from_X_Coordinate-to_X_Coordinate);
@@ -63,5 +63,12 @@ public class Bishop extends Piece {
 		
 		
 		
+	}
+	@Override
+	public boolean noPieceInTheWay(int from_X_Coordinate,
+			int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
+			Piece[][] CB) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 }

@@ -30,11 +30,50 @@ public class Rook extends Piece {
 			return false;
 		return true;
 	}
+	
 	@Override
-	public boolean pieceInTheWay(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
-			Piece[][] CB) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean noPieceInTheWay(int from_X_Coordinate,int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB) {
+		int yDiff = to_Y_Coordinate - from_Y_Coordinate;
+		int xDiff = to_X_Coordinate - from_X_Coordinate;
+		if(xDiff == 0){
+			if (yDiff > 0){
+				for (int i = from_Y_Coordinate + 1; yDiff != 0; i++) {
+					yDiff--;
+					if (CB[i][from_X_Coordinate] != null)
+						return false;
+				}
+			}
+			else{
+				for (int i = from_Y_Coordinate - 1; yDiff != 0; i--) {
+					yDiff++;
+					if (CB[i][from_X_Coordinate] != null)
+						return false;
+				}
+			}
+		}
+		else{
+			if (xDiff > 0){
+				for (int i = from_X_Coordinate + 1; xDiff != 0; i++) {
+					xDiff--;
+					if (CB[from_Y_Coordinate][i] != null)
+						return false;
+				}
+			}
+			else{
+				for (int i = from_X_Coordinate - 1; xDiff != 0; i--) {
+					xDiff++;
+					if (CB[from_Y_Coordinate][i] != null)
+						return false;
+				}
+			}
+		}
+		return true;
 	}
+	/*
+	public boolean inOneDirection(int diff, int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB){
+		for (int i = 0; i <= diff; i++) {
+			
+		}
+	}*/
  
 }
