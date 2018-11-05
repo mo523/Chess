@@ -29,7 +29,6 @@ public class Pawn extends Piece
 	{
 		int yDiff = to_Y_Coordinate - from_Y_Coordinate;
 		int xDiff = Math.abs(to_X_Coordinate - from_X_Coordinate);
-		//boolean goodSoFar = true;
 		int tempY;
 		
 		if(xDiff > 1)
@@ -53,7 +52,7 @@ public class Pawn extends Piece
 	@Override
 	public boolean pieceInTheWay(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
 			Piece[][] CB) {
-		// TODO Auto-generated method stub
+		//this is taken care of by canPieceMoveLikeThat
 		return false;
 	}
 
