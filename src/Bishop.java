@@ -29,4 +29,46 @@ public class Bishop extends Piece {
 			return true;
 		return false;
 	}
+	//@Override
+	public boolean pieceInTheWay(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
+			Piece[][] CB) {
+		int  XMoveDistance =(from_X_Coordinate-to_X_Coordinate);
+		int  YMoveDistance =(from_Y_Coordinate-to_Y_Coordinate);
+		
+		do
+		{
+			if(CB[from_Y_Coordinate-YMoveDistance][from_X_Coordinate-XMoveDistance] != null)
+				return false;
+			
+			else 
+			{
+				if (XMoveDistance>0)
+					XMoveDistance--;
+				
+				if (XMoveDistance<0)
+					XMoveDistance++;
+				
+				if (YMoveDistance>0)
+					YMoveDistance--;
+				
+				if (YMoveDistance<0)
+					YMoveDistance++;
+					
+					
+			}
+		}
+		while (XMoveDistance!=0);
+		
+		return true;
+		
+		
+		
+	}
+	@Override
+	public boolean noPieceInTheWay(int from_X_Coordinate,
+			int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
+			Piece[][] CB) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

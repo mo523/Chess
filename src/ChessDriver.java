@@ -218,7 +218,7 @@ public class ChessDriver
 	}
 
 	public static void displayDebug( Piece[][] CB ){
-		System.out.println("  A  B  C  D  E  D  G  H");
+		System.out.println("  A  B  C  D  E  F  G  H");
 		for (int i = 0; i < 8; i++)
 		{
 			for (int j = 0; j < 8; j++)
