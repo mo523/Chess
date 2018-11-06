@@ -37,14 +37,14 @@ public class Rook extends Piece {
 		int xDiff = to_X_Coordinate - from_X_Coordinate;
 		if(xDiff == 0){
 			if (yDiff > 0){
-				for (int i = from_Y_Coordinate + 1; yDiff != 0; i++) {
+				for (int i = from_Y_Coordinate + 1; yDiff != 1; i++) {
 					yDiff--;
 					if (CB[i][from_X_Coordinate] != null)
 						return false;
 				}
 			}
 			else{
-				for (int i = from_Y_Coordinate - 1; yDiff != 0; i--) {
+				for (int i = from_Y_Coordinate - 1; yDiff != -1; i--) {
 					yDiff++;
 					if (CB[i][from_X_Coordinate] != null)
 						return false;
@@ -53,14 +53,14 @@ public class Rook extends Piece {
 		}
 		else{
 			if (xDiff > 0){
-				for (int i = from_X_Coordinate + 1; xDiff != 0; i++) {
+				for (int i = from_X_Coordinate + 1; xDiff != 1; i++) {
 					xDiff--;
 					if (CB[from_Y_Coordinate][i] != null)
 						return false;
 				}
 			}
 			else{
-				for (int i = from_X_Coordinate - 1; xDiff != 0; i--) {
+				for (int i = from_X_Coordinate - 1; xDiff != -1; i--) {
 					xDiff++;
 					if (CB[from_Y_Coordinate][i] != null)
 						return false;

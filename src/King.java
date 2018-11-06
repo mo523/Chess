@@ -30,18 +30,15 @@ public class King extends Piece {
 		return true;
 	}
 
-	//@Override
-	public boolean pieceInTheWay(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
-			Piece[][] CB) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	@Override
 	public boolean noPieceInTheWay(int from_X_Coordinate,
 			int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
 			Piece[][] CB) {
-		return true;
+		if(CB[to_Y_Coordinate][to_X_Coordinate] == null)
+			return true;
+		else if(CB[to_Y_Coordinate][to_X_Coordinate].isWhite() != this.isWhite())
+			return true;
+		return false;
 	}
 	
 
