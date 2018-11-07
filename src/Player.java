@@ -11,7 +11,7 @@ static Scanner kyb = new Scanner(System.in);
 		
 		public static void main( String[] args ){
 			Piece k = new Bishop(true);
-			System.out.println(k.getIcon(line));
+			System.out.println();
 		}
 
 	/*private boolean white;

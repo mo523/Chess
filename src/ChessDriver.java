@@ -159,9 +159,9 @@ public class ChessDriver
 	public static void setUpPieces( Piece[][] CB )
 	{
 		// for tests only
-			CB[2][4] = new King(IS_WHITE);
-			CB[5][1] = new Bishop(IS_BLACK);
-			CB[3][3] = new Pawn(IS_WHITE);
+		//	CB[2][4] = new King(IS_WHITE);
+		//	CB[5][1] = new Bishop(IS_BLACK);
+		//	CB[3][3] = new Pawn(IS_WHITE);
 		// for tests only
 		
 		
@@ -185,7 +185,7 @@ public class ChessDriver
 		CB[0][1] = new Horse(IS_WHITE);
 		CB[0][2] = new Bishop(IS_WHITE);
 		CB[0][3] = new Queen(IS_WHITE);
-		//CB[0][4] = new King(IS_WHITE);
+		CB[0][4] = new King(IS_WHITE);
 		CB[0][5] = new Bishop(IS_WHITE);
 		CB[0][6] = new Horse(IS_WHITE);
 		CB[0][7] = new Rook(IS_WHITE);

@@ -67,6 +67,7 @@ public abstract class Piece {
 		return true;// can't kill
 
 	}
+	
 	private Piece[][] makeNewBoard(Piece[][] CB){
 		Piece[][] newCB = new Piece[8][8];
 		for (int i = 0; i < CB.length; i++) {
