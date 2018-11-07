@@ -136,6 +136,11 @@ public class ChessDriver
 
 	public static void setUpPieces( Piece[][] CB )
 	{
+		// for tests only
+		//	CB[3][5] = new Bishop(IS_WHITE);
+		// for tests only
+		
+		
 		CB[1][0] = new Pawn(IS_WHITE);
 		CB[1][1] = new Pawn(IS_WHITE);
 		CB[1][2] = new Pawn(IS_WHITE);

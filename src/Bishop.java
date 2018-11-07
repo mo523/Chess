@@ -36,12 +36,13 @@ public class Bishop extends Piece {
 			Piece[][] CB) {
 		int  XMoveDistance =(from_X_Coordinate-to_X_Coordinate);
 		int  YMoveDistance =(from_Y_Coordinate-to_Y_Coordinate);
-		
+		boolean done = false;
 		do
 		{
-			if(CB[from_Y_Coordinate-YMoveDistance][from_X_Coordinate-XMoveDistance] != null)
-				return false;
 			
+			if(CB[from_Y_Coordinate-YMoveDistance][from_X_Coordinate-XMoveDistance] != null && 
+					!(from_Y_Coordinate-YMoveDistance == to_Y_Coordinate && from_X_Coordinate- XMoveDistance == to_X_Coordinate))
+					return false;
 			else 
 			{
 				if (XMoveDistance>0)
@@ -58,8 +59,10 @@ public class Bishop extends Piece {
 					
 					
 			}
+			if(XMoveDistance == 1 || XMoveDistance == -1)
+				done = true;
 		}
-		while (XMoveDistance!=0);
+		while (!done);
 		
 		return true;
 	}
