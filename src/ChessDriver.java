@@ -71,7 +71,7 @@ public class ChessDriver
 				if ( !legalMoveInput )
 					System.out.println(name + ", You do not have a piece there\nPlease try again;");
 				System.out.println(name + ", Which piece would you like to move?");
-				from = makeSureStringIs2Chars();
+				from = getCorrect2CharPosition();
 				from_X_Coordinate = from.charAt(0) - 97;
 				from_Y_Coordinate = from.charAt(1) - 49;
 
@@ -84,7 +84,7 @@ public class ChessDriver
 					System.out.println("Illegal complete move, try again");
 				System.out.println(name + ", Where would you like to move your piece to?");
 				do {
-					to = makeSureStringIs2Chars();
+					to = getCorrect2CharPosition();
 					if(to.equalsIgnoreCase(from))
 						System.out.println("Can't move to same place. Try again.");
 				}while(to.equalsIgnoreCase(from));
@@ -96,10 +96,21 @@ public class ChessDriver
 			canPieceMoveThereBasedOnAllItsRules = canMoveThere( from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB );
 			
 		} while ( !canPieceMoveThereBasedOnAllItsRules );
+		performMove(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB);
+	}
+
+	public static void performMove( int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate,
+			int to_Y_Coordinate, Piece[][] CB ){
 		CB[to_Y_Coordinate][to_X_Coordinate] = CB[from_Y_Coordinate][from_X_Coordinate];
 		CB[from_Y_Coordinate][from_X_Coordinate] = null;
 	}
-
+	
+	public static String getCorrect2CharPosition(){
+		String position = makeSureStringIs2Chars();
+		correctChars(position);
+		return position;
+	}
+	
 	public static String makeSureStringIs2Chars(){
 		String position = "";
 		do{
@@ -107,10 +118,15 @@ public class ChessDriver
 			if(position.length() != 2)
 				System.out.println("Position must be 2 characters");
 		}while(position.length() != 2);
+		
 		return position;
 	}
-	public static boolean correctChars(String position){
-		
+	public static String correctChars(String position){
+		while(position.charAt(0) < 97 || position.charAt(0) > 104 || position.charAt(1) < 49 || position.charAt(1) > 56 ){
+			System.out.println("Invalid position entry. It must be a [a-h] then [1-8]. Try Again");
+			position = kyb.next().toLowerCase();
+		}
+		return position;
 	}
 	// call to piece method if valid move, add do while loop in last method
 	public static boolean canMoveThere( int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate,
@@ -143,8 +159,9 @@ public class ChessDriver
 	public static void setUpPieces( Piece[][] CB )
 	{
 		// for tests only
-		//	CB[3][3] = new King(IS_WHITE);
-		//	CB[4][2] = new Bishop(IS_BLACK);
+			CB[2][4] = new King(IS_WHITE);
+			CB[5][1] = new Bishop(IS_BLACK);
+			CB[3][3] = new Pawn(IS_WHITE);
 		// for tests only
 		
 		
@@ -168,7 +185,7 @@ public class ChessDriver
 		CB[0][1] = new Horse(IS_WHITE);
 		CB[0][2] = new Bishop(IS_WHITE);
 		CB[0][3] = new Queen(IS_WHITE);
-		CB[0][4] = new King(IS_WHITE);
+		//CB[0][4] = new King(IS_WHITE);
 		CB[0][5] = new Bishop(IS_WHITE);
 		CB[0][6] = new Horse(IS_WHITE);
 		CB[0][7] = new Rook(IS_WHITE);

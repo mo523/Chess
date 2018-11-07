@@ -14,6 +14,8 @@ public class Pawn extends Piece
 	public Pawn( boolean white )
 	{
 		super(white);
+		this.name = "Pawn";
+		this.displayCharacter = 'p';
 		verticalMoveMax = white ? 1 : -1;
 	}
 	public String getIcon(int row)
