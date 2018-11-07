@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.Scanner;
+
 import org.fusesource.jansi.AnsiConsole;
 
 public class ChessDriver
@@ -71,7 +72,7 @@ public class ChessDriver
 					System.out.println(name + ", You do not have a piece there\nPlease try again;");
 				System.out.println(name + ", Which piece would you like to move?");
 				do{
-					from = kyb.nextLine().toLowerCase();
+					from = kyb.next().toLowerCase();
 					if(from.length() != 2)
 						System.out.println("Position must be 2 characters");
 				}while(from.length() != 2);
@@ -88,10 +89,10 @@ public class ChessDriver
 				System.out.println(name + ", Where would you like to move your piece to?");
 				do {
 					do{
-						to = kyb.nextLine().toLowerCase();
+						to = kyb.next().toLowerCase();
 						if(to.length() != 2)
 							System.out.println("Position must be 2 characters");
-					}while(from.length() != 2);
+					}while(to.length() != 2);
 					if(to.equalsIgnoreCase(from))
 						System.out.println("Can't move to same place. Try again.");
 				}while(to.equalsIgnoreCase(from));
@@ -113,6 +114,7 @@ public class ChessDriver
 	{
 		return CB[from_Y_Coordinate][from_X_Coordinate].isLegalMove(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB);
 	}
+	
 	
 	public static boolean isValidPieceThere( String inputPosition, int y_Coordinate, int x_Coordinate, Piece[][] CB,
 			boolean localWhite, boolean from )
@@ -137,8 +139,8 @@ public class ChessDriver
 	public static void setUpPieces( Piece[][] CB )
 	{
 		// for tests only
-			CB[3][3] = new King(IS_WHITE);
-			CB[4][2] = new Bishop(IS_BLACK);
+		//	CB[3][3] = new King(IS_WHITE);
+		//	CB[4][2] = new Bishop(IS_BLACK);
 		// for tests only
 		
 		
@@ -162,7 +164,7 @@ public class ChessDriver
 		CB[0][1] = new Horse(IS_WHITE);
 		CB[0][2] = new Bishop(IS_WHITE);
 		CB[0][3] = new Queen(IS_WHITE);
-		//CB[0][4] = new King(IS_WHITE);
+		CB[0][4] = new King(IS_WHITE);
 		CB[0][5] = new Bishop(IS_WHITE);
 		CB[0][6] = new Horse(IS_WHITE);
 		CB[0][7] = new Rook(IS_WHITE);
@@ -244,3 +246,37 @@ public class ChessDriver
 		new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 	}  
 }
+
+
+
+/*public static boolean doesntLeaveKingInCheck(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB){
+int xCoordinate = 0;
+int yCoordinate = 0;
+boolean done = false;
+for (int i = 0; i < 8; i++){
+	for (int j = 0; j < 8; j++){
+		if(CB[i][j] instanceof King && CB[i][j].isWhite() == CB[from_Y_Coordinate][from_X_Coordinate].isWhite()){
+			yCoordinate = i;
+			xCoordinate = j;
+			done = true;
+			break;
+		}
+	}
+	if(done)
+		break;
+}
+
+for (int i = 0; i < 8; i++)
+	for (int j = 0; j < 8; j++)
+		if(moveCheckForCheck(j, i, xCoordinate, yCoordinate, CB))
+			return false;
+return true;
+
+}
+private static boolean moveCheckForCheck(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB){
+if(CB[from_Y_Coordinate][from_X_Coordinate] != null)
+	return CB[from_Y_Coordinate][from_X_Coordinate].canPieceMoveLikeThat(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB)
+		&& CB[from_Y_Coordinate][from_X_Coordinate].willNotKillSameColor(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB)
+		&& CB[from_Y_Coordinate][from_X_Coordinate].noPieceInTheWay(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB);
+return false;
+}*/

@@ -41,8 +41,10 @@ public class Bishop extends Piece {
 		{
 			
 			if(CB[from_Y_Coordinate-YMoveDistance][from_X_Coordinate-XMoveDistance] != null && 
-					!(from_Y_Coordinate-YMoveDistance == to_Y_Coordinate && from_X_Coordinate- XMoveDistance == to_X_Coordinate))
-					return false;
+					!(from_Y_Coordinate-YMoveDistance == to_Y_Coordinate && from_X_Coordinate- XMoveDistance == to_X_Coordinate)){
+				System.out.println("WARNING piece in the way");
+				return false;
+			}
 			else 
 			{
 				if (XMoveDistance>0)
@@ -59,7 +61,7 @@ public class Bishop extends Piece {
 					
 					
 			}
-			if(XMoveDistance == 1 || XMoveDistance == -1)
+			if(XMoveDistance == 1 || XMoveDistance == -1 || XMoveDistance == 0)
 				done = true;
 		}
 		while (!done);
