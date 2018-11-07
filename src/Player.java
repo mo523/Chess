@@ -1,6 +1,10 @@
 
 public class Player {
 
+	public static void main(String[] args) {
+		Piece k = new King(true);
+		System.out.println(k instanceof Queen);
+	}
 	/*private boolean white;
 	private String name;
 	public Player(boolean white, String name) {

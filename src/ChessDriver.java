@@ -137,7 +137,8 @@ public class ChessDriver
 	public static void setUpPieces( Piece[][] CB )
 	{
 		// for tests only
-		//	CB[3][5] = new Bishop(IS_WHITE);
+			CB[3][3] = new King(IS_WHITE);
+			CB[4][2] = new Bishop(IS_BLACK);
 		// for tests only
 		
 		
@@ -161,7 +162,7 @@ public class ChessDriver
 		CB[0][1] = new Horse(IS_WHITE);
 		CB[0][2] = new Bishop(IS_WHITE);
 		CB[0][3] = new Queen(IS_WHITE);
-		CB[0][4] = new King(IS_WHITE);
+		//CB[0][4] = new King(IS_WHITE);
 		CB[0][5] = new Bishop(IS_WHITE);
 		CB[0][6] = new Horse(IS_WHITE);
 		CB[0][7] = new Rook(IS_WHITE);
@@ -173,38 +174,7 @@ public class ChessDriver
 		CB[7][5] = new Bishop(IS_BLACK);
 		CB[7][6] = new Horse(IS_BLACK);
 		CB[7][7] = new Rook(IS_BLACK);
-		/*		CB[0][1] = new Pawn(IS_WHITE);
-		CB[1][1] = new Pawn(IS_WHITE);
-		CB[2][1] = new Pawn(IS_WHITE);
-		CB[3][1] = new Pawn(IS_WHITE);
-		CB[4][1] = new Pawn(IS_WHITE);
-		CB[5][1] = new Pawn(IS_WHITE);
-		CB[6][1] = new Pawn(IS_WHITE);
-		CB[7][1] = new Pawn(IS_WHITE);
-		CB[0][6] = new Pawn(IS_BLACK);
-		CB[1][6] = new Pawn(IS_BLACK);
-		CB[2][6] = new Pawn(IS_BLACK);
-		CB[3][6] = new Pawn(IS_BLACK);
-		CB[4][6] = new Pawn(IS_BLACK);
-		CB[5][6] = new Pawn(IS_BLACK);
-		CB[6][6] = new Pawn(IS_BLACK);
-		CB[7][6] = new Pawn(IS_BLACK);
-		CB[0][0] = new Rook(IS_WHITE);
-		CB[1][0] = new Horse(IS_WHITE);
-		CB[2][0] = new Bishop(IS_WHITE);
-		CB[3][0] = new Queen(IS_WHITE);
-		CB[4][0] = new King(IS_WHITE);
-		CB[5][0] = new Bishop(IS_WHITE);
-		CB[6][0] = new Horse(IS_WHITE);
-		CB[7][0] = new Rook(IS_WHITE);
-		CB[0][7] = new Rook(IS_BLACK);
-		CB[1][7] = new Horse(IS_BLACK);
-		CB[2][7] = new Bishop(IS_BLACK);
-		CB[3][7] = new Queen(IS_BLACK);
-		CB[4][7] = new King(IS_BLACK);
-		CB[5][7] = new Bishop(IS_BLACK);
-		CB[6][7] = new Horse(IS_BLACK);
-		CB[7][7] = new Rook(IS_BLACK);*/
+
 	}
 
 	public static String PieceSection( int i, int j, Piece[][] cb )
