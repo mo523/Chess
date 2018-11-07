@@ -71,11 +71,7 @@ public class ChessDriver
 				if ( !legalMoveInput )
 					System.out.println(name + ", You do not have a piece there\nPlease try again;");
 				System.out.println(name + ", Which piece would you like to move?");
-				do{
-					from = kyb.next().toLowerCase();
-					if(from.length() != 2)
-						System.out.println("Position must be 2 characters");
-				}while(from.length() != 2);
+				from = makeSureStringIs2Chars();
 				from_X_Coordinate = from.charAt(0) - 97;
 				from_Y_Coordinate = from.charAt(1) - 49;
 
@@ -88,11 +84,7 @@ public class ChessDriver
 					System.out.println("Illegal complete move, try again");
 				System.out.println(name + ", Where would you like to move your piece to?");
 				do {
-					do{
-						to = kyb.next().toLowerCase();
-						if(to.length() != 2)
-							System.out.println("Position must be 2 characters");
-					}while(to.length() != 2);
+					to = makeSureStringIs2Chars();
 					if(to.equalsIgnoreCase(from))
 						System.out.println("Can't move to same place. Try again.");
 				}while(to.equalsIgnoreCase(from));
@@ -108,6 +100,18 @@ public class ChessDriver
 		CB[from_Y_Coordinate][from_X_Coordinate] = null;
 	}
 
+	public static String makeSureStringIs2Chars(){
+		String position = "";
+		do{
+			position = kyb.next().toLowerCase();
+			if(position.length() != 2)
+				System.out.println("Position must be 2 characters");
+		}while(position.length() != 2);
+		return position;
+	}
+	public static boolean correctChars(String position){
+		
+	}
 	// call to piece method if valid move, add do while loop in last method
 	public static boolean canMoveThere( int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate,
 			int to_Y_Coordinate, Piece[][] CB )
