@@ -107,7 +107,7 @@ public class ChessDriver
 	
 	public static String getCorrect2CharPosition(){
 		String position = makeSureStringIs2Chars();
-		correctChars(position);
+		position = correctChars(position);
 		return position;
 	}
 	

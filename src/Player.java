@@ -10,8 +10,8 @@ static Scanner kyb = new Scanner(System.in);
 		
 		
 		public static void main( String[] args ){
-			Piece k = new King(true);
-			System.out.println(k.getClass());
+			Piece k = new Bishop(true);
+			System.out.println(k.getIcon(line));
 		}
 
 	/*private boolean white;
