@@ -150,6 +150,9 @@ public class ChessDriver
 			return true;
 	}
 
+	public static boolean inCheck(){
+		return false;
+	}
 	//needs work
 	public static boolean notInCheckMate( Piece king )
 	{
