@@ -1,12 +1,8 @@
-import java.util.Arrays;
-
 public abstract class Piece {
 
-	String position; // this is the position in the array of the game board (e.g. 06 or 77)
-	String name; // name of the piece
-	boolean white; // boolean to test if the piece is white or black
-	char displayCharacter; // this is the character that will be displayed on the screen in the board
-	String icon[];
+	protected String name; // name of the piece
+	protected boolean white; // boolean to test if the piece is white or black
+	protected String icon[];
 	
 	/**
 	 * 
@@ -15,59 +11,72 @@ public abstract class Piece {
 	 */
 	public Piece(boolean white) {
 		this.white = white;
-		
 	}
 	
+	public boolean isWhite() {
+		return white;
+	}
+	public String getIcon(int line)
+	{
+		return icon[line];
+	}
 	
 	//all other methods go in this one
-	public boolean isLegalMove(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB ){
-		/*if(!canPieceMoveLikeThat(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB))
-			System.out.println("WARNING piece cant move like that");
+	public boolean isLegalMove(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB, Piece King){
+		if(!canPieceMoveLikeThat(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB))
+		{
+			System.out.println("WARNING! Piece cannot move like that");
+			return false;
+		}
 		if(!willNotKillSameColor(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB ))
-			System.out.println("WARNING piece will kill same color");
+		{
+			System.out.println("WARNING! Piece will kill same color");
+			return false;
+		}
 		if(!noPieceInTheWay(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB))
-			System.out.println("WARNING piece in the way");*/
-		return canPieceMoveLikeThat(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB)
-				&& willNotKillSameColor(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB )
-				&& noPieceInTheWay(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB)
-				&& doesntLeaveKingInCheck(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB)
-				;
+		{
+			System.out.println("WARNING! Piece in the way");
+			return false;
+		}
+		if (!doesntLeaveKingInCheck(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB, King))
+			{
+			System.out.println("Warning! Leaves king in check");
+			return false;
+			}		
+		return true;
 	}
 	
-
-	public boolean doesntLeaveKingInCheck(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB){
+	public boolean inCheck(Piece King, Piece[][] CB )
+	{
+		int y = 0, x = 0;
+		
+		outer: for ( y = 0; y < 8; y++)
+			for (x = 0; x < 8; x++)
+				if (CB[y][x] instanceof King && CB[y][x].isWhite() == this.isWhite())
+					break outer;
+		for (int i = 0; i < 8; i++)
+			for (int j = 0; j < 8; j++)
+				if(moveCheckForCheck(j, i, x, y, CB))
+					return true;//can kill
+		return false;
+	}
+	
+	public boolean doesntLeaveKingInCheck(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB, Piece King){
 		//makes a temporary board and moves the piece in it
 		Piece[][] newCB = makeNewBoard(CB);
 		ChessDriver.performMove(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, newCB);
-		
-		//gets kings position
-		int xCoordinate = 0;
-		int yCoordinate = 0;
-		boolean done = false;
-		for (int i = 0; i < 8; i++){
-			for (int j = 0; j < 8; j++){
-				if(newCB[i][j] instanceof King && newCB[i][j].isWhite() == this.isWhite()){
-					yCoordinate = i;
-					xCoordinate = j;
-					done = true;
-					break;
-				}
-			}
-			if(done)
-				break;
-		}
-		
-		//checks if any piece can kill the king
-		for (int i = 0; i < 8; i++)
-			for (int j = 0; j < 8; j++)
-				if(moveCheckForCheck(j, i, xCoordinate, yCoordinate, newCB)){
-					System.out.println("WARNING leaves king in check");
-					return false;//can kill
-				}	
-		return true;// can't kill
-
+		return !inCheck(King, newCB);
 	}
-	
+	public boolean notInCheckmate(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB, Piece King){
+		//makes a temporary board and moves the piece in it
+		Piece[][] newCB = makeNewBoard(CB);
+		if (moveCheckForCheck( from_X_Coordinate,  from_Y_Coordinate,  to_X_Coordinate,  to_Y_Coordinate, newCB))
+		{
+		ChessDriver.performMove(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, newCB);
+		return !inCheck(King, newCB);}
+		else
+			return false;
+	}
 	private Piece[][] makeNewBoard(Piece[][] CB){
 		Piece[][] newCB = new Piece[8][8];
 		for (int i = 0; i < CB.length; i++) {
@@ -96,9 +105,7 @@ public abstract class Piece {
 		return false;
 	}
 	public abstract boolean noPieceInTheWay(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB );
-//	public boolean inCheck(String from, String to){
-//		
-//	}
+
 
 	
 	public abstract boolean canPieceMoveLikeThat(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB );
@@ -110,52 +117,4 @@ public abstract class Piece {
 			return false;
 		return true;
 	}
-	
-	public boolean isWhite() {
-		return white;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getPosition() {
-		return position;
-	}
-	public String getIcon(int line)
-	{
-		return icon[line];
-	}
-	
-	public void setPosition(String position) {
-		this.position = position;
-	}
-	public char getDisplayCharacter() {
-		return white ? Character.toUpperCase(displayCharacter) : Character.toLowerCase(displayCharacter);
-	}
-
-	
 }
-
-/*String piece = CB[i][j].getName();
-				switch (piece) {
-				case  "King":
-					newCB[i][j] = new King(CB[i][j].isWhite());
-					break;
-				case "Queen":
-					newCB[i][j] = new Queen(CB[i][j].isWhite());
-					break;
-				case "Rook":
-					newCB[i][j] = new Rook(CB[i][j].isWhite());
-					break;
-				case "Bishop":
-					newCB[i][j] = new Bishop(CB[i][j].isWhite());
-					break;
-				case "Horse":
-					newCB[i][j] = new Horse(CB[i][j].isWhite());
-					break;
-				case "Pawn":
-					newCB[i][j] = new Pawn(CB[i][j].isWhite());
-					break;
-				}*/

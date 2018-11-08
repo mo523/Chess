@@ -11,6 +11,8 @@ public class ChessDriver
 	static final boolean IS_BLACK = false;// this is to make what color the pieces are more clear (rather than using//
 											// true and false)
 	static boolean debug;
+	static Piece whiteKing, blackKing;
+	static boolean whitesTurn;
 
 	public static void main( String[] args ) throws InterruptedException, IOException
 	{
@@ -32,22 +34,47 @@ public class ChessDriver
 
 	public static void playGame( String p1, String p2, Piece[][] CB ) throws InterruptedException, IOException
 	{
-		Piece whiteKing = CB[0][4];
-		Piece blackKing = CB[7][4];
+		whiteKing = CB[0][4];
+		blackKing = CB[7][4];
 		do
 		{
-			if ( notInCheckMate(whiteKing) )
-				movePiece(IS_WHITE, CB, p1);
+			// clear();
+			whitesTurn = true;
+			if ( notInCheckMate(CB) )
+			{
+				if ( debug )
+					displayDebug(CB);
+				else
+					display(CB);
+				if (isInCheck( CB))
+					System.out.println("\nWarning! Your king is in check!\n");
+				movePiece(CB, p1);
+			}
 			else
+			{
+				System.out.println("Sorry white, checkmate, you lose.");
 				break;
-			if ( notInCheckMate(blackKing) )
-				movePiece(IS_BLACK, CB, p2);
+			}
+			whitesTurn = false;
+			if ( notInCheckMate(CB) )
+			{
+				if ( debug )
+					displayDebug(CB);
+				else
+					display(CB);
+				if (isInCheck(CB))
+					System.out.println("\nWarning! Your king is in check!\n");
+				movePiece(CB, p2);
+			}
 			else
+			{
+				System.out.println("Sorry black, checkmate, you lose.");
 				break;
-		} while ( notInCheckMate(whiteKing) && notInCheckMate(blackKing) );
+			}
+		} while (true);
 	}
 
-	public static void movePiece( boolean localWhite, Piece[][] CB, String name )
+	public static void movePiece( Piece[][] CB, String name )
 			throws InterruptedException, IOException
 	{
 		// method needs to be cut in half
@@ -57,11 +84,6 @@ public class ChessDriver
 		final boolean IS_FROM = true;
 		final boolean IS_TO = false;
 		int from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate;
-		// clear();
-		if ( debug )
-			displayDebug(CB);
-		else
-			display(CB, localWhite);
 		do
 		{
 			if ( !canPieceMoveThereBasedOnAllItsRules )
@@ -76,7 +98,7 @@ public class ChessDriver
 				from_X_Coordinate = from.charAt(0) - 97;
 				from_Y_Coordinate = from.charAt(1) - 49;
 
-				legalMoveInput = isValidPieceThere(from, from_X_Coordinate, from_Y_Coordinate, CB, localWhite, IS_FROM);
+				legalMoveInput = isValidPieceThere(from, from_X_Coordinate, from_Y_Coordinate, CB, IS_FROM);
 			} while ( !legalMoveInput );
 			do
 			{
@@ -92,7 +114,7 @@ public class ChessDriver
 				} while ( to.equalsIgnoreCase(from) );
 				to_X_Coordinate = to.charAt(0) - 97;
 				to_Y_Coordinate = to.charAt(1) - 49;
-				legalMoveInput = isValidPieceThere(from, from_X_Coordinate, from_Y_Coordinate, CB, localWhite, IS_TO);
+				legalMoveInput = isValidPieceThere(from, from_X_Coordinate, from_Y_Coordinate, CB, IS_TO);
 			} while ( !legalMoveInput );
 
 			canPieceMoveThereBasedOnAllItsRules = canMoveThere(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate,
@@ -145,33 +167,42 @@ public class ChessDriver
 			int to_Y_Coordinate, Piece[][] CB )
 	{
 		return CB[from_Y_Coordinate][from_X_Coordinate].isLegalMove(from_X_Coordinate, from_Y_Coordinate,
-				to_X_Coordinate, to_Y_Coordinate, CB);
+				to_X_Coordinate, to_Y_Coordinate, CB, (whitesTurn ? whiteKing : blackKing));
+	}
+	public static boolean isInCheck( Piece[][] CB)
+	{
+		return whitesTurn ? whiteKing.inCheck(whiteKing, CB) : blackKing.inCheck(blackKing, CB);
+	}
+
+	public static boolean notInCheckMate( Piece[][] CB )
+	{
+		if (!isInCheck(CB))
+			return true;
+			for (int i = 0; i < 8; i++)
+				for (int j = 0; j < 8; j++)
+					if(CB[i][j] != null && CB[i][j].isWhite() == whitesTurn)
+						for (int x = 0; x < 8; x++)
+							for (int y = 0; y < 8; y++)
+								if ( (whitesTurn? whiteKing.notInCheckmate(j, i, y, x, CB, whiteKing) : blackKing.notInCheckmate(j, i, y, x, CB, blackKing)))
+									return true;
+		return false;
 	}
 
 	public static boolean isValidPieceThere( String inputPosition, int y_Coordinate, int x_Coordinate, Piece[][] CB,
-			boolean localWhite, boolean from )
+			boolean from )
 	{
 
 		if ( inputPosition.length() != 2 || y_Coordinate < 0 || y_Coordinate > 7 || x_Coordinate < 0
 				|| x_Coordinate > 7 )
 			return false;
 		else if ( from
-				&& ( CB[x_Coordinate][y_Coordinate] == null || CB[x_Coordinate][y_Coordinate].white != localWhite ) )
+				&& ( CB[x_Coordinate][y_Coordinate] == null || CB[x_Coordinate][y_Coordinate].white != whitesTurn ) )
 			return false;
 		else
 			return true;
 	}
 
-	public static boolean inCheck()
-	{
-		return false;
-	}
 
-	// needs work
-	public static boolean notInCheckMate( Piece king )
-	{
-		return true;
-	}
 
 	public static void setUpPieces( Piece[][] CB )
 	{
@@ -213,21 +244,31 @@ public class ChessDriver
 		CB[7][5] = new Bishop(IS_BLACK);
 		CB[7][6] = new Horse(IS_BLACK);
 		CB[7][7] = new Rook(IS_BLACK);
-
+		
+		//debug for checkmate
+//		CB[6][4] = CB[0][3];
+//		CB[6][3] = CB[0][2];
+//		CB[6][5] = CB[0][5];
+//		CB[5][4] = CB[0][0];
+//		CB[0][0] = null;
+//		CB[0][5] = null;
+//		CB[0][2] = null;
+//		CB[0][3] = null;
+		
 	}
 
-	public static String PieceSection( int i, int j, Piece[][] cb, boolean player )
+	public static String PieceSection( int i, int j, Piece[][] cb )
 	{
 		String fourteen;
-		if ( i % 6 == (player ? 5 : 0) )
+		if ( i % 6 == ( whitesTurn ? 5 : 0 ) )
 			if ( cb[i / 6][j] == null )
 				fourteen = "            " + (char) ( j + 65 ) + ( i / 6 + 1 );
 			else
-				fourteen = cb[i / 6][j].getIcon((player ? i : 47 - i) % 6) + (char) ( j + 65 ) + ( i / 6 + 1 );
+				fourteen = cb[i / 6][j].getIcon(( whitesTurn ? i : 47 - i ) % 6) + (char) ( j + 65 ) + ( i / 6 + 1 );
 		else if ( cb[i / 6][j] == null )
 			fourteen = "              ";
 		else
-			fourteen = cb[i / 6][j].getIcon((player ? i : 47 - i) % 6);
+			fourteen = cb[i / 6][j].getIcon(( whitesTurn ? i : 47 - i ) % 6);
 		return fourteen;
 	}
 
@@ -247,27 +288,25 @@ public class ChessDriver
 			System.out.println();
 		}
 		System.out.println();
-
 	}
 
-	public static void display( Piece[][] CB, boolean player )
+	public static void display( Piece[][] CB )
 	{
-		int out = player ? 0 : 47;
-		int in = player ? 0 : 7;
-		int minOut = player ? 48 : -1;
-		int minIn = player ? 8 : -1;
-		int chg = player ? 1 : -1;
+		int out = whitesTurn ? 0 : 47;
+		int in = whitesTurn ? 0 : 7;
+		int minOut = whitesTurn ? 48 : -1;
+		int minIn = whitesTurn ? 8 : -1;
+		int chg = whitesTurn ? 1 : -1;
 		String letters1 = "        A             B             C             D             E             F             G             H        ";
-		String letters2 = "        H             G             F             E             D             C             B             A        "; 
+		String letters2 = "        H             G             F             E             D             C             B             A        ";
 		String reset = "\u001B[0m";
-		// String test = "\u001B[38;2;255;135;0m";
 		String bxWhite = "\u001B[107m";
 		String bgWhite = "\u001B[47m";
 		String bgBlack = "\u001B[100m";
 		String fgWhite = "\u001B[97m";
 		String fgBlack = "\u001B[30m";
 		String fgBlue = "\u001B[34m";
-		System.out.println(bxWhite + fgBlack + (player ? letters1: letters2) + " " + reset);
+		System.out.println(bxWhite + fgBlack + ( whitesTurn ? letters1 : letters2 ) + " " + reset);
 		for ( int i = out; i != minOut; i += chg )
 		{
 			boolean numRow = i % 6 + 1 == 3;
@@ -278,54 +317,12 @@ public class ChessDriver
 				boolean ijTheSame = i / 6 % 2 == j % 2;
 				boolean isNull = CB[i / 6][j] == null;
 				System.out.print(( ijTheSame ? bgWhite : bgBlack ) + ( isNull ? fgBlue : isWhite ? fgWhite : fgBlack )
-						+ PieceSection(i, j, CB, player) + reset);
+						+ PieceSection(i, j, CB) + reset);
 			}
 			System.out.print(bxWhite + fgBlack + ( numRow ? " " + ( i / 6 + 1 ) : "  " ) + reset);
 			System.out.println();
 		}
-		// if ( player )
-		// {
-		// for ( int i = 0; i < 48; i++ )
-		// {
-		// boolean numRow = i % 6 + 1 == 3;
-		// System.out.print(bxWhite + fgBlack + ( numRow ? i / 6 + 1 + " " : " " ) +
-		// reset);
-		// for ( int j = 0; j < 8; j ++ )
-		// {
-		// Boolean isWhite = CB[i / 6][j] != null ? CB[i / 6][j].isWhite() : null;
-		// boolean ijTheSame = i / 6 % 2 == j % 2;
-		// boolean isNull = CB[i / 6][j] == null;
-		// System.out.print(( ijTheSame ? bgWhite : bgBlack )
-		// + ( isNull ? fgBlue : isWhite ? fgWhite : fgBlack ) + PieceSection(i, j, CB)
-		// + reset);
-		// }
-		// System.out.print(bxWhite + fgBlack + ( numRow ? " " + ( i / 6 + 1 ) : " " ) +
-		// reset);
-		// System.out.println();
-		// }
-		// }
-		// else
-		// {
-		// for ( int i = 47; i >=0 ; i-- )
-		// {
-		// boolean numRow = i % 6 + 1 == 3;
-		// System.out.print(bxWhite + fgBlack + ( numRow ? i / 6 + 1 + " " : " " ) +
-		// reset);
-		// for ( int j = 7; j >= 0; j--)
-		// {
-		// Boolean isWhite = CB[i / 6][j] != null ? CB[i / 6][j].isWhite() : null;
-		// boolean ijTheSame = i / 6 % 2 == j % 2;
-		// boolean isNull = CB[i / 6][j] == null;
-		// System.out.print(( ijTheSame ? bgWhite : bgBlack ) + ( isNull ? fgBlue :
-		// isWhite ? fgWhite : fgBlack )
-		// + PieceSection(i, j, CB) + reset);
-		// }
-		// System.out.print(bxWhite + fgBlack + ( numRow ? " " + ( i / 6 + 1 ) : " " ) +
-		// reset);
-		// System.out.println();
-		// }
-		// }
-		System.out.println(bxWhite + fgBlack + " " + (player? letters1: letters2) + reset);
+		System.out.println(bxWhite + fgBlack + " " + ( whitesTurn ? letters1 : letters2 ) + reset);
 	}
 
 	public static void clear() throws InterruptedException, IOException
@@ -333,27 +330,3 @@ public class ChessDriver
 		new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 	}
 }
-
-/*
- * public static boolean doesntLeaveKingInCheck(int from_X_Coordinate, int
- * from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB){
- * int xCoordinate = 0; int yCoordinate = 0; boolean done = false; for (int i =
- * 0; i < 8; i++){ for (int j = 0; j < 8; j++){ if(CB[i][j] instanceof King &&
- * CB[i][j].isWhite() == CB[from_Y_Coordinate][from_X_Coordinate].isWhite()){
- * yCoordinate = i; xCoordinate = j; done = true; break; } } if(done) break; }
- * 
- * for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++)
- * if(moveCheckForCheck(j, i, xCoordinate, yCoordinate, CB)) return false;
- * return true;
- * 
- * } private static boolean moveCheckForCheck(int from_X_Coordinate, int
- * from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB){
- * if(CB[from_Y_Coordinate][from_X_Coordinate] != null) return
- * CB[from_Y_Coordinate][from_X_Coordinate].canPieceMoveLikeThat(
- * from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB)
- * && CB[from_Y_Coordinate][from_X_Coordinate].willNotKillSameColor(
- * from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB)
- * &&
- * CB[from_Y_Coordinate][from_X_Coordinate].noPieceInTheWay(from_X_Coordinate,
- * from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB); return false; }
- */

@@ -11,7 +11,14 @@ public class Bishop extends Piece {
 	public Bishop( boolean white) {
 		super(white);
 		this.name = "Bishop";
-		displayCharacter = 'b';
+		this.icon = new String[] {
+				"          ",
+				"    \u2588\u2588    ",
+				"  \u2580\u2580\u2588\u2588\u2580\u2580  ",
+				"   \u2584\u2588\u2588\u2584   ",
+				"  \u2588\u2588\u2588\u2588\u2588\u2588  ",
+				"        "
+				};
 	}
 	public String getIcon(int row)
 	{
