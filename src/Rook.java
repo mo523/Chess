@@ -1,12 +1,12 @@
 
 public class Rook extends Piece {
 	private String icon[] = {
-			"          ",
-			" \u258C \u2588  \u2588 \u2590 " ,
-			" \u2580\u2588\u2588\u2588\u2588\u2588\u2588\u2580 ",
-			"  \u2588\u2588\u2588\u2588\u2588\u2588  ",
-			" \u2584\u2588\u2588\u2588\u2588\u2588\u2588\u2584 ",
-			"        "
+			"            ",
+			"    \u258C\u2588\u2590\u258C\u2588\u2590  " ,
+			"    \u2580\u2588\u2588\u2588\u2588\u2580  ",
+			"     \u2588\u2588\u2588\u2588   ",
+			"    \u2584\u2588\u2588\u2588\u2588\u2584  ",
+			"            "
 			};
 	public Rook(boolean white) {
 		super(white);
@@ -14,7 +14,7 @@ public class Rook extends Piece {
 	}
 	public String getIcon(int row)
 	{
-		return  "  " + icon[row] + "  ";
+		return icon[row];
 	}
 	public boolean isWhite()
 	{

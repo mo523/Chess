@@ -74,7 +74,8 @@ public abstract class Piece {
 		if (moveCheckForCheck( fromCol,  fromRow,  toCol,  toRow, newCB))
 		{
 			newCB[toRow][toCol] = newCB[fromRow][fromCol];
-			newCB[fromRow][fromCol] = null;return !inCheck(King, newCB);
+			newCB[fromRow][fromCol] = null;
+			return !inCheck(King, newCB);
 			}
 		else
 			return false;
@@ -108,8 +109,6 @@ public abstract class Piece {
 	}
 	public abstract boolean noPieceInTheWay(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB );
 
-
-	
 	public abstract boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB );
 	//method works
 	public boolean willNotKillSameColor(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB ) {
