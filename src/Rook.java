@@ -22,46 +22,46 @@ public class Rook extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB ) {
-		int yDiff = Math.abs(to_Y_Coordinate - from_Y_Coordinate);
-		int xDiff = Math.abs(to_X_Coordinate - from_X_Coordinate);
+	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB ) {
+		int yDiff = Math.abs(toRow - fromRow);
+		int xDiff = Math.abs(toCol - fromCol);
 		if(yDiff > 0 && xDiff > 0)
 			return false;
 		return true;
 	}
 	
 	@Override
-	public boolean noPieceInTheWay(int from_X_Coordinate,int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB) {
-		int yDiff = to_Y_Coordinate - from_Y_Coordinate;
-		int xDiff = to_X_Coordinate - from_X_Coordinate;
+	public boolean noPieceInTheWay(int fromCol,int fromRow, int toCol, int toRow, Piece[][] CB) {
+		int yDiff = toRow - fromRow;
+		int xDiff = toCol - fromCol;
 		if(xDiff == 0){
 			if (yDiff > 0){
-				for (int i = from_Y_Coordinate + 1; yDiff != 1; i++) {
+				for (int i = fromRow + 1; yDiff != 1; i++) {
 					yDiff--;
-					if (CB[i][from_X_Coordinate] != null)
+					if (CB[i][fromCol] != null)
 						return false;
 				}
 			}
 			else{
-				for (int i = from_Y_Coordinate - 1; yDiff != -1; i--) {
+				for (int i = fromRow - 1; yDiff != -1; i--) {
 					yDiff++;
-					if (CB[i][from_X_Coordinate] != null)
+					if (CB[i][fromCol] != null)
 						return false;
 				}
 			}
 		}
 		else{
 			if (xDiff > 0){
-				for (int i = from_X_Coordinate + 1; xDiff != 1; i++) {
+				for (int i = fromCol + 1; xDiff != 1; i++) {
 					xDiff--;
-					if (CB[from_Y_Coordinate][i] != null)
+					if (CB[fromRow][i] != null)
 						return false;
 				}
 			}
 			else{
-				for (int i = from_X_Coordinate - 1; xDiff != -1; i--) {
+				for (int i = fromCol - 1; xDiff != -1; i--) {
 					xDiff++;
-					if (CB[from_Y_Coordinate][i] != null)
+					if (CB[fromRow][i] != null)
 						return false;
 				}
 			}
@@ -69,7 +69,7 @@ public class Rook extends Piece {
 		return true;
 	}
 	/*
-	public boolean inOneDirection(int diff, int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB){
+	public boolean inOneDirection(int diff, int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB){
 		for (int i = 0; i <= diff; i++) {
 			
 		}

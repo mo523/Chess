@@ -26,19 +26,19 @@ public class Pawn extends Piece
 		return white;
 	}
 	@Override
-	public boolean canPieceMoveLikeThat(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB ) 
+	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB ) 
 	{
-		int yDiff = to_Y_Coordinate - from_Y_Coordinate;
-		int xDiff = Math.abs(to_X_Coordinate - from_X_Coordinate);
+		int yDiff = toRow - fromRow;
+		int xDiff = Math.abs(toCol - fromCol);
 		int tempY;
 		
 		if(xDiff > 1)
 			return false;
-		if(xDiff == 1 && CB[to_Y_Coordinate][to_X_Coordinate] == null)
+		if(xDiff == 1 && CB[toRow][toCol] == null)
 			return false;
-		if((xDiff == 1 && CB[to_Y_Coordinate][to_X_Coordinate].isWhite() == this.isWhite()))
+		if((xDiff == 1 && CB[toRow][toCol].isWhite() == this.isWhite()))
 			return false;
-		if(xDiff == 0 && CB[to_Y_Coordinate][to_X_Coordinate] != null)
+		if(xDiff == 0 && CB[toRow][toCol] != null)
 			return false;
 		
 		tempY = verticalMoveMax * (firstMove ? 2 : 1);
@@ -52,8 +52,8 @@ public class Pawn extends Piece
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int from_X_Coordinate,
-			int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
+	public boolean noPieceInTheWay(int fromCol,
+			int fromRow, int toCol, int toRow,
 			Piece[][] CB) {
 		//this is taken care of by canPieceMoveLikeThat
 		return true;

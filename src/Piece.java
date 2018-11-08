@@ -22,23 +22,23 @@ public abstract class Piece {
 	}
 	
 	//all other methods go in this one
-	public boolean isLegalMove(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB, Piece King){
-		if(!canPieceMoveLikeThat(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB))
+	public boolean isLegalMove(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB, Piece King){
+		if(!canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB))
 		{
 			System.out.println("WARNING! Piece cannot move like that");
 			return false;
 		}
-		if(!willNotKillSameColor(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB ))
+		if(!willNotKillSameColor(fromCol, fromRow, toCol, toRow, CB ))
 		{
 			System.out.println("WARNING! Piece will kill same color");
 			return false;
 		}
-		if(!noPieceInTheWay(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB))
+		if(!noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB))
 		{
 			System.out.println("WARNING! Piece in the way");
 			return false;
 		}
-		if (!doesntLeaveKingInCheck(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB, King))
+		if (!doesntLeaveKingInCheck(fromCol, fromRow, toCol, toRow, CB, King))
 			{
 			System.out.println("Warning! Leaves king in check");
 			return false;
@@ -61,19 +61,21 @@ public abstract class Piece {
 		return false;
 	}
 	
-	public boolean doesntLeaveKingInCheck(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB, Piece King){
+	public boolean doesntLeaveKingInCheck(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB, Piece King){
 		//makes a temporary board and moves the piece in it
 		Piece[][] newCB = makeNewBoard(CB);
-		ChessDriver.performMove(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, newCB);
+			newCB[toRow][toCol] = newCB[fromRow][fromCol];
+			newCB[fromRow][fromCol] = null;
 		return !inCheck(King, newCB);
 	}
-	public boolean notInCheckmate(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB, Piece King){
+	public boolean notInCheckmate(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB, Piece King){
 		//makes a temporary board and moves the piece in it
 		Piece[][] newCB = makeNewBoard(CB);
-		if (moveCheckForCheck( from_X_Coordinate,  from_Y_Coordinate,  to_X_Coordinate,  to_Y_Coordinate, newCB))
+		if (moveCheckForCheck( fromCol,  fromRow,  toCol,  toRow, newCB))
 		{
-		ChessDriver.performMove(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, newCB);
-		return !inCheck(King, newCB);}
+			newCB[toRow][toCol] = newCB[fromRow][fromCol];
+			newCB[fromRow][fromCol] = null;return !inCheck(King, newCB);
+			}
 		else
 			return false;
 	}
@@ -97,23 +99,23 @@ public abstract class Piece {
 		}
 		return newCB;
 	}
-	private boolean moveCheckForCheck(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB){
-		if(CB[from_Y_Coordinate][from_X_Coordinate] != null)
-			return CB[from_Y_Coordinate][from_X_Coordinate].canPieceMoveLikeThat(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB)
-				&& CB[from_Y_Coordinate][from_X_Coordinate].willNotKillSameColor(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB)
-				&& CB[from_Y_Coordinate][from_X_Coordinate].noPieceInTheWay(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB);
+	private boolean moveCheckForCheck(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB){
+		if(CB[fromRow][fromCol] != null)
+			return CB[fromRow][fromCol].canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB)
+				&& CB[fromRow][fromCol].willNotKillSameColor(fromCol, fromRow, toCol, toRow, CB)
+				&& CB[fromRow][fromCol].noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB);
 		return false;
 	}
-	public abstract boolean noPieceInTheWay(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB );
+	public abstract boolean noPieceInTheWay(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB );
 
 
 	
-	public abstract boolean canPieceMoveLikeThat(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB );
+	public abstract boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB );
 	//method works
-	public boolean willNotKillSameColor(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB ) {
-		if(CB[to_Y_Coordinate][to_X_Coordinate] == null)
+	public boolean willNotKillSameColor(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB ) {
+		if(CB[toRow][toCol] == null)
 			return true;
-		if(this.isWhite() == CB[to_Y_Coordinate][to_X_Coordinate].isWhite())
+		if(this.isWhite() == CB[toRow][toCol].isWhite())
 			return false;
 		return true;
 	}

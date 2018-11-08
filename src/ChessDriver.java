@@ -12,7 +12,8 @@ public class ChessDriver
 											// true and false)
 	static boolean debug;
 	static Piece whiteKing, blackKing;
-	static boolean whitesTurn;
+	static boolean whitesTurn = true;;
+	static Piece[][] chessBoard = new Piece[8][8];
 
 	public static void main( String[] args ) throws InterruptedException, IOException
 	{
@@ -20,117 +21,90 @@ public class ChessDriver
 		debug = kyb.nextLine().toUpperCase().equals("D") ? true : false;
 
 		AnsiConsole.systemInstall();
-		Piece CB[][] = new Piece[8][8];
-		setUpPieces(CB);
+		setUpPieces();
 		/*
 		 * System.out.println("Player 1 (white), what is your name?");// String p1 =
 		 * kyb.nextLine(); System.out.println("Player 2 (black), what is your name?");
 		 * String p2 = kyb.nextLine();
 		 */
-		playGame("White", "Black", CB);// remember to take out the literal p1 and p2
+		playGame();// remember to take out the literal p1 and p2
 		kyb.close();
 		AnsiConsole.systemUninstall();
 	}
 
-	public static void playGame( String p1, String p2, Piece[][] CB ) throws InterruptedException, IOException
+	public static void playGame() throws InterruptedException, IOException
 	{
-		whiteKing = CB[0][4];
-		blackKing = CB[7][4];
 		do
 		{
-			// clear();
-			whitesTurn = true;
-			if ( notInCheckMate(CB) )
+			if (notInCheckMate())
 			{
 				if ( debug )
-					displayDebug(CB);
+					displayDebug();
 				else
-					display(CB);
-				if (isInCheck( CB))
+					display();
+				if (isInCheck())
 					System.out.println("\nWarning! Your king is in check!\n");
-				movePiece(CB, p1);
+				movePiece();
 			}
-			else
-			{
-				System.out.println("Sorry white, checkmate, you lose.");
-				break;
-			}
-			whitesTurn = false;
-			if ( notInCheckMate(CB) )
-			{
-				if ( debug )
-					displayDebug(CB);
-				else
-					display(CB);
-				if (isInCheck(CB))
-					System.out.println("\nWarning! Your king is in check!\n");
-				movePiece(CB, p2);
-			}
-			else
-			{
-				System.out.println("Sorry black, checkmate, you lose.");
-				break;
-			}
-		} while (true);
+			whitesTurn = !whitesTurn;
+		}	while(notInCheckMate());
+		
+		System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ", checkmate, you lose.");
 	}
 
-	public static void movePiece( Piece[][] CB, String name )
-			throws InterruptedException, IOException
+	public static void movePiece() throws InterruptedException, IOException
 	{
+		String name = whitesTurn ? "White" : "Black"; 
 		// method needs to be cut in half
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
-		String from = "", to = "";
+		String move;
 		boolean legalMoveInput = true;
-		final boolean IS_FROM = true;
-		final boolean IS_TO = false;
-		int from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate;
+		int fromCol, fromRow, toCol, toRow;
+
 		do
 		{
-			if ( !canPieceMoveThereBasedOnAllItsRules )
-				System.out.println("Bad Move, try again");
 			do
 			{
-
 				if ( !legalMoveInput )
 					System.out.println(name + ", You do not have a piece there\nPlease try again;");
 				System.out.println(name + ", Which piece would you like to move?");
-				from = getCorrect2CharPosition();
-				from_X_Coordinate = from.charAt(0) - 97;
-				from_Y_Coordinate = from.charAt(1) - 49;
+				move = getCorrect2CharPosition();
+				fromCol = move.charAt(0) - 97;
+				fromRow = move.charAt(1) - 49;
 
-				legalMoveInput = isValidPieceThere(from, from_X_Coordinate, from_Y_Coordinate, CB, IS_FROM);
+				legalMoveInput = isValidPieceThere(fromCol, fromRow);
 			} while ( !legalMoveInput );
+
+			System.out.println(name + ", Where would you like to move your piece to?");
 			do
 			{
-
-				if ( !legalMoveInput )
-					System.out.println("Illegal complete move, try again");
-				System.out.println(name + ", Where would you like to move your piece to?");
-				do
-				{
-					to = getCorrect2CharPosition();
-					if ( to.equalsIgnoreCase(from) )
-						System.out.println("Can't move to same place. Try again.");
-				} while ( to.equalsIgnoreCase(from) );
-				to_X_Coordinate = to.charAt(0) - 97;
-				to_Y_Coordinate = to.charAt(1) - 49;
-				legalMoveInput = isValidPieceThere(from, from_X_Coordinate, from_Y_Coordinate, CB, IS_TO);
-			} while ( !legalMoveInput );
-
-			canPieceMoveThereBasedOnAllItsRules = canMoveThere(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate,
-					to_Y_Coordinate, CB);
+				move = getCorrect2CharPosition();
+				toCol = move.charAt(0) - 97;
+				toRow = move.charAt(1) - 49;
+				if ( toCol == fromCol && toRow == fromRow)
+					System.out.println("Can't move to same place. Try again.");
+			} while ( toCol == fromCol && toRow == fromRow);
+				
+			canPieceMoveThereBasedOnAllItsRules = canMoveThere(fromCol, fromRow, toCol,
+					toRow);
 
 		} while ( !canPieceMoveThereBasedOnAllItsRules );
-		performMove(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB);
+		performMove(fromCol, fromRow, toCol, toRow);
 	}
-
-	public static void performMove( int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate,
-			int to_Y_Coordinate, Piece[][] CB )
+	// call to piece method if valid move, add do while loop in last method
+	public static boolean canMoveThere( int fromCol, int fromRow, int toCol, int toRow )
 	{
-		CB[to_Y_Coordinate][to_X_Coordinate] = CB[from_Y_Coordinate][from_X_Coordinate];
-		CB[from_Y_Coordinate][from_X_Coordinate] = null;
+		return chessBoard[fromRow][fromCol].isLegalMove(fromCol, fromRow,
+				toCol, toRow, chessBoard, (whitesTurn ? whiteKing : blackKing));
 	}
-
+	
+	public static boolean isValidPieceThere( int col, int row )
+	{
+		if ( chessBoard[row][col] == null || chessBoard[row][col].white != whitesTurn ) 
+			return false;
+		else
+			return true;
+	}
 	public static String getCorrect2CharPosition()
 	{
 		String position = makeSureStringIs2Chars();
@@ -162,135 +136,114 @@ public class ChessDriver
 		return position;
 	}
 
-	// call to piece method if valid move, add do while loop in last method
-	public static boolean canMoveThere( int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate,
-			int to_Y_Coordinate, Piece[][] CB )
+
+	
+	public static boolean isInCheck()
 	{
-		return CB[from_Y_Coordinate][from_X_Coordinate].isLegalMove(from_X_Coordinate, from_Y_Coordinate,
-				to_X_Coordinate, to_Y_Coordinate, CB, (whitesTurn ? whiteKing : blackKing));
-	}
-	public static boolean isInCheck( Piece[][] CB)
-	{
-		return whitesTurn ? whiteKing.inCheck(whiteKing, CB) : blackKing.inCheck(blackKing, CB);
+		return whitesTurn ? whiteKing.inCheck(whiteKing, chessBoard) : blackKing.inCheck(blackKing, chessBoard);
 	}
 
-	public static boolean notInCheckMate( Piece[][] CB )
+	public static boolean notInCheckMate( )
 	{
-		if (!isInCheck(CB))
+		if (!isInCheck())
 			return true;
 			for (int i = 0; i < 8; i++)
 				for (int j = 0; j < 8; j++)
-					if(CB[i][j] != null && CB[i][j].isWhite() == whitesTurn)
+					if(chessBoard[i][j] != null && chessBoard[i][j].isWhite() == whitesTurn)
 						for (int x = 0; x < 8; x++)
 							for (int y = 0; y < 8; y++)
-								if ( (whitesTurn? whiteKing.notInCheckmate(j, i, y, x, CB, whiteKing) : blackKing.notInCheckmate(j, i, y, x, CB, blackKing)))
+								if ( (whitesTurn? whiteKing.notInCheckmate(j, i, y, x, chessBoard, whiteKing) : blackKing.notInCheckmate(j, i, y, x, chessBoard, blackKing)))
 									return true;
 		return false;
 	}
 
-	public static boolean isValidPieceThere( String inputPosition, int y_Coordinate, int x_Coordinate, Piece[][] CB,
-			boolean from )
-	{
 
-		if ( inputPosition.length() != 2 || y_Coordinate < 0 || y_Coordinate > 7 || x_Coordinate < 0
-				|| x_Coordinate > 7 )
-			return false;
-		else if ( from
-				&& ( CB[x_Coordinate][y_Coordinate] == null || CB[x_Coordinate][y_Coordinate].white != whitesTurn ) )
-			return false;
-		else
-			return true;
+	
+	
+
+	//These methods are done and should not be touched
+	//Iff you do, note why you touched them
+	
+	public static void performMove( int fromCol, int fromRow, int toCol,
+			int toRow )
+	{
+		chessBoard[toRow][toCol] = chessBoard[fromRow][fromCol];
+		chessBoard[fromRow][fromCol] = null;
 	}
-
-
-
-	public static void setUpPieces( Piece[][] CB )
+	
+	public static void setUpPieces()
 	{
 		// for tests only
-		// CB[2][4] = new King(IS_WHITE);
-		// CB[5][1] = new Bishop(IS_BLACK);
-		// CB[3][3] = new Pawn(IS_WHITE);
+		// chessBoard[2][4] = new King(IS_WHITE);
+		// chessBoard[5][1] = new Bishop(IS_BLACK);
+		// chessBoard[3][3] = new Pawn(IS_WHITE);
 		// for tests only
 
-		CB[1][0] = new Pawn(IS_WHITE);
-		CB[1][1] = new Pawn(IS_WHITE);
-		CB[1][2] = new Pawn(IS_WHITE);
-		CB[1][3] = new Pawn(IS_WHITE);
-		CB[1][4] = new Pawn(IS_WHITE);
-		CB[1][5] = new Pawn(IS_WHITE);
-		CB[1][6] = new Pawn(IS_WHITE);
-		CB[1][7] = new Pawn(IS_WHITE);
-		CB[6][0] = new Pawn(IS_BLACK);
-		CB[6][1] = new Pawn(IS_BLACK);
-		CB[6][2] = new Pawn(IS_BLACK);
-		CB[6][3] = new Pawn(IS_BLACK);
-		CB[6][4] = new Pawn(IS_BLACK);
-		CB[6][5] = new Pawn(IS_BLACK);
-		CB[6][6] = new Pawn(IS_BLACK);
-		CB[6][7] = new Pawn(IS_BLACK);
-		CB[0][0] = new Rook(IS_WHITE);
-		CB[0][1] = new Horse(IS_WHITE);
-		CB[0][2] = new Bishop(IS_WHITE);
-		CB[0][3] = new Queen(IS_WHITE);
-		CB[0][4] = new King(IS_WHITE);
-		CB[0][5] = new Bishop(IS_WHITE);
-		CB[0][6] = new Horse(IS_WHITE);
-		CB[0][7] = new Rook(IS_WHITE);
-		CB[7][0] = new Rook(IS_BLACK);
-		CB[7][1] = new Horse(IS_BLACK);
-		CB[7][2] = new Bishop(IS_BLACK);
-		CB[7][3] = new Queen(IS_BLACK);
-		CB[7][4] = new King(IS_BLACK);
-		CB[7][5] = new Bishop(IS_BLACK);
-		CB[7][6] = new Horse(IS_BLACK);
-		CB[7][7] = new Rook(IS_BLACK);
+		chessBoard[1][0] = new Pawn(IS_WHITE);
+		chessBoard[1][1] = new Pawn(IS_WHITE);
+		chessBoard[1][2] = new Pawn(IS_WHITE);
+		chessBoard[1][3] = new Pawn(IS_WHITE);
+		chessBoard[1][4] = new Pawn(IS_WHITE);
+		chessBoard[1][5] = new Pawn(IS_WHITE);
+		chessBoard[1][6] = new Pawn(IS_WHITE);
+		chessBoard[1][7] = new Pawn(IS_WHITE);
+		chessBoard[6][0] = new Pawn(IS_BLACK);
+		chessBoard[6][1] = new Pawn(IS_BLACK);
+		chessBoard[6][2] = new Pawn(IS_BLACK);
+		chessBoard[6][3] = new Pawn(IS_BLACK);
+		chessBoard[6][4] = new Pawn(IS_BLACK);
+		chessBoard[6][5] = new Pawn(IS_BLACK);
+		chessBoard[6][6] = new Pawn(IS_BLACK);
+		chessBoard[6][7] = new Pawn(IS_BLACK);
+		chessBoard[0][0] = new Rook(IS_WHITE);
+		chessBoard[0][1] = new Horse(IS_WHITE);
+		chessBoard[0][2] = new Bishop(IS_WHITE);
+		chessBoard[0][3] = new Queen(IS_WHITE);
+		chessBoard[0][4] = new King(IS_WHITE);
+		chessBoard[0][5] = new Bishop(IS_WHITE);
+		chessBoard[0][6] = new Horse(IS_WHITE);
+		chessBoard[0][7] = new Rook(IS_WHITE);
+		chessBoard[7][0] = new Rook(IS_BLACK);
+		chessBoard[7][1] = new Horse(IS_BLACK);
+		chessBoard[7][2] = new Bishop(IS_BLACK);
+		chessBoard[7][3] = new Queen(IS_BLACK);
+		chessBoard[7][4] = new King(IS_BLACK);
+		chessBoard[7][5] = new Bishop(IS_BLACK);
+		chessBoard[7][6] = new Horse(IS_BLACK);
+		chessBoard[7][7] = new Rook(IS_BLACK);
+		whiteKing = chessBoard[0][4];
+		blackKing = chessBoard[7][4];
 		
 		//debug for checkmate
-//		CB[6][4] = CB[0][3];
-//		CB[6][3] = CB[0][2];
-//		CB[6][5] = CB[0][5];
-//		CB[5][4] = CB[0][0];
-//		CB[0][0] = null;
-//		CB[0][5] = null;
-//		CB[0][2] = null;
-//		CB[0][3] = null;
+		chessBoard[6][4] = chessBoard[0][3];
+		chessBoard[6][3] = chessBoard[0][2];
+		chessBoard[6][5] = chessBoard[0][5];
+		chessBoard[5][4] = chessBoard[0][0];
+		chessBoard[0][0] = null;
+		chessBoard[0][5] = null;
+		chessBoard[0][2] = null;
+		chessBoard[0][3] = null;
 		
 	}
-
-	public static String PieceSection( int i, int j, Piece[][] cb )
-	{
-		String fourteen;
-		if ( i % 6 == ( whitesTurn ? 5 : 0 ) )
-			if ( cb[i / 6][j] == null )
-				fourteen = "            " + (char) ( j + 65 ) + ( i / 6 + 1 );
-			else
-				fourteen = cb[i / 6][j].getIcon(( whitesTurn ? i : 47 - i ) % 6) + (char) ( j + 65 ) + ( i / 6 + 1 );
-		else if ( cb[i / 6][j] == null )
-			fourteen = "              ";
-		else
-			fourteen = cb[i / 6][j].getIcon(( whitesTurn ? i : 47 - i ) % 6);
-		return fourteen;
-	}
-
-	public static void displayDebug( Piece[][] CB )
+	public static void displayDebug()
 	{
 		System.out.println("  A  B  C  D  E  F  G  H");
 		for ( int i = 0; i < 8; i++ )
 		{
 			for ( int j = 0; j < 8; j++ )
 			{
-				if ( CB[i][j] == null )
+				if ( chessBoard[i][j] == null )
 					System.out.print(( j == 0 ? ( i + 1 ) + " " : "" ) + "nn ");
 				else
-					System.out.print(( j == 0 ? ( i + 1 ) + " " : "" ) + ( CB[i][j].white ? "w" : "b" )
-							+ CB[i][j].toString().charAt(0) + " ");
+					System.out.print(( j == 0 ? ( i + 1 ) + " " : "" ) + ( chessBoard[i][j].white ? "w" : "b" )
+							+ chessBoard[i][j].toString().charAt(0) + " ");
 			}
 			System.out.println();
 		}
 		System.out.println();
 	}
 
-	public static void display( Piece[][] CB )
+	public static void display()
 	{
 		int out = whitesTurn ? 0 : 47;
 		int in = whitesTurn ? 0 : 7;
@@ -313,18 +266,33 @@ public class ChessDriver
 			System.out.print(bxWhite + fgBlack + ( numRow ? i / 6 + 1 + " " : "  " ) + reset);
 			for ( int j = in; j != minIn; j += chg )
 			{
-				Boolean isWhite = CB[i / 6][j] != null ? CB[i / 6][j].isWhite() : null;
+				Boolean isWhite = chessBoard[i / 6][j] != null ? chessBoard[i / 6][j].isWhite() : null;
 				boolean ijTheSame = i / 6 % 2 == j % 2;
-				boolean isNull = CB[i / 6][j] == null;
+				boolean isNull = chessBoard[i / 6][j] == null;
 				System.out.print(( ijTheSame ? bgWhite : bgBlack ) + ( isNull ? fgBlue : isWhite ? fgWhite : fgBlack )
-						+ PieceSection(i, j, CB) + reset);
+						+ PieceSection(i, j) + reset);
 			}
 			System.out.print(bxWhite + fgBlack + ( numRow ? " " + ( i / 6 + 1 ) : "  " ) + reset);
 			System.out.println();
 		}
 		System.out.println(bxWhite + fgBlack + " " + ( whitesTurn ? letters1 : letters2 ) + reset);
 	}
+	public static String PieceSection( int i, int j )
+	{
+		String fourteen;
+		if ( i % 6 == ( whitesTurn ? 5 : 0 ) )
+			if ( chessBoard[i / 6][j] == null )
+				fourteen = "            " + (char) ( j + 65 ) + ( i / 6 + 1 );
+			else
+				fourteen = chessBoard[i / 6][j].getIcon(( whitesTurn ? i : 47 - i ) % 6) + (char) ( j + 65 ) + ( i / 6 + 1 );
+		else if ( chessBoard[i / 6][j] == null )
+			fourteen = "              ";
+		else
+			fourteen = chessBoard[i / 6][j].getIcon(( whitesTurn ? i : 47 - i ) % 6);
+		return fourteen;
+	}
 
+	
 	public static void clear() throws InterruptedException, IOException
 	{
 		new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();

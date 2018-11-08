@@ -23,19 +23,19 @@ public class Horse extends Piece {
 	}
 	
 	@Override
-	public boolean canPieceMoveLikeThat(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB )
+	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB )
 	{
 		Queen queen = new Queen(white);
-		if (!queen.canPieceMoveLikeThat(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB)&&
-				Math.abs(from_X_Coordinate - to_X_Coordinate) < 3 && Math.abs(from_Y_Coordinate - to_Y_Coordinate) < 3 )
+		if (!queen.canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB)&&
+				Math.abs(fromCol - toCol) < 3 && Math.abs(fromRow - toRow) < 3 )
 							return true;
 		else
 							return false;
 	}
 	
 	@Override
-	public boolean noPieceInTheWay(int from_X_Coordinate,
-			int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
+	public boolean noPieceInTheWay(int fromCol,
+			int fromRow, int toCol, int toRow,
 			Piece[][] CB) {
 		return true; // because horses jump
 	}

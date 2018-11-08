@@ -23,30 +23,30 @@ public class Queen extends Piece {
 	}
 	
 	@Override
-	public boolean canPieceMoveLikeThat(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB ) 
+	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB ) 
 	{
 		Rook rook = new Rook(white);
 		Bishop bishop = new Bishop(white);
 		
 		
-		return (rook.canPieceMoveLikeThat(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB)||
-				bishop.canPieceMoveLikeThat(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB));
+		return (rook.canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB)||
+				bishop.canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB));
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int from_X_Coordinate,
-			int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
+	public boolean noPieceInTheWay(int fromCol,
+			int fromRow, int toCol, int toRow,
 			Piece[][] CB) {
 		
 		Rook rook = new Rook(white);
 		Bishop bishop = new Bishop(white);
 		
-		int yDiff = Math.abs(to_Y_Coordinate - from_Y_Coordinate);
-		int xDiff = Math.abs(to_X_Coordinate - from_X_Coordinate);
+		int yDiff = Math.abs(toRow - fromRow);
+		int xDiff = Math.abs(toCol - fromCol);
 		if(yDiff == xDiff)
-			return bishop.noPieceInTheWay(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB);
+			return bishop.noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB);
 		else
-			return rook.noPieceInTheWay(from_X_Coordinate, from_Y_Coordinate, to_X_Coordinate, to_Y_Coordinate, CB);
+			return rook.noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB);
 		
 	}
 }

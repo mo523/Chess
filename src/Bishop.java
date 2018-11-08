@@ -29,26 +29,26 @@ public class Bishop extends Piece {
 		return white;
 	}
 	@Override
-	public boolean canPieceMoveLikeThat(int from_X_Coordinate,int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate, Piece[][] CB ) {
-		int yDiff = Math.abs(to_Y_Coordinate - from_Y_Coordinate);
-		int xDiff = Math.abs(to_X_Coordinate - from_X_Coordinate);
+	public boolean canPieceMoveLikeThat(int fromCol,int fromRow, int toCol, int toRow, Piece[][] CB ) {
+		int yDiff = Math.abs(toRow - fromRow);
+		int xDiff = Math.abs(toCol - fromCol);
 		if(yDiff == xDiff)
 			return true;
 		return false;
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int from_X_Coordinate,
-			int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
+	public boolean noPieceInTheWay(int fromCol,
+			int fromRow, int toCol, int toRow,
 			Piece[][] CB) {
-		int  XMoveDistance =(from_X_Coordinate-to_X_Coordinate);
-		int  YMoveDistance =(from_Y_Coordinate-to_Y_Coordinate);
+		int  XMoveDistance =(fromCol-toCol);
+		int  YMoveDistance =(fromRow-toRow);
 		boolean done = false;
 		do
 		{
 			
-			if(CB[from_Y_Coordinate-YMoveDistance][from_X_Coordinate-XMoveDistance] != null && 
-					!(from_Y_Coordinate-YMoveDistance == to_Y_Coordinate && from_X_Coordinate- XMoveDistance == to_X_Coordinate))
+			if(CB[fromRow-YMoveDistance][fromCol-XMoveDistance] != null && 
+					!(fromRow-YMoveDistance == toRow && fromCol- XMoveDistance == toCol))
 				return false;
 			else 
 			{
@@ -75,14 +75,14 @@ public class Bishop extends Piece {
 	}
 }
 /*	//@Override
-	public boolean pieceInTheWay(int from_X_Coordinate, int from_Y_Coordinate, int to_X_Coordinate, int to_Y_Coordinate,
+	public boolean pieceInTheWay(int fromCol, int fromRow, int toCol, int toRow,
 			Piece[][] CB) {
-		int  XMoveDistance =(from_X_Coordinate-to_X_Coordinate);
-		int  YMoveDistance =(from_Y_Coordinate-to_Y_Coordinate);
+		int  XMoveDistance =(fromCol-toCol);
+		int  YMoveDistance =(fromRow-toRow);
 		
 		do
 		{
-			if(CB[from_Y_Coordinate-YMoveDistance][from_X_Coordinate-XMoveDistance] != null)
+			if(CB[fromRow-YMoveDistance][fromCol-XMoveDistance] != null)
 				return false;
 			
 			else 
