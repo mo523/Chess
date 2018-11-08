@@ -2,11 +2,11 @@
 public class Queen extends Piece {
 	private String icon[] = {
 			"              ",
-			"     queen    ",
-			"              ",
-			"              ",
-			"              ",
-			"            "};
+			"     \u2584\u2590\u258C\u2584     ",
+			"    \u2584\u2588\u2588\u2588\u2588\u2584    ",
+			"     \u2590\u2588\u2588\u258C     ",
+			"    \u2584\u2588\u2588\u2588\u2588\u2584    ",
+			"   \u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580 "};
 	private boolean white;
 	public Queen( boolean white) {
 		super(white);

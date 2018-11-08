@@ -237,6 +237,7 @@ public class ChessDriver
 	public static void display( Piece[][] CB )
 	{
 		String letters = "        A             B             C             D             E             F             G             H        ";
+
 		String reset = "\u001B[0m";
 		//String test = "\u001B[38;2;255;135;0m";
 		String bxWhite = "\u001B[107m";
