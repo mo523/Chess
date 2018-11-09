@@ -30,9 +30,7 @@ public class Bishop extends Piece {
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int fromCol,
-			int fromRow, int toCol, int toRow,
-			Piece[][] CB) {
+	public boolean noPieceInTheWay(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB) {
 		int  XMoveDistance =(fromCol-toCol);
 		int  YMoveDistance =(fromRow-toRow);
 		boolean done = false;
@@ -58,7 +56,7 @@ public class Bishop extends Piece {
 					
 					
 			}
-			if(XMoveDistance == 1 || XMoveDistance == -1 || XMoveDistance == 0)
+			if(XMoveDistance == 0)
 				done = true;
 		}
 		while (!done);
