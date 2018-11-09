@@ -18,10 +18,16 @@ public class ChessDriver {
 		System.out.println("(R)egular mode\n(D)ebug mode");
 		debug = kyb.nextLine().toUpperCase().equals("D") ? true : false;
 		System.out.println("(C)PU game?");
-		cpuGame = kyb.nextLine().toUpperCase().equals("D") ? true : false;
+		cpuGame = kyb.nextLine().toUpperCase().equals("C") ? true : false;
 		AnsiConsole.systemInstall();
 		setUpPieces();
-		playGame();
+		if (cpuGame) {
+			pickCPUColor();
+			playCPUGame();
+		}
+
+		else
+			playGame();
 		kyb.close();
 		AnsiConsole.systemUninstall();
 	}
@@ -43,6 +49,8 @@ public class ChessDriver {
 	}
 
 	public static void playCPUGame() {
+		
+
 		do {
 			if (!cpuWhite) {
 				if (notInCheckMate()) {
@@ -54,9 +62,16 @@ public class ChessDriver {
 						System.out.println("\nWarning! Your king is in check!\n");
 					movePiece();
 				}
+
+				whitesTurn = !whitesTurn;
+				cpuWhite=!cpuWhite;
 			} else
+			{
 				cpuMovePiece();
-			whitesTurn = !whitesTurn;
+				whitesTurn=!whitesTurn;
+				cpuWhite = !cpuWhite;
+				
+			}
 		} while (notInCheckMate());
 		System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
 	}
@@ -97,25 +112,25 @@ public class ChessDriver {
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
 		boolean legalMoveInput = true;
 		int fromCol, fromRow, toCol, toRow;
-
+		System.out.println("test");
 		do {
 
 			do {
-				fromCol = (int) (Math.random() * 10 - 1);
-				fromRow = (int) (Math.random() * 10 - 1);
+				fromCol = (int) (Math.random()*((7 - 0) + 1));
+				fromRow = (int) (Math.random()*((7 - 0) + 1));
 				legalMoveInput = isValidPieceThere(fromCol, fromRow);
 			} while (!legalMoveInput);
 
 			do {
-				toCol = (int) (Math.random() * 10 - 1);
-				toRow = (int) (Math.random() * 10 - 1);
+				toCol = (int) (Math.random()*((7 - 0) + 1));
+				toRow = (int) (Math.random()*((7 - 0) + 1));
 			} while ((toCol == fromCol && toRow == fromRow));
 			canPieceMoveThereBasedOnAllItsRules = canMoveThere(fromCol, fromRow, toCol, toRow);
 
 		} while (!canPieceMoveThereBasedOnAllItsRules);
 		performMove(fromCol, fromRow, toCol, toRow);
 
-		cpuWhite = !cpuWhite;
+		
 	}
 
 	public static boolean canMoveThere(int fromCol, int fromRow, int toCol, int toRow) {
