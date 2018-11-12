@@ -45,6 +45,7 @@ public class ChessDriver {
 			}
 			whitesTurn = !whitesTurn;
 		} while (notInCheckMate());
+		display();//displays checkmate board
 		System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
 	}
 
