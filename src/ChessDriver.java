@@ -134,6 +134,32 @@ public class ChessDriver {
 		
 	}
 
+	/*public static boolean notInStaleMate(){
+		boolean onlyWhiteKing = true;
+		boolean onlyBlackKing = true;
+		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if( (!(chessBoard[i][j] instanceof King)) && chessBoard[i][j].isWhite() )
+					onlyWhiteKing = false;
+				if( (!(chessBoard[i][j] instanceof King)) && !chessBoard[i][j].isWhite() )
+					onlyBlackKing = false;
+				
+				for (int j2 = 0; j2 < 8; j2++) {
+					for (int k = 0; k < 8; k++) {
+						if(chessBoard[i][j].isLegalMove(i, j, j2, k, chessBoard, King))
+					}
+				}
+			}
+			if(!onlyBlackKing && !onlyWhiteKing)
+				return false;
+			if(!onlyWhiteKing || !onlyBlackKing){
+				if(numTilStale == 0)
+			}
+				
+			
+		}
+	}*/
 	public static boolean canMoveThere(int fromCol, int fromRow, int toCol, int toRow) {
 		return chessBoard[fromRow][fromCol].isLegalMove(fromCol, fromRow, toCol, toRow, chessBoard,
 				(whitesTurn ? whiteKing : blackKing));
