@@ -112,7 +112,6 @@ public class ChessDriver {
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
 		boolean legalMoveInput = true;
 		int fromCol, fromRow, toCol, toRow;
-		System.out.println("test");
 		do {
 
 			do {
@@ -142,6 +141,8 @@ public class ChessDriver {
 		return !(chessBoard[row][col] == null || chessBoard[row][col].white != whitesTurn);
 	}
 
+	//public static void 
+	
 	public static String getPosition() {
 		String pos;
 		boolean badInput = false;

@@ -26,19 +26,19 @@ public abstract class Piece {
 		
 		if(!canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB))
 		{
-			if(!ChessDriver.cpuGame)
+			if(!ChessDriver.cpuGame );
 				System.out.println("WARNING! Piece cannot move like that");
 			return false;
 		}
 		if(!willNotKillSameColor(fromCol, fromRow, toCol, toRow, CB ))
 		{
-			if(!ChessDriver.cpuGame)
+			if(!ChessDriver.cpuGame )
 				System.out.println("WARNING! Piece will kill same color");
 			return false;
 		}
 		if(!noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB))
 		{
-			if(!ChessDriver.cpuGame)
+			if(!ChessDriver.cpuGame )
 				System.out.println("WARNING! Piece in the way");
 			return false;
 		}
