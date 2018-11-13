@@ -45,7 +45,6 @@ public class ChessDriver {
 			}
 			whitesTurn = !whitesTurn;
 		} while (notInCheckMate());
-		display();//displays checkmate board
 		System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
 	}
 
@@ -90,7 +89,7 @@ public class ChessDriver {
 				if (!legalMoveInput)
 					System.out.println("\nYou do not have a piece there, try again.");
 				move = getPosition();
-				fromCol = move.charAt(0) - 97;
+				fromCol = 104 - move.charAt(0);
 				fromRow = move.charAt(1) - 49;
 				legalMoveInput = isValidPieceThere(fromCol, fromRow);
 			} while (!legalMoveInput);
@@ -98,7 +97,7 @@ public class ChessDriver {
 			System.out.println("\nWhere would you like to move your " + chessBoard[fromRow][fromCol].name + " to?");
 			do {
 				move = getPosition();
-				toCol = move.charAt(0) - 97;
+				toCol = 104 - move.charAt(0);
 				toRow = move.charAt(1) - 49;
 				if (toCol == fromCol && toRow == fromRow)
 					System.out.println("\nCan't move to same place, try again.");
@@ -134,32 +133,6 @@ public class ChessDriver {
 		
 	}
 
-	/*public static boolean notInStaleMate(){
-		boolean onlyWhiteKing = true;
-		boolean onlyBlackKing = true;
-		
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				if( (!(chessBoard[i][j] instanceof King)) && chessBoard[i][j].isWhite() )
-					onlyWhiteKing = false;
-				if( (!(chessBoard[i][j] instanceof King)) && !chessBoard[i][j].isWhite() )
-					onlyBlackKing = false;
-				
-				for (int j2 = 0; j2 < 8; j2++) {
-					for (int k = 0; k < 8; k++) {
-						if(chessBoard[i][j].isLegalMove(i, j, j2, k, chessBoard, King))
-					}
-				}
-			}
-			if(!onlyBlackKing && !onlyWhiteKing)
-				return false;
-			if(!onlyWhiteKing || !onlyBlackKing){
-				if(numTilStale == 0)
-			}
-				
-			
-		}
-	}*/
 	public static boolean canMoveThere(int fromCol, int fromRow, int toCol, int toRow) {
 		return chessBoard[fromRow][fromCol].isLegalMove(fromCol, fromRow, toCol, toRow, chessBoard,
 				(whitesTurn ? whiteKing : blackKing));
@@ -239,22 +212,21 @@ public class ChessDriver {
 		chessBoard[0][0] = new Rook(IS_WHITE);
 		chessBoard[0][1] = new Horse(IS_WHITE);
 		chessBoard[0][2] = new Bishop(IS_WHITE);
-		chessBoard[0][3] = new Queen(IS_WHITE);
-		chessBoard[0][4] = new King(IS_WHITE);
+		chessBoard[0][3] = new King(IS_WHITE);
+		chessBoard[0][4] = new Queen(IS_WHITE);
 		chessBoard[0][5] = new Bishop(IS_WHITE);
 		chessBoard[0][6] = new Horse(IS_WHITE);
 		chessBoard[0][7] = new Rook(IS_WHITE);
 		chessBoard[7][0] = new Rook(IS_BLACK);
 		chessBoard[7][1] = new Horse(IS_BLACK);
 		chessBoard[7][2] = new Bishop(IS_BLACK);
-		chessBoard[7][3] = new Queen(IS_BLACK);
-		chessBoard[7][4] = new King(IS_BLACK);
+		chessBoard[7][3] = new King(IS_BLACK);
+		chessBoard[7][4] = new Queen(IS_BLACK);
 		chessBoard[7][5] = new Bishop(IS_BLACK);
 		chessBoard[7][6] = new Horse(IS_BLACK);
 		chessBoard[7][7] = new Rook(IS_BLACK);
-		whiteKing = chessBoard[0][4];
-		blackKing = chessBoard[7][4];
-
+		whiteKing = chessBoard[0][3];
+		blackKing = chessBoard[7][3];
 		// // debug for checkmate
 		// chessBoard[6][4] = chessBoard[0][3];
 		// chessBoard[6][5] = chessBoard[0][5];
@@ -266,20 +238,20 @@ public class ChessDriver {
 
 	public static void displayDebug() {
 		System.out.println("  A  B  C  D  E  F  G  H");
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++)
-				System.out.print((j == 0 ? (i + 1) + " " : "") + (chessBoard[i][j] == null ? "nn "
+		for (int i = 7; i >= 0; i--) {
+			for (int j = 7; j >= 0; j--)
+				System.out.print((j == 7 ? (i + 1) + " " : "") + (chessBoard[i][j] == null ? "nn "
 						: ((chessBoard[i][j].white ? "w" : "b") + chessBoard[i][j].toString().charAt(0) + " ")));
 			System.out.println();
 		}
 	}
 
 	public static void display() {
-		int out = whitesTurn ? 0 : 47;
-		int in = whitesTurn ? 0 : 7;
-		int minOut = whitesTurn ? 48 : -1;
-		int minIn = whitesTurn ? 8 : -1;
-		int chg = whitesTurn ? 1 : -1;
+		int out = whitesTurn ? 47 : 0;
+		int in = whitesTurn ? 7 : 0;
+		int minOut = whitesTurn ? -1 : 48;
+		int minIn = whitesTurn ? -1 : 8;
+		int chg = whitesTurn ? -1 : 1;
 		String letters1 = "        A             B             C             D             E             F             G             H        ";
 		String letters2 = "        H             G             F             E             D             C             B             A        ";
 		String reset = "\u001B[0m";
@@ -307,10 +279,10 @@ public class ChessDriver {
 	}
 
 	public static String PieceSection(int i, int j) {
-		boolean numRow = i % 6 == (whitesTurn ? 5 : 0);
+		boolean numRow = i % 6 == (whitesTurn ? 0 : 5);
 		boolean empty = chessBoard[i / 6][j] == null;
-		String numLet = (char) (j + 65) + "" + (i / 6 + 1);
-		int iconRow = (whitesTurn ? i : 47 - i) % 6;
+		String numLet = (char) (72 -j) + "" + (i / 6 + 1);
+		int iconRow = (whitesTurn ? 47 - i : i) % 6;
 		return (empty ? "            " : chessBoard[i / 6][j].getIcon(iconRow)) + (numRow ? numLet : "  ");
 	}
 	// public static void clear() throws InterruptedException, IOException
