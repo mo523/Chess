@@ -58,5 +58,11 @@ public class Pawn extends Piece
 		//this is taken care of by canPieceMoveLikeThat
 		return true;
 	}
+	public void setFirstMove(boolean first) {
+		this.firstMove = first;
+	}
+	public boolean getFirstMove() {
+		return this.firstMove;
+	}
 
 }

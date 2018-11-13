@@ -99,8 +99,10 @@ public abstract class Piece {
 					newCB[i][j] = new Bishop(CB[i][j].isWhite());
 				else if(CB[i][j] instanceof Horse)
 					newCB[i][j] = new Horse(CB[i][j].isWhite());
-				else if(CB[i][j] instanceof Pawn)
+				else if(CB[i][j] instanceof Pawn) {
 					newCB[i][j] = new Pawn(CB[i][j].isWhite());
+					((Pawn) newCB[i][j]).setFirstMove(((Pawn)CB[i][j]).getFirstMove());
+				}
 			}	
 		}
 		return newCB;

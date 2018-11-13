@@ -234,7 +234,8 @@ public class ChessDriver {
 		// chessBoard[6][3] = chessBoard[0][0];
 		// chessBoard[0][0] = null;
 		// chessBoard[0][5] = null;
-		// chessBoard[0][3] = null;
+		 chessBoard[2][4] = null;
+		
 	}
 
 	public static void displayDebug() {
