@@ -13,6 +13,8 @@ public class ChessDriver {
 	static Piece[][] chessBoard = new Piece[8][8];
 	static boolean cpuGame;
 	static boolean cpuWhite;
+	static boolean startCountingTurns;
+	static int turns = 0;
 
 	public static void main(String[] args) {
 		System.out.println("(R)egular mode\n(D)ebug mode");
