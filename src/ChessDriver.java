@@ -36,6 +36,16 @@ public class ChessDriver {
 
 	public static void playGame() {
 		do {
+			//stalemate stuff for every turn
+			if(!startCountingTurns){
+				if(checkForOneKingFor18MoveStaleMate())//true = only king for either side (whichever side it is doesn't matter)
+					startCountingTurns = true;
+			}
+			if(turns > 17){
+				displayStaleMate();
+			}
+			
+			
 			if (notInCheckMate()) {
 				if (debug)
 					displayDebug();
@@ -47,6 +57,7 @@ public class ChessDriver {
 			}
 			whitesTurn = !whitesTurn;
 		} while (notInCheckMate());
+		display();
 		System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
 	}
 
@@ -54,6 +65,15 @@ public class ChessDriver {
 		
 
 		do {
+			//stalemate stuff for every turn
+			if(!startCountingTurns){
+				if(checkForOneKingFor18MoveStaleMate())//true = only king for either side (whichever side it is doesn't matter)
+					startCountingTurns = true;
+			}
+			if(turns > 17){
+				displayStaleMate();
+			}
+			
 			if (!cpuWhite) {
 				if (notInCheckMate()) {
 					if (debug)
@@ -75,6 +95,7 @@ public class ChessDriver {
 				
 			}
 		} while (notInCheckMate());
+		display();
 		System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
 	}
 
@@ -107,6 +128,8 @@ public class ChessDriver {
 			canPieceMoveThereBasedOnAllItsRules = canMoveThere(fromCol, fromRow, toCol, toRow);
 
 		} while (!canPieceMoveThereBasedOnAllItsRules);
+		if(startCountingTurns)
+			System.out.println("Turns til stalemate : " + (17 - turns++));
 		performMove(fromCol, fromRow, toCol, toRow);
 	}
 
@@ -129,6 +152,8 @@ public class ChessDriver {
 			canPieceMoveThereBasedOnAllItsRules = canMoveThere(fromCol, fromRow, toCol, toRow);
 
 		} while (!canPieceMoveThereBasedOnAllItsRules);
+		if(startCountingTurns)
+			System.out.println("Turns til stalemate : " + (17 - turns++));
 		performMove(fromCol, fromRow, toCol, toRow);
 
 		
@@ -179,26 +204,59 @@ public class ChessDriver {
 		return false;
 	}
 	
-	/*public static boolean notInStaleMate(){
-		
-	}
-	public static boolean checkForOneKingFor18MoveStaleMate(){
+	/*public static boolean notInNoAvailableMovesAndOnly2KingsStaleMate(){
+		//refactor this and next method into one algorithm
 		boolean onlyWhiteKing = true;
 		boolean onlyBlackKing = true;
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == true)
-					onlyWhiteKing = false;
-				if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == false)
-					onlyWhiteKing = false;
+				if(chessBoard[i][j] != null){
+					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == true)
+						onlyWhiteKing = false;
+					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == false)
+						onlyWhiteKing = false;
+				}	
 			}
 		}
-		if(!onlyBlackKing || !onlyWhiteKing){
+		if(onlyBlackKing && onlyWhiteKing)
 			return false;
+		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				
+			}
 		}
-		return true;
 		
 	}*/
+	public static boolean checkForOneKingFor18MoveStaleMate(){
+		//refactor this and last method into one algorithm
+		boolean onlyWhiteKing = true;
+		boolean onlyBlackKing = true;
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if(chessBoard[i][j] != null){
+					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == true)
+						onlyWhiteKing = false;
+					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == false)
+						onlyWhiteKing = false;
+				}	
+			}
+		}
+		/*if(onlyBlackKing && onlyWhiteKing){
+			displayStaleMate();
+		}*/
+			
+		if(!onlyBlackKing && !onlyWhiteKing)
+			return false;
+		return true;
+		
+	}
+	
+	public static void displayStaleMate(){
+		display();
+		System.out.println("Stalemate.");
+		System.exit(0);
+	}
 
 	// These methods are done and should not be touched
 	// Iff you do, note why you touched them
@@ -217,7 +275,7 @@ public class ChessDriver {
 		// MEYER!! See below for more tests
 		// Just uncomment them out
 
-		chessBoard[1][0] = new Pawn(IS_WHITE);
+		/*chessBoard[1][0] = new Pawn(IS_WHITE);
 		chessBoard[1][1] = new Pawn(IS_WHITE);
 		chessBoard[1][2] = new Pawn(IS_WHITE);
 		chessBoard[1][3] = new Pawn(IS_WHITE);
@@ -235,15 +293,15 @@ public class ChessDriver {
 		chessBoard[6][7] = new Pawn(IS_BLACK);
 		chessBoard[0][0] = new Rook(IS_WHITE);
 		chessBoard[0][1] = new Horse(IS_WHITE);
-		chessBoard[0][2] = new Bishop(IS_WHITE);
-		chessBoard[0][3] = new King(IS_WHITE);
+		chessBoard[0][2] = new Bishop(IS_WHITE);*/
+		chessBoard[0][3] = new King(IS_WHITE);/*
 		chessBoard[0][4] = new Queen(IS_WHITE);
 		chessBoard[0][5] = new Bishop(IS_WHITE);
 		chessBoard[0][6] = new Horse(IS_WHITE);
 		chessBoard[0][7] = new Rook(IS_WHITE);
 		chessBoard[7][0] = new Rook(IS_BLACK);
 		chessBoard[7][1] = new Horse(IS_BLACK);
-		chessBoard[7][2] = new Bishop(IS_BLACK);
+		chessBoard[7][2] = new Bishop(IS_BLACK);*/
 		chessBoard[7][3] = new King(IS_BLACK);
 		chessBoard[7][4] = new Queen(IS_BLACK);
 		chessBoard[7][5] = new Bishop(IS_BLACK);
