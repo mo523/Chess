@@ -176,6 +176,27 @@ public class ChessDriver {
 								return true;
 		return false;
 	}
+	
+	/*public static boolean notInStaleMate(){
+		
+	}
+	public static boolean checkForOneKingFor18MoveStaleMate(){
+		boolean onlyWhiteKing = true;
+		boolean onlyBlackKing = true;
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == true)
+					onlyWhiteKing = false;
+				if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == false)
+					onlyWhiteKing = false;
+			}
+		}
+		if(!onlyBlackKing || !onlyWhiteKing){
+			return false;
+		}
+		return true;
+		
+	}*/
 
 	// These methods are done and should not be touched
 	// Iff you do, note why you touched them
