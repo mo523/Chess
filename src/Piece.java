@@ -24,28 +24,20 @@ public abstract class Piece {
 	//all other methods go in this one
 	public boolean isLegalMove(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB, Piece King){
 		
-		if(!canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB))
-		{
-			if(!ChessDriver.cpuGame && !ChessDriver.checkingForStale);
-				System.out.println("WARNING! Piece cannot move like that");
+		if(!canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB)){
+			ChessDriver.errorMessage = "WARNING! Piece cannot move like that";
 			return false;
 		}
-		if(!willNotKillSameColor(fromCol, fromRow, toCol, toRow, CB ))
-		{
-			if(!ChessDriver.cpuGame && !ChessDriver.checkingForStale)
-				System.out.println("WARNING! Piece will kill same color");
+		if(!willNotKillSameColor(fromCol, fromRow, toCol, toRow, CB )){
+			ChessDriver.errorMessage = "WARNING! Piece will kill same color";
 			return false;
 		}
-		if(!noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB))
-		{
-			if(!ChessDriver.cpuGame && !ChessDriver.checkingForStale)
-				System.out.println("WARNING! Piece in the way");
+		if(!noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB)){
+			ChessDriver.errorMessage = "WARNING! Piece in the way";
 			return false;
 		}
-		if (!doesntLeaveKingInCheck(fromCol, fromRow, toCol, toRow, CB, King))
-		{
-			if(!ChessDriver.cpuGame && !ChessDriver.checkingForStale)
-				System.out.println("Warning! Leaves king in check");
+		if (!doesntLeaveKingInCheck(fromCol, fromRow, toCol, toRow, CB, King)){
+			ChessDriver.errorMessage = "Warning! Leaves king in check";
 			return false;
 		}		
 		return true;

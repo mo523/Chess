@@ -16,6 +16,7 @@ public class ChessDriver {
 	static boolean startCountingTurns;
 	static int turns = 0;
 	static boolean checkingForStale;//maybe not needed
+	static String errorMessage;
 	
 	public static void main(String[] args) {
 		System.out.println("(R)egular mode\n(D)ebug mode");
@@ -144,6 +145,8 @@ public class ChessDriver {
 		int fromCol, fromRow, toCol, toRow;
 
 		do {
+			if(!canPieceMoveThereBasedOnAllItsRules)
+				System.out.println(errorMessage);
 			System.out.println("\n" + name + ", Which piece would you like to move?");
 			do {
 				if (!legalMoveInput)
@@ -192,8 +195,6 @@ public class ChessDriver {
 		if(startCountingTurns)
 			System.out.println("Turns til stalemate : " + (17 - turns++));
 		performMove(fromCol, fromRow, toCol, toRow);
-
-		
 	}
 
 	public static boolean canMoveThere(int fromCol, int fromRow, int toCol, int toRow) {
