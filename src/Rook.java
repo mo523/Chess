@@ -12,12 +12,10 @@ public class Rook extends Piece {
 		super(white);
 		this.name = "Rook";
 	}
-	public String getIcon(int row)
-	{
+	public String getIcon(int row){
 		return icon[row];
 	}
-	public boolean isWhite()
-	{
+	public boolean isWhite(){
 		return white;
 	}
 

@@ -12,12 +12,10 @@ public class Bishop extends Piece {
 		super(white);
 		this.name = "Bishop";
 	}
-	public String getIcon(int row)
-	{
+	public String getIcon(int row){
 		return "  " + icon[row] + "  ";
 	}
-	public boolean isWhite()
-	{
+	public boolean isWhite(){
 		return white;
 	}
 	@Override
@@ -36,12 +34,10 @@ public class Bishop extends Piece {
 		boolean done = false;
 		do
 		{
-			
 			if(CB[fromRow-YMoveDistance][fromCol-XMoveDistance] != null && 
 					!(fromRow-YMoveDistance == toRow && fromCol- XMoveDistance == toCol))
 				return false;
-			else 
-			{
+			else {
 				if (XMoveDistance>0)
 					XMoveDistance--;
 				
@@ -52,50 +48,12 @@ public class Bishop extends Piece {
 					YMoveDistance--;
 				
 				if (YMoveDistance<0)
-					YMoveDistance++;
-					
-					
+					YMoveDistance++;		
 			}
 			if(XMoveDistance == 0)
 				done = true;
 		}
 		while (!done);
-		
 		return true;
 	}
 }
-/*	//@Override
-	public boolean pieceInTheWay(int fromCol, int fromRow, int toCol, int toRow,
-			Piece[][] CB) {
-		int  XMoveDistance =(fromCol-toCol);
-		int  YMoveDistance =(fromRow-toRow);
-		
-		do
-		{
-			if(CB[fromRow-YMoveDistance][fromCol-XMoveDistance] != null)
-				return false;
-			
-			else 
-			{
-				if (XMoveDistance>0)
-					XMoveDistance--;
-				
-				if (XMoveDistance<0)
-					XMoveDistance++;
-				
-				if (YMoveDistance>0)
-					YMoveDistance--;
-				
-				if (YMoveDistance<0)
-					YMoveDistance++;
-					
-					
-			}
-		}
-		while (XMoveDistance!=0);
-		
-		return true;
-		
-		
-		
-	}*/

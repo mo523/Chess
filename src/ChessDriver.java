@@ -1,5 +1,4 @@
 
-//import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -31,21 +30,15 @@ public class ChessDriver {
 			pickCPUColor();
 			playCPUGame();
 		}
-
 		else
 			playGame();
+		
 		kyb.close();
 		AnsiConsole.systemUninstall();
 	}
 
 
-	public static void displayChoice(){
-		if (debug)
-			displayDebug();
-		else
-			display();
-	}
-	
+
 	
 	public static void playGame() {
 		AtomicBoolean notInStaleMate = new AtomicBoolean();
@@ -269,6 +262,13 @@ public class ChessDriver {
 			displayStaleMate();
 		}
 	}
+	public static void displayChoice(){
+		if (debug)
+			displayDebug();
+		else
+			display();
+	}
+	
 	public static void displayCheckMate(){
 		System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
 		System.exit(0);

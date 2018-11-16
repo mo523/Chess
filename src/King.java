@@ -12,13 +12,10 @@ public class King extends Piece {
 		super( white);
 		this.name = "King";
 	}
-
-	public String getIcon(int row)
-	{
+	public String getIcon(int row){
 		return icon[row];
 	}
-	public boolean isWhite()
-	{
+	public boolean isWhite(){
 		return white;
 	}
 
@@ -39,6 +36,4 @@ public class King extends Piece {
 			return true;
 		return false;
 	}
-	
-
 }

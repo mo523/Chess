@@ -11,18 +11,16 @@ public class Pawn extends Piece
 			};
 	private int verticalMoveMax;
 	private boolean firstMove = true;
-	public Pawn( boolean white )
-	{
+	
+	public Pawn( boolean white ){
 		super(white);
 		this.name = "Pawn";
 		verticalMoveMax = white ? 1 : -1;
 	}
-	public String getIcon(int row)
-	{
+	public String getIcon(int row){
 		return icon[row];
 	}
-	public boolean isWhite()
-	{
+	public boolean isWhite(){
 		return white;
 	}
 	@Override
@@ -51,7 +49,6 @@ public class Pawn extends Piece
 			return true;
 		}	
 		return false;
-		
 	}
 
 	@Override

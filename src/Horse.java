@@ -12,24 +12,21 @@ public class Horse extends Piece {
 		super( white);
 		this.name = "Horse";
 	}
-	public String getIcon(int row)
-	{
+	public String getIcon(int row){
 		return icon[row];
 	}
-	public boolean isWhite()
-	{
+	public boolean isWhite(){
 		return white;
 	}
 	
 	@Override
-	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB )
-	{
+	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB ){
 		Queen queen = new Queen(white);
 		if (!queen.canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB)&&
 				Math.abs(fromCol - toCol) < 3 && Math.abs(fromRow - toRow) < 3 )
-							return true;
+			return true;
 		else
-							return false;
+			return false;
 	}
 	
 	@Override

@@ -11,22 +11,17 @@ public class Queen extends Piece {
 		super(white);
 		this.name = "Queen";
 	}
-	public String getIcon(int row)
-	{
+	public String getIcon(int row){
 		return icon[row];
 	}
-	public boolean isWhite()
-	{
+	public boolean isWhite(){
 		return white;
 	}
 	
 	@Override
-	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB ) 
-	{
+	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB ) {
 		Rook rook = new Rook(white);
 		Bishop bishop = new Bishop(white);
-		
-		
 		return (rook.canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB)||
 				bishop.canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB));
 	}
@@ -44,7 +39,6 @@ public class Queen extends Piece {
 		if(yDiff == xDiff)
 			return bishop.noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB);
 		else
-			return rook.noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB);
-		
+			return rook.noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB);		
 	}
 }

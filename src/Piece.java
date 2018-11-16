@@ -5,8 +5,6 @@ public abstract class Piece {
 	protected String icon[];
 	
 	/**
-	 * 
-	 * @param position is the position of the piece
 	 * @param white tells if the piece is white or black
 	 */
 	public Piece(boolean white) {
@@ -16,14 +14,12 @@ public abstract class Piece {
 	public boolean isWhite() {
 		return white;
 	}
-	public String getIcon(int line)
-	{
+	public String getIcon(int line){
 		return icon[line];
 	}
 	
 	//all other methods go in this one
 	public boolean isLegalMove(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB, Piece King){
-		
 		if(!canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB)){
 			ChessDriver.errorMessage = "WARNING! Piece cannot move like that";
 			return false;
@@ -43,8 +39,7 @@ public abstract class Piece {
 		return true;
 	}
 	
-	public boolean inCheck(Piece King, Piece[][] CB )
-	{
+	public boolean inCheck(Piece King, Piece[][] CB ){
 		int y = 0, x = 0;
 		
 		outer: for ( y = 0; y < 8; y++)
