@@ -17,6 +17,7 @@ public class ChessDriver {
 	static int turns = 0;
 	static boolean checkingForStale;//maybe not needed
 	static String errorMessage;
+	static boolean movingPiece = false;
 	
 	public static void main(String[] args) {
 		System.out.println("(R)egular mode\n(D)ebug mode");
@@ -36,21 +37,31 @@ public class ChessDriver {
 		AnsiConsole.systemUninstall();
 	}
 
+	public static void staleMateCheckForEveryTurn(){
+		if(!startCountingTurns){
+			if(checkForOneKingFor18MoveStaleMate())//true = only king for either side (whichever side it is doesn't matter)
+				startCountingTurns = true;
+		}
+		if(turns > 17){
+			displayStaleMate();
+		}
+	}
+	
 	public static void playGame() {
 		boolean notInStaleMate;
 		boolean notInCheckMate;
 		do {
 			notInStaleMate = true;
 			notInCheckMate = true;
-			//stalemate stuff for every turn
+			/*//stalemate stuff for every turn
 			if(!startCountingTurns){
 				if(checkForOneKingFor18MoveStaleMate())//true = only king for either side (whichever side it is doesn't matter)
 					startCountingTurns = true;
 			}
 			if(turns > 17){
 				displayStaleMate();
-			}
-			
+			}*/
+			staleMateCheckForEveryTurn();
 			
 			if(isInCheck())
 				notInCheckMate = notInCheckMate();
@@ -89,15 +100,15 @@ public class ChessDriver {
 			notInCheckMate = true;
 			
 			
-			//stalemate stuff for every turn
+			/*//stalemate stuff for every turn
 			if(!startCountingTurns){
 				if(checkForOneKingFor18MoveStaleMate())//true = only king for either side (whichever side it is doesn't matter)
 					startCountingTurns = true;
 			}
 			if(turns > 17){
 				displayStaleMate();
-			}
-			
+			}*/
+			staleMateCheckForEveryTurn();
 			
 			if(isInCheck())
 				notInCheckMate = notInCheckMate();
@@ -143,6 +154,7 @@ public class ChessDriver {
 		String move;
 		boolean legalMoveInput = true;
 		int fromCol, fromRow, toCol, toRow;
+		movingPiece = true;
 
 		do {
 			if(!canPieceMoveThereBasedOnAllItsRules)
@@ -171,12 +183,14 @@ public class ChessDriver {
 		if(startCountingTurns)
 			System.out.println("Turns til stalemate : " + (17 - turns++));
 		performMove(fromCol, fromRow, toCol, toRow);
+		movingPiece = false;
 	}
 
 	public static void cpuMovePiece() {
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
 		boolean legalMoveInput = true;
 		int fromCol, fromRow, toCol, toRow;
+		movingPiece = true;
 		do {
 
 			do {
@@ -195,6 +209,7 @@ public class ChessDriver {
 		if(startCountingTurns)
 			System.out.println("Turns til stalemate : " + (17 - turns++));
 		performMove(fromCol, fromRow, toCol, toRow);
+		movingPiece = false;
 	}
 
 	public static boolean canMoveThere(int fromCol, int fromRow, int toCol, int toRow) {
@@ -253,7 +268,7 @@ public class ChessDriver {
 					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == true)
 						onlyWhiteKing = false;
 					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == false)
-						onlyWhiteKing = false;
+						onlyBlackKing = false;
 				}	
 			}
 		}
@@ -324,7 +339,14 @@ public class ChessDriver {
 		// for tests only
 		// MEYER!! See below for more tests
 		// Just uncomment them out
-
+		/*chessBoard[3][3] = new King(true);
+		chessBoard[2][2] = new Rook(false);
+		chessBoard[4][4] = new Rook(false);
+		chessBoard[2][4] = new Rook(false);
+		chessBoard[4][2] = new Rook(false);*/
+		//chessBoard[0][0] = new Pawn(true);
+		
+		
 		chessBoard[1][0] = new Pawn(IS_WHITE);
 		chessBoard[1][1] = new Pawn(IS_WHITE);
 		chessBoard[1][2] = new Pawn(IS_WHITE);
@@ -366,11 +388,7 @@ public class ChessDriver {
 		// chessBoard[0][0] = null;
 		// chessBoard[0][5] = null;
 		//chessBoard[2][4] = null;
-		/*chessBoard[3][3] = new King(true);
-		chessBoard[2][2] = new Rook(false);
-		chessBoard[4][4] = new Rook(false);
-		chessBoard[2][4] = new Rook(false);
-		chessBoard[4][2] = new Rook(false);*/
+
 		
 	}
 

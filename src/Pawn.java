@@ -46,7 +46,8 @@ public class Pawn extends Piece
 		tempY = verticalMoveMax * (firstMove ? 2 : 1);
 
 		if(yDiff == tempY || yDiff == verticalMoveMax) {
-			firstMove = false;
+			if(ChessDriver.movingPiece)
+				firstMove = false;
 			return true;
 		}	
 		return false;
