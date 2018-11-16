@@ -1,6 +1,8 @@
 
 //import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.fusesource.jansi.AnsiConsole;
 
 public class ChessDriver {
@@ -15,7 +17,6 @@ public class ChessDriver {
 	static boolean cpuWhite;
 	static boolean startCountingTurns;
 	static int turns = 0;
-	static boolean checkingForStale;//maybe not needed
 	static String errorMessage;
 	static boolean movingPiece = false;
 	
@@ -37,91 +38,50 @@ public class ChessDriver {
 		AnsiConsole.systemUninstall();
 	}
 
-	public static void staleMateCheckForEveryTurn(){
-		if(!startCountingTurns){
-			if(checkForOneKingFor18MoveStaleMate())//true = only king for either side (whichever side it is doesn't matter)
-				startCountingTurns = true;
-		}
-		if(turns > 17){
-			displayStaleMate();
-		}
+
+	public static void displayChoice(){
+		if (debug)
+			displayDebug();
+		else
+			display();
 	}
 	
+	
 	public static void playGame() {
-		boolean notInStaleMate;
-		boolean notInCheckMate;
+		AtomicBoolean notInStaleMate = new AtomicBoolean();
+		AtomicBoolean notInCheckMate = new AtomicBoolean();
 		do {
-			notInStaleMate = true;
-			notInCheckMate = true;
-			/*//stalemate stuff for every turn
-			if(!startCountingTurns){
-				if(checkForOneKingFor18MoveStaleMate())//true = only king for either side (whichever side it is doesn't matter)
-					startCountingTurns = true;
-			}
-			if(turns > 17){
-				displayStaleMate();
-			}*/
-			staleMateCheckForEveryTurn();
-			
-			if(isInCheck())
-				notInCheckMate = notInCheckMate();
-			else
-				notInStaleMate = notInNoAvailableMovesAndOnly2KingsStaleMate();
-			
-			
-			
-			if (notInCheckMate && notInStaleMate) {
-				if (debug)
-					displayDebug();
-				else
-					display();
+			notInStaleMate.set(true);
+			notInCheckMate.set(true);
+			setStaleAndCheck(notInStaleMate, notInCheckMate);
+
+			if (notInCheckMate.get() && notInStaleMate.get()) {
+				displayChoice();
 				if (isInCheck())
 					System.out.println("\nWarning! Your king is in check!\n");
 				movePiece();
 			}
 			whitesTurn = !whitesTurn;
-		} while (notInCheckMate && notInStaleMate);
-		if (debug)
-			displayDebug();
+		} while (notInCheckMate.get() && notInStaleMate.get());
+		displayChoice();
+		if(!notInCheckMate.get())
+			displayCheckMate();
 		else
-			display();
-		if(!notInCheckMate)
-			System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
-		else
-			System.out.println("Stalemate");
+			displayStaleMate();
 	}
 
 	public static void playCPUGame() {
-		boolean notInStaleMate;
-		boolean notInCheckMate;
+		AtomicBoolean notInStaleMate = new AtomicBoolean();
+		AtomicBoolean notInCheckMate = new AtomicBoolean();
 
 		do {
-			notInStaleMate = true;
-			notInCheckMate = true;
-			
-			
-			/*//stalemate stuff for every turn
-			if(!startCountingTurns){
-				if(checkForOneKingFor18MoveStaleMate())//true = only king for either side (whichever side it is doesn't matter)
-					startCountingTurns = true;
-			}
-			if(turns > 17){
-				displayStaleMate();
-			}*/
-			staleMateCheckForEveryTurn();
-			
-			if(isInCheck())
-				notInCheckMate = notInCheckMate();
-			else
-				notInStaleMate = notInNoAvailableMovesAndOnly2KingsStaleMate();
-			
+			notInStaleMate.set(true);
+			notInCheckMate.set(true);
+			setStaleAndCheck(notInStaleMate, notInCheckMate);
 			
 			if (!cpuWhite) {
-				if (notInCheckMate && notInStaleMate) {
-					if (debug)
-						displayDebug();
-					else
-						display();
+				if (notInCheckMate.get() && notInStaleMate.get()) {
+					displayChoice();
 					if (isInCheck())
 						System.out.println("\nWarning! Your king is in check!\n");
 					movePiece();
@@ -130,22 +90,17 @@ public class ChessDriver {
 				whitesTurn = !whitesTurn;
 				cpuWhite=!cpuWhite;
 			} 
-			else
-			{
+			else{
 				cpuMovePiece();
 				whitesTurn=!whitesTurn;
-				cpuWhite = !cpuWhite;
-				
+				cpuWhite = !cpuWhite;	
 			}
-		} while (notInCheckMate && notInStaleMate);
-		if (debug)
-			displayDebug();
+		} while (notInCheckMate.get() && notInStaleMate.get());
+		displayChoice();
+		if(!notInCheckMate.get())
+			displayCheckMate();
 		else
-			display();
-		if(!notInCheckMate)
-			System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
-		else
-			System.out.println("Stalemate");
+			displayStaleMate();
 	}
 
 	public static void movePiece() {
@@ -220,8 +175,7 @@ public class ChessDriver {
 	public static boolean isValidPieceThere(int col, int row) {
 		return !(chessBoard[row][col] == null || chessBoard[row][col].white != whitesTurn);
 	}
-
-	//public static void 
+ 
 	
 	public static String getPosition() {
 		String pos;
@@ -258,24 +212,11 @@ public class ChessDriver {
 	}
 	
 	public static boolean notInNoAvailableMovesAndOnly2KingsStaleMate(){
-		checkingForStale = true;
-		//refactor this and next method into one algorithm
-		boolean onlyWhiteKing = true;
-		boolean onlyBlackKing = true;
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				if(chessBoard[i][j] != null){
-					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == true)
-						onlyWhiteKing = false;
-					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == false)
-						onlyBlackKing = false;
-				}	
-			}
-		}
-		if(onlyBlackKing && onlyWhiteKing) {
-			checkingForStale = false;
+		AtomicBoolean onlyWhiteKing = new AtomicBoolean(true);
+		AtomicBoolean onlyBlackKing = new AtomicBoolean(true);
+		loopForKings(onlyWhiteKing, onlyBlackKing);
+		if(onlyBlackKing.get() && onlyWhiteKing.get())
 			return false;
-		}
 		
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
@@ -283,42 +224,56 @@ public class ChessDriver {
 					for (int x = 0; x < 8; x++)
 						for (int y = 0; y < 8; y++) {
 							Piece king = whitesTurn ? whiteKing : blackKing;
-							if(chessBoard[i][j].isLegalMove(j, i, x, y, chessBoard, king)) {
-								checkingForStale = false;
+							if(chessBoard[i][j].isLegalMove(j, i, x, y, chessBoard, king))
 								return true;
-							}
 						}
-		checkingForStale = false;
 		return false;
 	}
+
+	public static void setStaleAndCheck(AtomicBoolean notInStaleMate, AtomicBoolean notInCheckMate){
+		staleMateCheckForEveryTurn();
+		if(isInCheck())
+			notInCheckMate.set(notInCheckMate());
+		else
+			notInStaleMate.set(notInNoAvailableMovesAndOnly2KingsStaleMate());
+	}
+	
 	public static boolean checkForOneKingFor18MoveStaleMate(){
-		checkingForStale = true;
-		//refactor this and last method into one algorithm
-		boolean onlyWhiteKing = true;
-		boolean onlyBlackKing = true;
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				if(chessBoard[i][j] != null){
-					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == true)
-						onlyWhiteKing = false;
-					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == false)
-						onlyBlackKing = false;
-				}	
-			}
-		}
-		
-		checkingForStale = false;
-		if(!onlyBlackKing && !onlyWhiteKing)
+		AtomicBoolean onlyWhiteKing = new AtomicBoolean(true);
+		AtomicBoolean onlyBlackKing = new AtomicBoolean(true);
+		loopForKings(onlyWhiteKing, onlyBlackKing);
+
+		if(!onlyBlackKing.get() && !onlyWhiteKing.get())
 			return false;
 		return true;
 		
 	}
-	
+	public static void loopForKings(AtomicBoolean onlyWhiteKing, AtomicBoolean onlyBlackKing){
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if(chessBoard[i][j] != null){
+					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == true)
+						onlyWhiteKing.set(false);
+					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == false)
+						onlyBlackKing.set(false);
+				}	
+			}
+		}
+	}
+	public static void staleMateCheckForEveryTurn(){
+		if(!startCountingTurns){
+			if(checkForOneKingFor18MoveStaleMate())//true = only king for either side (whichever side it is doesn't matter)
+				startCountingTurns = true;
+		}
+		if(turns > 17){
+			displayStaleMate();
+		}
+	}
+	public static void displayCheckMate(){
+		System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
+		System.exit(0);
+	}
 	public static void displayStaleMate(){
-		if (debug)
-			displayDebug();
-		else
-			display();
 		System.out.println("Stalemate.");
 		System.exit(0);
 	}
@@ -347,7 +302,7 @@ public class ChessDriver {
 		//chessBoard[0][0] = new Pawn(true);
 		
 		
-		chessBoard[1][0] = new Pawn(IS_WHITE);
+		/*chessBoard[1][0] = new Pawn(IS_WHITE);
 		chessBoard[1][1] = new Pawn(IS_WHITE);
 		chessBoard[1][2] = new Pawn(IS_WHITE);
 		chessBoard[1][3] = new Pawn(IS_WHITE);
@@ -365,12 +320,12 @@ public class ChessDriver {
 		chessBoard[6][7] = new Pawn(IS_BLACK);
 		chessBoard[0][0] = new Rook(IS_WHITE);
 		chessBoard[0][1] = new Horse(IS_WHITE);
-		chessBoard[0][2] = new Bishop(IS_WHITE);
-		chessBoard[0][3] = new King(IS_WHITE);
+		chessBoard[0][2] = new Bishop(IS_WHITE);*/
+		chessBoard[0][3] = new King(IS_WHITE);/*
 		chessBoard[0][4] = new Queen(IS_WHITE);
 		chessBoard[0][5] = new Bishop(IS_WHITE);
 		chessBoard[0][6] = new Horse(IS_WHITE);
-		chessBoard[0][7] = new Rook(IS_WHITE);
+		chessBoard[0][7] = new Rook(IS_WHITE);*/
 		chessBoard[7][0] = new Rook(IS_BLACK);
 		chessBoard[7][1] = new Horse(IS_BLACK);
 		chessBoard[7][2] = new Bishop(IS_BLACK);
