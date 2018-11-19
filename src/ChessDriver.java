@@ -242,13 +242,15 @@ public class ChessDriver {
 		
 	}
 	public static void loopForKings(AtomicBoolean onlyWhiteKing, AtomicBoolean onlyBlackKing){
-		for (int i = 0; i < 8; i++) {
+		outer: for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				if(chessBoard[i][j] != null){
 					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == true)
 						onlyWhiteKing.set(false);
 					if( !(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == false)
 						onlyBlackKing.set(false);
+					if(!onlyWhiteKing.get() && !onlyBlackKing.get())
+						break outer;
 				}	
 			}
 		}
