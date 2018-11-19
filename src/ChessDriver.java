@@ -5,20 +5,24 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.fusesource.jansi.AnsiConsole;
 
 public class ChessDriver {
-	static Scanner kyb = new Scanner(System.in);
-	static final boolean IS_WHITE = true;// this is to make what color the pieces are more clear
-	static final boolean IS_BLACK = false;// this is to make what color the pieces are more clear
-	static boolean debug;
-	static Piece whiteKing, blackKing;
-	static boolean whitesTurn = true;;
-	static Piece[][] chessBoard = new Piece[8][8];
-	static boolean cpuGame;
-	static boolean cpuWhite;
-	static boolean startCountingTurns;
-	static int turns = 0;
-	static String errorMessage;
-	static boolean movingPiece = false;
-	
+	private static Scanner kyb = new Scanner(System.in);
+	private static final boolean IS_WHITE = true;// this is to make what color the pieces are more clear
+	private static final boolean IS_BLACK = false;// this is to make what color the pieces are more clear
+	private static boolean debug;
+	private static Piece whiteKing, blackKing;
+	private static boolean whitesTurn = true;;
+	private static Piece[][] chessBoard = new Piece[8][8];
+	private static boolean cpuGame;
+	private static boolean cpuWhite;
+	private static boolean startCountingTurns;
+	private static int turns = 0;
+	private static String errorMessage;
+	private static boolean movingPiece = false;
+
+
+
+
+
 	public static void main(String[] args) {
 		System.out.println("(R)egular mode\n(D)ebug mode");
 		debug = kyb.nextLine().toUpperCase().equals("D") ? true : false;
@@ -279,6 +283,14 @@ public class ChessDriver {
 		System.out.println("Stalemate.");
 		System.exit(0);
 	}
+	
+	public static boolean isMovingPiece() {
+		return movingPiece;
+	}
+
+	public static void setErrorMessage(String errorMessage) {
+		ChessDriver.errorMessage = errorMessage;
+	}
 
 	// These methods are done and should not be touched
 	// Iff you do, note why you touched them
@@ -304,7 +316,7 @@ public class ChessDriver {
 		//chessBoard[0][0] = new Pawn(true);
 		
 		
-		/*chessBoard[1][0] = new Pawn(IS_WHITE);
+		chessBoard[1][0] = new Pawn(IS_WHITE);
 		chessBoard[1][1] = new Pawn(IS_WHITE);
 		chessBoard[1][2] = new Pawn(IS_WHITE);
 		chessBoard[1][3] = new Pawn(IS_WHITE);
@@ -322,12 +334,12 @@ public class ChessDriver {
 		chessBoard[6][7] = new Pawn(IS_BLACK);
 		chessBoard[0][0] = new Rook(IS_WHITE);
 		chessBoard[0][1] = new Horse(IS_WHITE);
-		chessBoard[0][2] = new Bishop(IS_WHITE);*/
-		chessBoard[0][3] = new King(IS_WHITE);/*
+		chessBoard[0][2] = new Bishop(IS_WHITE);
+		chessBoard[0][3] = new King(IS_WHITE);
 		chessBoard[0][4] = new Queen(IS_WHITE);
 		chessBoard[0][5] = new Bishop(IS_WHITE);
 		chessBoard[0][6] = new Horse(IS_WHITE);
-		chessBoard[0][7] = new Rook(IS_WHITE);*/
+		chessBoard[0][7] = new Rook(IS_WHITE);
 		chessBoard[7][0] = new Rook(IS_BLACK);
 		chessBoard[7][1] = new Horse(IS_BLACK);
 		chessBoard[7][2] = new Bishop(IS_BLACK);

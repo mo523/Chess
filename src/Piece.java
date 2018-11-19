@@ -21,19 +21,19 @@ public abstract class Piece {
 	//all other methods go in this one
 	public boolean isLegalMove(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB, Piece King){
 		if(!canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB)){
-			ChessDriver.errorMessage = "WARNING! Piece cannot move like that";
+			ChessDriver.setErrorMessage("WARNING! Piece cannot move like that");
 			return false;
 		}
 		if(!willNotKillSameColor(fromCol, fromRow, toCol, toRow, CB )){
-			ChessDriver.errorMessage = "WARNING! Piece will kill same color";
+			ChessDriver.setErrorMessage("WARNING! Piece will kill same color");
 			return false;
 		}
 		if(!noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB)){
-			ChessDriver.errorMessage = "WARNING! Piece in the way";
+			ChessDriver.setErrorMessage("WARNING! Piece in the way");
 			return false;
 		}
 		if (!doesntLeaveKingInCheck(fromCol, fromRow, toCol, toRow, CB, King)){
-			ChessDriver.errorMessage = "Warning! Leaves king in check";
+			ChessDriver.setErrorMessage("Warning! Leaves king in check");
 			return false;
 		}		
 		return true;
