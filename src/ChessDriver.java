@@ -18,7 +18,7 @@ public class ChessDriver {
 	private static int turns = 0;
 	private static String errorMessage;
 	private static boolean movingPiece = false;
-
+	private HashMap<String,Piece> pieces = new Hasmap<>();
 
 
 
@@ -132,6 +132,7 @@ public class ChessDriver {
 			canPieceMoveThereBasedOnAllItsRules = canMoveThere(fromCol, fromRow, toCol, toRow);
 
 		} while (!canPieceMoveThereBasedOnAllItsRules);
+		if (whitesturn && toRow=5 && chessBoard[4][toCol]==)
 		if(startCountingTurns)
 			System.out.println("Turns til stalemate : " + (17 - turns++));
 		performMove(fromCol, fromRow, toCol, toRow);
@@ -350,6 +351,8 @@ public class ChessDriver {
 		chessBoard[7][7] = new Rook(IS_BLACK);
 		whiteKing = chessBoard[0][3];
 		blackKing = chessBoard[7][3];
+		
+		
 		// // debug for checkmate
 		// chessBoard[6][4] = chessBoard[0][3];
 		// chessBoard[6][5] = chessBoard[0][5];

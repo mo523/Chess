@@ -11,6 +11,7 @@ public class Pawn extends Piece
 			};
 	private int verticalMoveMax;
 	private boolean firstMove = true;
+	private boolean enPassantAble;
 	
 	public Pawn( boolean white ){
 		super(white);
