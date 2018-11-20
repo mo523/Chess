@@ -65,5 +65,7 @@ public class Pawn extends Piece
 	public boolean getFirstMove() {
 		return this.firstMove;
 	}
-
+public boolean isEnPassantAble() {
+	return enPassantAble;
+}
 }

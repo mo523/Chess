@@ -112,4 +112,8 @@ public abstract class Piece {
 			return false;
 		return true;
 	}
+	
+	public String getNmae() {
+		return name;
+	}
 }
