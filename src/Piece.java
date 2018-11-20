@@ -113,7 +113,7 @@ public abstract class Piece {
 		return true;
 	}
 	
-	public String getNmae() {
+	public String getName() {
 		return name;
 	}
 }

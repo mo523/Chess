@@ -68,4 +68,9 @@ public class Pawn extends Piece
 public boolean isEnPassantAble() {
 	return enPassantAble;
 }
+
+public void changeEnPassantAble(boolean change)
+{
+	enPassantAble=change;
+}
 }
