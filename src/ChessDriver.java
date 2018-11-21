@@ -18,7 +18,8 @@ public class ChessDriver {
 	private static int turns = 0;
 	private static String errorMessage;
 	private static boolean movingPiece = false;
-	// private HashMap<String,Piece> pieces = new Hasmap<>();
+	private static int fr = -1, fc = -1, tr = -1, tc = -1;
+	// private HashMap<String,Piece> pieces = new HashMap<>();
 
 	public static void main(String[] args) {
 		System.out.println("(R)egular mode\n(D)ebug mode");
@@ -128,7 +129,10 @@ public class ChessDriver {
 		if (startCountingTurns)
 			System.out.println("Turns til stalemate : " + (17 - turns++));
 		
-		
+		fc = fromCol;
+		fr = fromRow;
+		tc = toCol;
+		tr = toRow;
 		performMove(fromCol, fromRow, toCol, toRow);
 		
 		//if pawn enPassantAble it kills
@@ -395,6 +399,8 @@ public class ChessDriver {
 		String bxWhite = "\u001B[107m";
 		String bgWhite = "\u001B[47m";
 		String bgBlack = "\u001B[100m";
+		String bgGreen = "\u001B[42m";
+		String bgCyan = "\u001B[46m";
 		String fgWhite = "\u001B[97m";
 		String fgBlack = "\u001B[30m";
 		String fgBlue = "\u001B[34m";
@@ -406,7 +412,9 @@ public class ChessDriver {
 				Boolean isWhite = chessBoard[i / 6][j] != null ? chessBoard[i / 6][j].isWhite() : null;
 				boolean ijTheSame = i / 6 % 2 == j % 2;
 				boolean isNull = chessBoard[i / 6][j] == null;
-				System.out.print((ijTheSame ? bgWhite : bgBlack) + (isNull ? fgBlue : isWhite ? fgWhite : fgBlack)
+				boolean from = i / 6 == fr && j == fc;
+				boolean to = i / 6 == tr && j == tc;
+				System.out.print((from ? bgCyan : to ? bgGreen : ijTheSame ? bgWhite : bgBlack) + (isNull ? fgBlue : isWhite ? fgWhite : fgBlack)
 						+ PieceSection(i, j) + reset);
 			}
 			System.out.print(bxWhite + fgBlack + (numRow ? " " + (i / 6 + 1) : "  ") + reset);
