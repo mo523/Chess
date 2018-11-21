@@ -119,12 +119,13 @@ public class ChessDriver {
 
 				whitesTurn = !whitesTurn;
 				cpuWhite = !cpuWhite;
+				saveGame();
 			} else {
 				cpuMovePiece();
 				whitesTurn = !whitesTurn;
 				cpuWhite = !cpuWhite;
 			}
-			saveGame();
+			
 		} while (notInCheckMate.get() && notInStaleMate.get());
 		displayChoice();
 		if (!notInCheckMate.get())
