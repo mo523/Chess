@@ -1,4 +1,6 @@
-public abstract class Piece {
+import java.io.Serializable;
+
+public abstract class Piece implements Serializable{
 
 	protected String name; // name of the piece
 	protected boolean white; // boolean to test if the piece is white or black

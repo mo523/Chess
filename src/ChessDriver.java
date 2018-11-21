@@ -1,4 +1,10 @@
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -21,24 +27,31 @@ public class ChessDriver {
 	private static int fr = -1, fc = -1, tr = -1, tc = -1;
 	// private HashMap<String,Piece> pieces = new HashMap<>();
 
-	public static void main(String[] args) {
-		System.out.println("(R)egular mode\n(D)ebug mode");
-		debug = kyb.nextLine().toUpperCase().equals("D") ? true : false;
-		System.out.println("(C)PU game?");
-		cpuGame = kyb.nextLine().toUpperCase().equals("C") ? true : false;
-		AnsiConsole.systemInstall();
-		setUpPieces();
-		if (cpuGame) {
-			pickCPUColor();
-			playCPUGame();
-		} else
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
+		System.out.println("Do you want to load a saved game");
+		if(kyb.next().toUpperCase().charAt(0) == 'Y') {
+			loadSavedGame();
 			playGame();
-
+		}
+		else {
+			System.out.println("(R)egular mode\n(D)ebug mode");
+			debug = kyb.next().toUpperCase().equals("D") ? true : false;
+			System.out.println("(C)PU game?");
+			cpuGame = kyb.next().toUpperCase().equals("C") ? true : false;
+			AnsiConsole.systemInstall();
+			setUpPieces();
+			if (cpuGame) {
+				pickCPUColor();
+				playCPUGame();
+			}
+			else
+				playGame();
+		}
 		kyb.close();
 		AnsiConsole.systemUninstall();
 	}
 
-	public static void playGame() {
+	public static void playGame() throws FileNotFoundException, IOException {
 		AtomicBoolean notInStaleMate = new AtomicBoolean();
 		AtomicBoolean notInCheckMate = new AtomicBoolean();
 		do {
@@ -53,6 +66,7 @@ public class ChessDriver {
 				movePiece();
 			}
 			whitesTurn = !whitesTurn;
+			saveGame();
 		} while (notInCheckMate.get() && notInStaleMate.get());
 		displayChoice();
 		if (!notInCheckMate.get())
@@ -60,8 +74,33 @@ public class ChessDriver {
 		else
 			displayStaleMate();
 	}
-
-	public static void playCPUGame() {
+	public static void saveGame() throws FileNotFoundException, IOException {
+		System.out.println("Do you want to save the game ? Y/N");
+		if(kyb.next().toUpperCase().charAt(0) == 'Y') {
+			SavedGame s = new SavedGame(chessBoard, debug, whiteKing, blackKing, whitesTurn, cpuGame, cpuWhite, startCountingTurns, turns);
+			System.out.println("What name do you want to save the game as?");
+			ObjectOutputStream saver = new ObjectOutputStream(new FileOutputStream(kyb.next())); 
+			saver.writeObject(s);
+			saver.close();
+			System.exit(0);
+		}
+	}
+	public static void loadSavedGame() throws FileNotFoundException, IOException, ClassNotFoundException {
+		System.out.println("Which game?");
+		ObjectInputStream loader = new ObjectInputStream(new FileInputStream(kyb.next())); 
+		SavedGame s = (SavedGame) loader.readObject();
+		loader.close();
+		chessBoard = s.getChessBoard();
+		debug = s.isDebug();
+		whiteKing = s.getWhiteKing();
+		blackKing = s.getBlackKing();
+		whitesTurn = s.isWhitesTurn();
+		cpuGame = s.isCpuGame();
+		cpuWhite = s.isCpuWhite();
+		startCountingTurns = s.isStartCountingTurns();
+		turns = s.getTurns();
+	}
+	public static void playCPUGame() throws FileNotFoundException, IOException {
 		AtomicBoolean notInStaleMate = new AtomicBoolean();
 		AtomicBoolean notInCheckMate = new AtomicBoolean();
 
@@ -85,6 +124,7 @@ public class ChessDriver {
 				whitesTurn = !whitesTurn;
 				cpuWhite = !cpuWhite;
 			}
+			saveGame();
 		} while (notInCheckMate.get() && notInStaleMate.get());
 		displayChoice();
 		if (!notInCheckMate.get())
@@ -191,7 +231,7 @@ public class ChessDriver {
 		boolean badInput = false;
 		do {
 			badInput = true;
-			pos = kyb.nextLine().toLowerCase();
+			pos = kyb.next().toLowerCase();
 			if (pos.length() != 2)
 				System.out.println("\nPosition must be 2 characters, try again.");
 			else if (pos.charAt(0) < 97 || pos.charAt(0) > 104 || pos.charAt(1) < 49 || pos.charAt(1) > 56)
@@ -437,6 +477,6 @@ public class ChessDriver {
 
 	public static void pickCPUColor() {
 		System.out.println("(B)lack or (W)hite?");
-		cpuWhite = kyb.nextLine().toUpperCase().equals("B") ? true : false;
+		cpuWhite = kyb.next().toUpperCase().equals("B") ? true : false;
 	}
 }
