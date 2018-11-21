@@ -113,7 +113,7 @@ public abstract class Piece {
 		return true;
 	}
 	
-	public String getName() {
+	public String isInstanceOf() {
 		return name;
 	}
 }

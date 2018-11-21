@@ -132,13 +132,13 @@ public class ChessDriver {
 		performMove(fromCol, fromRow, toCol, toRow);
 		
 		//if pawn enPassantAble it kills
-		if ((whitesTurn && toRow == 5 && chessBoard[4][toCol] != null && chessBoard[4][toCol].getName() =="Pawn" &&((Pawn) chessBoard[4][toCol]).isEnPassantAble()))
+		if ((whitesTurn && toRow == 5 && chessBoard[4][toCol] != null && chessBoard[4][toCol].isInstanceOf().equals("Pawn") &&((Pawn) chessBoard[4][toCol]).isEnPassantAble()))
 						chessBoard[4][toCol] = null;
-		if (!whitesTurn && toRow == 2 && chessBoard[3][toCol] != null && chessBoard[3][toCol].getName() =="Pawn" &&((Pawn) chessBoard[3][toCol]).isEnPassantAble())
+		if (!whitesTurn && toRow == 2 && chessBoard[3][toCol] != null && chessBoard[3][toCol].isInstanceOf().equals("Pawn") &&((Pawn) chessBoard[3][toCol]).isEnPassantAble())
 						chessBoard[3][toCol] = null;
 		
 		//makes a piece enPassantAble
-		if (chessBoard[toRow][toCol].getName() == "Pawn") {
+		if (chessBoard[toRow][toCol].isInstanceOf().equals("Pawn")) {
 			if (Math.abs(toRow - fromRow) == 2)
 				((Pawn) chessBoard[toRow][toCol]).changeEnPassantAble(true);
 			else
