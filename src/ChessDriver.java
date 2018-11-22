@@ -66,7 +66,6 @@ public class ChessDriver {
 				movePiece();
 			}
 			whitesTurn = !whitesTurn;
-			saveGame();
 		} while (notInCheckMate.get() && notInStaleMate.get());
 		displayChoice();
 		if (!notInCheckMate.get())
@@ -75,15 +74,12 @@ public class ChessDriver {
 			displayStaleMate();
 	}
 	public static void saveGame() throws FileNotFoundException, IOException {
-		System.out.println("Do you want to save the game ? Y/N");
-		if(kyb.next().toUpperCase().charAt(0) == 'Y') {
-			SavedGame s = new SavedGame(chessBoard, debug, whiteKing, blackKing, whitesTurn, cpuGame, cpuWhite, startCountingTurns, turns);
-			System.out.println("What name do you want to save the game as?");
-			ObjectOutputStream saver = new ObjectOutputStream(new FileOutputStream(kyb.next())); 
-			saver.writeObject(s);
-			saver.close();
-			System.exit(0);
-		}
+		SavedGame s = new SavedGame(chessBoard, debug, whiteKing, blackKing, whitesTurn, cpuGame, cpuWhite, startCountingTurns, turns);
+		System.out.println("What name do you want to save the game as?");
+		ObjectOutputStream saver = new ObjectOutputStream(new FileOutputStream(kyb.next())); 
+		saver.writeObject(s);
+		saver.close();
+		System.exit(0);	
 	}
 	public static void loadSavedGame() throws FileNotFoundException, IOException, ClassNotFoundException {
 		System.out.println("Which game?");
@@ -119,7 +115,6 @@ public class ChessDriver {
 
 				whitesTurn = !whitesTurn;
 				cpuWhite = !cpuWhite;
-				saveGame();
 			} else {
 				cpuMovePiece();
 				whitesTurn = !whitesTurn;
@@ -134,7 +129,7 @@ public class ChessDriver {
 			displayStaleMate();
 	}
 
-	public static void movePiece() {
+	public static void movePiece() throws FileNotFoundException, IOException {
 		String name = whitesTurn ? "White" : "Black";
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
 		String move;
@@ -227,12 +222,14 @@ public class ChessDriver {
 		return !(chessBoard[row][col] == null || chessBoard[row][col].white != whitesTurn);
 	}
 
-	public static String getPosition() {
+	public static String getPosition() throws FileNotFoundException, IOException {
 		String pos;
 		boolean badInput = false;
 		do {
 			badInput = true;
 			pos = kyb.next().toLowerCase();
+			if (pos.equalsIgnoreCase("s"))
+				saveGame();
 			if (pos.length() != 2)
 				System.out.println("\nPosition must be 2 characters, try again.");
 			else if (pos.charAt(0) < 97 || pos.charAt(0) > 104 || pos.charAt(1) < 49 || pos.charAt(1) > 56)
