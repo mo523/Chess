@@ -172,7 +172,8 @@ public class ChessDriver {
 		tc = toCol;
 		tr = toRow;
 		performMove(fromCol, fromRow, toCol, toRow);
-		
+		if (chessBoard[toRow][toCol] instanceof Pawn && ((whitesTurn && toRow == 7 ) || (!whitesTurn && toRow == 0)))
+			pawnReachedOtherSide(toRow, toCol);
 		//if pawn enPassantAble it kills
 		if ((whitesTurn && toRow == 5 && chessBoard[4][toCol] != null && chessBoard[4][toCol].isInstanceOf().equals("Pawn") &&((Pawn) chessBoard[4][toCol]).isEnPassantAble()))
 						chessBoard[4][toCol] = null;
@@ -242,6 +243,24 @@ public class ChessDriver {
 		return pos;
 	}
 
+	public static void pawnReachedOtherSide(int row, int col)
+	{
+		display();
+		int choice;
+		do {
+		System.out.println("\nWhat would you like to convert your pawn to?");
+		System.out.println("1. Queen\n2. Bishop\n3. Rook\n4. Horse");
+		choice = kyb.nextInt();
+		if (choice > 4 || choice < 1)
+			System.out.println("Not a valid choice, 1-4");
+		}	while (choice > 4 || choice < 1);
+		
+		chessBoard[row][col] = choice == 1 ? new Queen(whitesTurn) : choice == 2 ? new Bishop(whitesTurn) : choice == 3 ? new Rook(whitesTurn) : new Horse(whitesTurn);
+		
+		
+		
+	}
+	
 	public static boolean isInCheck() {
 		return whitesTurn ? whiteKing.inCheck(whiteKing, chessBoard) : blackKing.inCheck(blackKing, chessBoard);
 	}
