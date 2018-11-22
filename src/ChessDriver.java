@@ -28,6 +28,9 @@ public class ChessDriver {
 	// private HashMap<String,Piece> pieces = new HashMap<>();
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
+
+		AnsiConsole.systemInstall();	//MUST BE ON TOP - PARSES ALL THE UNICODE
+		
 		System.out.println("Do you want to load a saved game");
 		if(kyb.next().toUpperCase().charAt(0) == 'Y') {
 			loadSavedGame();
@@ -38,7 +41,6 @@ public class ChessDriver {
 			debug = kyb.next().toUpperCase().equals("D") ? true : false;
 			System.out.println("(C)PU game?");
 			cpuGame = kyb.next().toUpperCase().equals("C") ? true : false;
-			AnsiConsole.systemInstall();
 			setUpPieces();
 			if (cpuGame) {
 				pickCPUColor();
