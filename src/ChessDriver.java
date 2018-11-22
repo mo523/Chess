@@ -459,13 +459,13 @@ public class ChessDriver {
 		String letters2 = "        H             G             F             E             D             C             B             A        ";
 		String reset = "\u001B[0m";
 		String bxWhite = "\u001B[107m";
-		String bgWhite = "\u001B[47m";
-		String bgBlack = "\u001B[100m";
+		String bgWhite = useJansi ? "\u001B[47m" : "\u001B[48;2;249;218;180m";
+		String bgBlack = useJansi? "\u001B[100m" : "\u001B[48;2;127;99;95m";
 		String bgGreen = "\u001B[42m";
 		String bgCyan = "\u001B[46m";
-		String fgWhite = "\u001B[97m";
-		String fgBlack = "\u001B[30m";
-		String fgBlue = "\u001B[34m";
+		String fgWhite = useJansi? "\u001B[97m" : "\u001B[38;2;205;205;205m";
+		String fgBlack = useJansi? "\u001B[30m" : "\u001B[38;2;40;40;40m";
+		String fgBlue = useJansi? "\u001B[34m" : "\u001B[38;2;112;140;78m";
 		System.out.println("\n" + bxWhite + fgBlack + (whitesTurn ? letters1 : letters2) + " " + reset);
 		for (int i = out; i != minOut; i += chg) {
 			boolean numRow = i % 6 + 1 == 3;
