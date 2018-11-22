@@ -25,11 +25,13 @@ public class ChessDriver {
 	private static String errorMessage;
 	private static boolean movingPiece = false;
 	private static int fr = -1, fc = -1, tr = -1, tc = -1;
+	private static boolean useJansi = System.getProperty("os.name").contains("Windows") && !System.getProperty("os.name").contains("10");
 	// private HashMap<String,Piece> pieces = new HashMap<>();
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 
-		AnsiConsole.systemInstall();	//MUST BE ON TOP - PARSES ALL THE UNICODE
+		if (useJansi)
+			AnsiConsole.systemInstall();	//MUST BE ON TOP - PARSES ALL THE UNICODE
 		
 		System.out.println("Do you want to load a saved game");
 		if(kyb.next().toUpperCase().charAt(0) == 'Y') {
@@ -50,7 +52,8 @@ public class ChessDriver {
 				playGame();
 		}
 		kyb.close();
-		AnsiConsole.systemUninstall();
+		if (useJansi)
+			AnsiConsole.systemUninstall();
 	}
 
 	public static void playGame() throws FileNotFoundException, IOException {
