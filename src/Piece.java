@@ -1,5 +1,5 @@
 import java.io.Serializable;
-
+@SuppressWarnings("serial")
 public abstract class Piece implements Serializable{
 
 	protected String name; // name of the piece

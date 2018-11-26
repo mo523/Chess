@@ -25,5 +25,9 @@ public class AI
 			System.out.println("Turns til stalemate : " + (17 - ChessDriver.turns++));
 		ChessDriver.performMove(fromCol, fromRow, toCol, toRow);
 		ChessDriver.movingPiece = false;
+		ChessDriver.fr = fromRow;
+		ChessDriver.fc = fromCol;
+		ChessDriver.tc = toCol;
+		ChessDriver.tr = toRow;
 	}
 }

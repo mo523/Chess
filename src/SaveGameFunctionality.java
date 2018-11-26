@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
+@SuppressWarnings("resource")
 public class SaveGameFunctionality {
 	private static Scanner kyb = new Scanner(System.in);
 

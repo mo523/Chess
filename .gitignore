@@ -3,8 +3,5 @@
 .classpath
 .project
 /.settings
-/test
+/test/*
 jansi-1.17.1.jar.lnk
-/test
-/test
-/test

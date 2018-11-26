@@ -19,7 +19,7 @@ public class ChessDriver {
 	static int turns = 0;
 	private static String errorMessage;
 	static boolean movingPiece = false;
-	private static int fr = -1, fc = -1, tr = -1, tc = -1;
+	static int fr = -1, fc = -1, tr = -1, tc = -1;
 	private static boolean useJansi = System.getProperty("os.name").contains("Windows")
 			&& !System.getProperty("os.name").contains("10");
 	// private HashMap<String,Piece> pieces = new HashMap<>();
