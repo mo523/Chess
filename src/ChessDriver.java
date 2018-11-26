@@ -3,7 +3,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.fusesource.jansi.AnsiConsole;
 
 public class ChessDriver {
@@ -12,41 +11,25 @@ public class ChessDriver {
 	private static final boolean IS_BLACK = false;// this is to make what color the pieces are more clear
 	private static boolean debug;
 	private static Piece whiteKing, blackKing;
-	private static boolean whitesTurn = true;;
+	private static boolean whitesTurn = true;
 	private static Piece[][] chessBoard = new Piece[8][8];
 	private static boolean cpuGame;
-	private static boolean cpuWhite;
-	private static boolean startCountingTurns;
-	private static int turns = 0;
+	private static boolean cpuTurn;
+	static boolean startCountingTurns;
+	static int turns = 0;
 	private static String errorMessage;
-	private static boolean movingPiece = false;
+	static boolean movingPiece = false;
 	private static int fr = -1, fc = -1, tr = -1, tc = -1;
-	private static boolean useJansi = System.getProperty("os.name").contains("Windows") && !System.getProperty("os.name").contains("10");
+	private static boolean useJansi = System.getProperty("os.name").contains("Windows")
+			&& !System.getProperty("os.name").contains("10");
 	// private HashMap<String,Piece> pieces = new HashMap<>();
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 
 		if (useJansi)
-			AnsiConsole.systemInstall();	//MUST BE ON TOP - PARSES ALL THE UNICODE
-		
-		System.out.println("Do you want to load a saved game");
-		if(kyb.next().toUpperCase().charAt(0) == 'Y') {
-			SaveGameFunctionality.loadSavedGame();
-			playGame();
-		}
-		else {
-			System.out.println("(R)egular mode\n(D)ebug mode");
-			debug = kyb.next().toUpperCase().equals("D") ? true : false;
-			System.out.println("(C)PU game?");
-			cpuGame = kyb.next().toUpperCase().equals("C") ? true : false;
-			setUpPieces();
-			if (cpuGame) {
-				pickCPUColor();
-				playCPUGame();
-			}
-			else
-				playGame();
-		}
+			AnsiConsole.systemInstall(); // MUST BE ON TOP - PARSES ALL THE UNICODE
+		setUpPieces();
+		initialMenu();
 		kyb.close();
 		if (useJansi)
 			AnsiConsole.systemUninstall();
@@ -59,53 +42,30 @@ public class ChessDriver {
 			notInStaleMate.set(true);
 			notInCheckMate.set(true);
 			setStaleAndCheck(notInStaleMate, notInCheckMate);
-
-			if (notInCheckMate.get() && notInStaleMate.get()) {
+			if (cpuGame && cpuTurn)
+			{
+				AI.cpuMovePiece();
+			}
+			else if (notInCheckMate.get() && notInStaleMate.get()) {
 				displayChoice();
 				if (isInCheck())
 					System.out.println("\nWarning! Your king is in check!\n");
 				movePiece();
 			}
 			whitesTurn = !whitesTurn;
+			cpuTurn = !cpuTurn;
 		} while (notInCheckMate.get() && notInStaleMate.get());
-		displayChoice();
-		if (!notInCheckMate.get())
-			displayCheckMate();
-		else
-			displayStaleMate();
+		endGame(!notInCheckMate.get());
 	}
-	
-	public static void playCPUGame() throws FileNotFoundException, IOException, ClassNotFoundException {
-		AtomicBoolean notInStaleMate = new AtomicBoolean();
-		AtomicBoolean notInCheckMate = new AtomicBoolean();
 
-		do {
-			notInStaleMate.set(true);
-			notInCheckMate.set(true);
-			setStaleAndCheck(notInStaleMate, notInCheckMate);
-
-			if (!cpuWhite) {
-				if (notInCheckMate.get() && notInStaleMate.get()) {
-					displayChoice();
-					if (isInCheck())
-						System.out.println("\nWarning! Your king is in check!\n");
-					movePiece();
-				}
-
-				whitesTurn = !whitesTurn;
-				cpuWhite = !cpuWhite;
-			} else {
-				cpuMovePiece();
-				whitesTurn = !whitesTurn;
-				cpuWhite = !cpuWhite;
-			}
-			
-		} while (notInCheckMate.get() && notInStaleMate.get());
+	public static void endGame(boolean checkmate) {
 		displayChoice();
-		if (!notInCheckMate.get())
-			displayCheckMate();
+		if (checkmate)
+			System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
 		else
-			displayStaleMate();
+			System.out.println("Stalemate.");
+
+		System.exit(0);
 	}
 
 	public static void movePiece() throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -119,7 +79,7 @@ public class ChessDriver {
 		do {
 			if (!canPieceMoveThereBasedOnAllItsRules)
 				System.out.println(errorMessage);
-			System.out.println("\n" + name + ", Which piece would you like to move?");
+			System.out.println("\n" + name + ", Which piece would you like to move?\nType 'm' for menu");
 			do {
 				if (!legalMoveInput)
 					System.out.println("\nYou do not have a piece there, try again.");
@@ -143,53 +103,31 @@ public class ChessDriver {
 
 		if (startCountingTurns)
 			System.out.println("Turns til stalemate : " + (17 - turns++));
-		
+
 		fc = fromCol;
 		fr = fromRow;
 		tc = toCol;
 		tr = toRow;
 		performMove(fromCol, fromRow, toCol, toRow);
-		if (chessBoard[toRow][toCol] instanceof Pawn && ((whitesTurn && toRow == 7 ) || (!whitesTurn && toRow == 0)))
+		if (chessBoard[toRow][toCol] instanceof Pawn && ((whitesTurn && toRow == 7) || (!whitesTurn && toRow == 0)))
 			pawnReachedOtherSide(toRow, toCol);
-		//if pawn enPassantAble it kills
-		if ((whitesTurn && toRow == 5 && chessBoard[4][toCol] != null && chessBoard[4][toCol].isInstanceOf().equals("Pawn") &&((Pawn) chessBoard[4][toCol]).isEnPassantAble()))
-						chessBoard[4][toCol] = null;
-		if (!whitesTurn && toRow == 2 && chessBoard[3][toCol] != null && chessBoard[3][toCol].isInstanceOf().equals("Pawn") &&((Pawn) chessBoard[3][toCol]).isEnPassantAble())
-						chessBoard[3][toCol] = null;
-		
-		//makes a piece enPassantAble
+		// if pawn enPassantAble it kills
+		if ((whitesTurn && toRow == 5 && chessBoard[4][toCol] != null
+				&& chessBoard[4][toCol].isInstanceOf().equals("Pawn")
+				&& ((Pawn) chessBoard[4][toCol]).isEnPassantAble()))
+			chessBoard[4][toCol] = null;
+		if (!whitesTurn && toRow == 2 && chessBoard[3][toCol] != null
+				&& chessBoard[3][toCol].isInstanceOf().equals("Pawn")
+				&& ((Pawn) chessBoard[3][toCol]).isEnPassantAble())
+			chessBoard[3][toCol] = null;
+
+		// makes a piece enPassantAble
 		if (chessBoard[toRow][toCol].isInstanceOf().equals("Pawn")) {
 			if (Math.abs(toRow - fromRow) == 2)
 				((Pawn) chessBoard[toRow][toCol]).changeEnPassantAble(true);
 			else
 				((Pawn) chessBoard[toRow][toCol]).changeEnPassantAble(false);
 		}
-		movingPiece = false;
-	}
-
-	public static void cpuMovePiece() {
-		boolean canPieceMoveThereBasedOnAllItsRules = true;
-		boolean legalMoveInput = true;
-		int fromCol, fromRow, toCol, toRow;
-		movingPiece = true;
-		do {
-
-			do {
-				fromCol = (int) (Math.random() * ((7 - 0) + 1));
-				fromRow = (int) (Math.random() * ((7 - 0) + 1));
-				legalMoveInput = isValidPieceThere(fromCol, fromRow);
-			} while (!legalMoveInput);
-
-			do {
-				toCol = (int) (Math.random() * ((7 - 0) + 1));
-				toRow = (int) (Math.random() * ((7 - 0) + 1));
-			} while ((toCol == fromCol && toRow == fromRow));
-			canPieceMoveThereBasedOnAllItsRules = canMoveThere(fromCol, fromRow, toCol, toRow);
-
-		} while (!canPieceMoveThereBasedOnAllItsRules);
-		if (startCountingTurns)
-			System.out.println("Turns til stalemate : " + (17 - turns++));
-		performMove(fromCol, fromRow, toCol, toRow);
 		movingPiece = false;
 	}
 
@@ -208,11 +146,9 @@ public class ChessDriver {
 		do {
 			badInput = true;
 			pos = kyb.next().toLowerCase();
-			if (pos.equalsIgnoreCase("s"))
-				SaveGameFunctionality.saveGame(chessBoard, debug, whiteKing,
-						blackKing, whitesTurn, cpuGame, cpuWhite,
-						startCountingTurns, turns);
-			if (pos.length() != 2)
+			if (pos.equalsIgnoreCase("M"))
+				menu();
+			else if (pos.length() != 2)
 				System.out.println("\nPosition must be 2 characters, try again.");
 			else if (pos.charAt(0) < 97 || pos.charAt(0) > 104 || pos.charAt(1) < 49 || pos.charAt(1) > 56)
 				System.out.println("\nInvalid position entry. It must be a [a-h][1-8], try again.");
@@ -222,24 +158,83 @@ public class ChessDriver {
 		return pos;
 	}
 
-	public static void pawnReachedOtherSide(int row, int col)
-	{
-		display();
+	public static void initialMenu() throws FileNotFoundException, ClassNotFoundException, IOException {
+		int choice;
+		System.out.println(
+				"0. Quit\n1. New Game (Two Player) \n2. New game (One Player)\n3. New networked game\n4. Open saved game\n\n5. 1 with debug\n6. 2 with debug");
+		do {
+			choice = kyb.nextInt();
+		} while (choice < 0 && choice > 3);
+		switch (choice) {
+		case 0:
+			System.exit(1);
+		case 5:
+			debug = true;
+		case 1:
+			playGame();
+			break;
+		case 6:
+			debug = true;
+		case 2:
+			System.out.println("(B)lack or (W)hite?");
+			cpuTurn = kyb.next().toUpperCase().equals("B") ? true : false;
+			cpuGame = true;
+			playGame();
+			break;
+		case 3:
+			break;
+		case 4:
+			SaveGameFunctionality.loadSavedGame();
+			break;
+
+		}
+	}
+
+	public static void menu() throws FileNotFoundException, ClassNotFoundException, IOException {
+		System.out.println("0. Quit\n1. Save game\n2. Change debug mode\n3. Change gameplay mode");
+		int choice = kyb.nextInt();
+		switch (choice) {
+		case 0:
+			System.exit(1);
+			break;
+		case 1:
+			SaveGameFunctionality.saveGame(chessBoard, debug, whiteKing, blackKing, whitesTurn, cpuGame, cpuTurn,
+					startCountingTurns, turns);
+			break;
+		case 2:
+			debug = !debug;
+			break;
+		case 3:
+			cpuGame = !cpuGame;
+			break;
+		}
+	}
+
+	public static void networkedGame() throws IOException {
+		System.out.println("Would you like to:\n1. Host a game\n2. Join a game");
 		int choice;
 		do {
-		System.out.println("\nWhat would you like to convert your pawn to?");
-		System.out.println("1. Queen\n2. Bishop\n3. Rook\n4. Horse");
-		choice = kyb.nextInt();
-		if (choice > 4 || choice < 1)
-			System.out.println("Not a valid choice, 1-4");
-		}	while (choice > 4 || choice < 1);
-		
-		chessBoard[row][col] = choice == 1 ? new Queen(whitesTurn) : choice == 2 ? new Bishop(whitesTurn) : choice == 3 ? new Rook(whitesTurn) : new Horse(whitesTurn);
-		
-		
-		
+			choice = kyb.nextInt();
+		} while (choice != 1 || choice != 2);
+		if (choice == 1)
+			Server.startServer();
 	}
-	
+
+	public static void pawnReachedOtherSide(int row, int col) {
+		displayChoice();
+		int choice;
+		do {
+			System.out.println("\nWhat would you like to convert your pawn to?");
+			System.out.println("1. Queen\n2. Bishop\n3. Rook\n4. Horse");
+			choice = kyb.nextInt();
+			if (choice > 4 || choice < 1)
+				System.out.println("Not a valid choice, 1-4");
+		} while (choice > 4 || choice < 1);
+
+		chessBoard[row][col] = choice == 1 ? new Queen(whitesTurn)
+				: choice == 2 ? new Bishop(whitesTurn) : choice == 3 ? new Rook(whitesTurn) : new Horse(whitesTurn);
+	}
+
 	public static boolean isInCheck() {
 		return whitesTurn ? whiteKing.inCheck(whiteKing, chessBoard) : blackKing.inCheck(blackKing, chessBoard);
 	}
@@ -312,43 +307,23 @@ public class ChessDriver {
 	}
 
 	public static void staleMateCheckForEveryTurn() {
-		if (!startCountingTurns) {
-			if (checkForOneKingFor18MoveStaleMate())// true = only king for either side (whichever side it is doesn't
-													// matter)
+		if (!startCountingTurns)
+			if (checkForOneKingFor18MoveStaleMate())// true = only king for either side (whichever side doesn't matter)
 				startCountingTurns = true;
-		}
-		if (turns > 17) {
-			displayStaleMate();
-		}
+		if (turns > 17)
+			endGame(false);
 	}
 
 	public static void displayChoice() {
 		if (debug)
-			displayDebug();
+			Display.debug(chessBoard);
 		else
-			display();
-	}
-
-	public static void displayCheckMate() {
-		System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
-		System.exit(0);
-	}
-
-	public static void displayStaleMate() {
-		System.out.println("Stalemate.");
-		System.exit(0);
+			Display.display(whitesTurn, useJansi, chessBoard, fr, fc, tr, tc);
 	}
 
 	public static boolean isMovingPiece() {
 		return movingPiece;
 	}
-
-	public static void setErrorMessage(String errorMessage) {
-		ChessDriver.errorMessage = errorMessage;
-	}
-
-	// These methods are done and should not be touched
-	// Iff you do, note why you touched them
 
 	public static void performMove(int fromCol, int fromRow, int toCol, int toRow) {
 		chessBoard[toRow][toCol] = chessBoard[fromRow][fromCol];
@@ -412,108 +387,22 @@ public class ChessDriver {
 		// chessBoard[0][0] = null;
 		// chessBoard[0][5] = null;
 		// chessBoard[2][4] = null;
-
 	}
 
-	public static void displayDebug() {
-		System.out.println("  A  B  C  D  E  F  G  H");
-		for (int i = 7; i >= 0; i--) {
-			for (int j = 7; j >= 0; j--)
-				System.out.print((j == 7 ? (i + 1) + " " : "") + (chessBoard[i][j] == null ? "nn "
-						: ((chessBoard[i][j].white ? "w" : "b") + chessBoard[i][j].toString().charAt(0) + " ")));
-			System.out.println();
-		}
+	public static void setGame(SavedGame s) {
+		debug = s.isDebug();
+		whiteKing = s.getWhiteKing();
+		blackKing = s.getBlackKing();
+		whitesTurn = s.isWhitesTurn();
+		chessBoard = s.getChessBoard();
+		cpuGame = s.isCpuGame();
+		cpuTurn = s.isCpuTurn();
+		startCountingTurns = s.isStartCountingTurns();
+		turns = s.getTurns();
 	}
 
-	public static void display() {
-		int out = whitesTurn ? 47 : 0;
-		int in = whitesTurn ? 7 : 0;
-		int minOut = whitesTurn ? -1 : 48;
-		int minIn = whitesTurn ? -1 : 8;
-		int chg = whitesTurn ? -1 : 1;
-		String letters1 = "        A             B             C             D             E             F             G             H        ";
-		String letters2 = "        H             G             F             E             D             C             B             A        ";
-		String reset = "\u001B[0m";
-		String bxWhite = "\u001B[107m";
-		String bgWhite = useJansi ? "\u001B[47m" : "\u001B[48;2;249;218;180m";
-		String bgBlack = useJansi? "\u001B[100m" : "\u001B[48;2;127;99;95m";
-		String bgGreen = "\u001B[42m";
-		String bgCyan = "\u001B[46m";
-		String fgWhite = useJansi? "\u001B[97m" : "\u001B[38;2;205;205;205m";
-		String fgBlack = useJansi? "\u001B[30m" : "\u001B[38;2;40;40;40m";
-		String fgBlue = useJansi? "\u001B[34m" : "\u001B[38;2;112;140;78m";
-		String board  = "";
-		board += ("\n" + bxWhite + fgBlack + (whitesTurn ? letters1 : letters2) + " " + reset + "\n");
-		for (int i = out; i != minOut; i += chg) {
-			boolean numRow = i % 6 + 1 == 3;
-			board += (bxWhite + fgBlack + (numRow ? i / 6 + 1 + " " : "  ") + reset);
-			for (int j = in; j != minIn; j += chg) {
-				Boolean isWhite = chessBoard[i / 6][j] != null ? chessBoard[i / 6][j].isWhite() : null;
-				boolean ijTheSame = i / 6 % 2 == j % 2;
-				boolean isNull = chessBoard[i / 6][j] == null;
-				boolean from = i / 6 == fr && j == fc;
-				boolean to = i / 6 == tr && j == tc;
-				board += ((from ? bgCyan : to ? bgGreen : ijTheSame ? bgWhite : bgBlack) + (isNull ? fgBlue : isWhite ? fgWhite : fgBlack)
-						+ PieceSection(i, j) + reset);
-			}
-			board += (bxWhite + fgBlack + (numRow ? " " + (i / 6 + 1) : "  ") + reset);
-			board += "\n";
-		}
-		board += (bxWhite + fgBlack + " " + (whitesTurn ? letters1 : letters2) + reset );
-		System.out.println(board);
-	}
-
-	public static String PieceSection(int i, int j) {
-		boolean numRow = i % 6 == (whitesTurn ? 0 : 5);
-		boolean empty = chessBoard[i / 6][j] == null;
-		String numLet = (char) (72 - j) + "" + (i / 6 + 1);
-		int iconRow = (whitesTurn ? 47 - i : i) % 6;
-		return (empty ? "            " : chessBoard[i / 6][j].getIcon(iconRow)) + (numRow ? ("\u001B[30m" + numLet) : "  ");
-	}
-	// public static void clear() throws InterruptedException, IOException
-	// {
-	// new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-	// }
-
-	public static void pickCPUColor() {
-		System.out.println("(B)lack or (W)hite?");
-		cpuWhite = kyb.next().toUpperCase().equals("B") ? true : false;
-	}
-
-	public static void setDebug(boolean debug) {
-		ChessDriver.debug = debug;
-	}
-
-	public static void setWhiteKing(Piece whiteKing) {
-		ChessDriver.whiteKing = whiteKing;
-	}
-
-	public static void setBlackKing(Piece blackKing) {
-		ChessDriver.blackKing = blackKing;
-	}
-
-	public static void setWhitesTurn(boolean whitesTurn) {
-		ChessDriver.whitesTurn = whitesTurn;
-	}
-
-	public static void setChessBoard(Piece[][] chessBoard) {
-		ChessDriver.chessBoard = chessBoard;
-	}
-
-	public static void setCpuGame(boolean cpuGame) {
-		ChessDriver.cpuGame = cpuGame;
-	}
-
-	public static void setCpuWhite(boolean cpuWhite) {
-		ChessDriver.cpuWhite = cpuWhite;
-	}
-
-	public static void setStartCountingTurns(boolean startCountingTurns) {
-		ChessDriver.startCountingTurns = startCountingTurns;
-	}
-
-	public static void setTurns(int turns) {
-		ChessDriver.turns = turns;
+	public static void setErrorMessage(String errorMessage) {
+		ChessDriver.errorMessage = errorMessage;
 	}
 
 	public static void setMovingPiece(boolean movingPiece) {

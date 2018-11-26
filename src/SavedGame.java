@@ -6,12 +6,12 @@ public class SavedGame implements Serializable{
 	private Piece whiteKing, blackKing;
 	private boolean whitesTurn = true;
 	private boolean cpuGame;
-	private boolean cpuWhite;
+	private boolean cpuTurn;
 	private boolean startCountingTurns;
 	private int turns = 0;
 	private String name;
 	public SavedGame(Piece[][] chessBoard, boolean debug, Piece whiteKing, Piece blackKing, boolean whitesTurn,
-			boolean cpuGame, boolean cpuWhite, boolean startCountingTurns, int turns, String name) {
+			boolean cpuGame, boolean cpuTurn, boolean startCountingTurns, int turns, String name) {
 		super();
 		this.chessBoard = chessBoard;
 		this.debug = debug;
@@ -19,7 +19,7 @@ public class SavedGame implements Serializable{
 		this.blackKing = blackKing;
 		this.whitesTurn = whitesTurn;
 		this.cpuGame = cpuGame;
-		this.cpuWhite = cpuWhite;
+		this.cpuTurn = cpuTurn;
 		this.startCountingTurns = startCountingTurns;
 		this.turns = turns;
 		this.name = name;
@@ -48,8 +48,8 @@ public class SavedGame implements Serializable{
 		return cpuGame;
 	}
 
-	public boolean isCpuWhite() {
-		return cpuWhite;
+	public boolean isCpuTurn() {
+		return cpuTurn;
 	}
 
 	public boolean isStartCountingTurns() {

@@ -16,7 +16,7 @@ public class SaveGameFunctionality {
 
 	public static void saveGame(Piece[][] chessBoard, boolean debug,
 			Piece whiteKing, Piece blackKing, boolean whitesTurn,
-			boolean cpuGame, boolean cpuWhite, boolean startCountingTurns,
+			boolean cpuGame, boolean cpuTurn, boolean startCountingTurns,
 			int turns) throws FileNotFoundException, IOException,
 			ClassNotFoundException {
 
@@ -27,10 +27,9 @@ public class SaveGameFunctionality {
 				saver.writeObject(s);
 		System.out.println("What name do you want to save the game as?");
 		saver.writeObject(new SavedGame(chessBoard, debug, whiteKing,
-				blackKing, whitesTurn, cpuGame, cpuWhite, startCountingTurns,
+				blackKing, whitesTurn, cpuGame, cpuTurn, startCountingTurns,
 				turns, kyb.next()));
 		saver.close();
-		System.exit(0);
 	}
 
 	private static SavedGame[] readFile() throws IOException,
@@ -75,14 +74,6 @@ public class SaveGameFunctionality {
 
 		SavedGame s = list.get(kyb.nextInt() - 1);
 
-		ChessDriver.setChessBoard(s.getChessBoard());
-		ChessDriver.setDebug(s.isDebug());
-		ChessDriver.setWhiteKing(s.getWhiteKing());
-		ChessDriver.setBlackKing(s.getBlackKing());
-		ChessDriver.setWhitesTurn(s.isWhitesTurn());
-		ChessDriver.setCpuGame(s.isCpuGame());
-		ChessDriver.setCpuWhite(s.isCpuWhite());
-		ChessDriver.setStartCountingTurns(s.isStartCountingTurns());
-		ChessDriver.setTurns(s.getTurns());
+		ChessDriver.setGame(s);
 	}
 }
