@@ -20,8 +20,8 @@ public class ChessDriver {
 	private static String errorMessage;
 	static boolean movingPiece = false;
 	static int fr = -1, fc = -1, tr = -1, tc = -1;
-	private static boolean useJansi = System.getProperty("os.name").contains("Windows")
-			&& !System.getProperty("os.name").contains("10");
+	private static boolean useJansi = !System.getProperty("os.name").equalsIgnoreCase("moshe");
+	//System.getProperty("os.name").contains("Windows") && !System.getProperty("os.name").contains("10");
 	// private HashMap<String,Piece> pieces = new HashMap<>();
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
@@ -316,7 +316,7 @@ public class ChessDriver {
 
 	public static void displayChoice() {
 		if (debug)
-			Display.debug(chessBoard);
+			Display.debug(chessBoard, whitesTurn, fr, fc, tr, tc);
 		else
 			Display.display(whitesTurn, useJansi, chessBoard, fr, fc, tr, tc);
 	}

@@ -55,12 +55,18 @@ public class Display
 				+ ( numRow ? ( "\u001B[30m" + numLet ) : "  " );
 	}
 
-	public static void debug( Piece[][] chessBoard )
+	public static void debug( Piece[][] chessBoard, boolean whitesTurn, int fr, int fc, int tr,	int tc)
 	{
-		System.out.println("  A  B  C  D  E  F  G  H");
-		for ( int i = 7; i >= 0; i-- )
+		String lets = whitesTurn ? "  A  B  C  D  E  F  G  H" : "  H  G  F  E  D  C  B  A";
+		System.out.println(lets);
+		int out = whitesTurn ? 7 : 0;
+		int in = out;
+		int minOut = whitesTurn ? -1 : 8;
+		int minIn = minOut;
+		int chg = whitesTurn ? -1 : 1; 
+		for ( int i = out; i != minOut; i += chg )
 		{
-			for ( int j = 7; j >= 0; j-- )
+			for ( int j = in; j != minIn; j += chg )
 				System.out.print(( j == 7 ? ( i + 1 ) + " " : "" ) + ( chessBoard[i][j] == null ? "nn "
 						: ( ( chessBoard[i][j].white ? "w" : "b" ) + chessBoard[i][j].toString().charAt(0) + " " ) ));
 			System.out.println();
