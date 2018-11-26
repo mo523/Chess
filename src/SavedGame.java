@@ -2,16 +2,16 @@ import java.io.Serializable;
 
 public class SavedGame implements Serializable{
 	Piece[][] chessBoard;
-	private  boolean debug;
-	private  Piece whiteKing, blackKing;
-	private  boolean whitesTurn = true;
-	private  boolean cpuGame;
-	private  boolean cpuWhite;
-	private  boolean startCountingTurns;
-	private  int turns = 0;
-	
+	private boolean debug;
+	private Piece whiteKing, blackKing;
+	private boolean whitesTurn = true;
+	private boolean cpuGame;
+	private boolean cpuWhite;
+	private boolean startCountingTurns;
+	private int turns = 0;
+	private String name;
 	public SavedGame(Piece[][] chessBoard, boolean debug, Piece whiteKing, Piece blackKing, boolean whitesTurn,
-			boolean cpuGame, boolean cpuWhite, boolean startCountingTurns, int turns) {
+			boolean cpuGame, boolean cpuWhite, boolean startCountingTurns, int turns, String name) {
 		super();
 		this.chessBoard = chessBoard;
 		this.debug = debug;
@@ -22,6 +22,7 @@ public class SavedGame implements Serializable{
 		this.cpuWhite = cpuWhite;
 		this.startCountingTurns = startCountingTurns;
 		this.turns = turns;
+		this.name = name;
 	}
 	public Piece[][] getChessBoard() {
 		return chessBoard;
@@ -57,6 +58,12 @@ public class SavedGame implements Serializable{
 
 	public int getTurns() {
 		return turns;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

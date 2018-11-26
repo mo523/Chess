@@ -1,10 +1,6 @@
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -35,7 +31,7 @@ public class ChessDriver {
 		
 		System.out.println("Do you want to load a saved game");
 		if(kyb.next().toUpperCase().charAt(0) == 'Y') {
-			loadSavedGame();
+			SaveGameFunctionality.loadSavedGame();
 			playGame();
 		}
 		else {
@@ -56,7 +52,7 @@ public class ChessDriver {
 			AnsiConsole.systemUninstall();
 	}
 
-	public static void playGame() throws FileNotFoundException, IOException {
+	public static void playGame() throws FileNotFoundException, IOException, ClassNotFoundException {
 		AtomicBoolean notInStaleMate = new AtomicBoolean();
 		AtomicBoolean notInCheckMate = new AtomicBoolean();
 		do {
@@ -78,30 +74,8 @@ public class ChessDriver {
 		else
 			displayStaleMate();
 	}
-	public static void saveGame() throws FileNotFoundException, IOException {
-		SavedGame s = new SavedGame(chessBoard, debug, whiteKing, blackKing, whitesTurn, cpuGame, cpuWhite, startCountingTurns, turns);
-		System.out.println("What name do you want to save the game as?");
-		ObjectOutputStream saver = new ObjectOutputStream(new FileOutputStream(kyb.next())); 
-		saver.writeObject(s);
-		saver.close();
-		System.exit(0);	
-	}
-	public static void loadSavedGame() throws FileNotFoundException, IOException, ClassNotFoundException {
-		System.out.println("Which game?");
-		ObjectInputStream loader = new ObjectInputStream(new FileInputStream(kyb.next())); 
-		SavedGame s = (SavedGame) loader.readObject();
-		loader.close();
-		chessBoard = s.getChessBoard();
-		debug = s.isDebug();
-		whiteKing = s.getWhiteKing();
-		blackKing = s.getBlackKing();
-		whitesTurn = s.isWhitesTurn();
-		cpuGame = s.isCpuGame();
-		cpuWhite = s.isCpuWhite();
-		startCountingTurns = s.isStartCountingTurns();
-		turns = s.getTurns();
-	}
-	public static void playCPUGame() throws FileNotFoundException, IOException {
+	
+	public static void playCPUGame() throws FileNotFoundException, IOException, ClassNotFoundException {
 		AtomicBoolean notInStaleMate = new AtomicBoolean();
 		AtomicBoolean notInCheckMate = new AtomicBoolean();
 
@@ -134,7 +108,7 @@ public class ChessDriver {
 			displayStaleMate();
 	}
 
-	public static void movePiece() throws FileNotFoundException, IOException {
+	public static void movePiece() throws FileNotFoundException, IOException, ClassNotFoundException {
 		String name = whitesTurn ? "White" : "Black";
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
 		String move;
@@ -228,14 +202,16 @@ public class ChessDriver {
 		return !(chessBoard[row][col] == null || chessBoard[row][col].white != whitesTurn);
 	}
 
-	public static String getPosition() throws FileNotFoundException, IOException {
+	public static String getPosition() throws FileNotFoundException, IOException, ClassNotFoundException {
 		String pos;
 		boolean badInput = false;
 		do {
 			badInput = true;
 			pos = kyb.next().toLowerCase();
 			if (pos.equalsIgnoreCase("s"))
-				saveGame();
+				SaveGameFunctionality.saveGame(chessBoard, debug, whiteKing,
+						blackKing, whitesTurn, cpuGame, cpuWhite,
+						startCountingTurns, turns);
 			if (pos.length() != 2)
 				System.out.println("\nPosition must be 2 characters, try again.");
 			else if (pos.charAt(0) < 97 || pos.charAt(0) > 104 || pos.charAt(1) < 49 || pos.charAt(1) > 56)
@@ -502,5 +478,45 @@ public class ChessDriver {
 	public static void pickCPUColor() {
 		System.out.println("(B)lack or (W)hite?");
 		cpuWhite = kyb.next().toUpperCase().equals("B") ? true : false;
+	}
+
+	public static void setDebug(boolean debug) {
+		ChessDriver.debug = debug;
+	}
+
+	public static void setWhiteKing(Piece whiteKing) {
+		ChessDriver.whiteKing = whiteKing;
+	}
+
+	public static void setBlackKing(Piece blackKing) {
+		ChessDriver.blackKing = blackKing;
+	}
+
+	public static void setWhitesTurn(boolean whitesTurn) {
+		ChessDriver.whitesTurn = whitesTurn;
+	}
+
+	public static void setChessBoard(Piece[][] chessBoard) {
+		ChessDriver.chessBoard = chessBoard;
+	}
+
+	public static void setCpuGame(boolean cpuGame) {
+		ChessDriver.cpuGame = cpuGame;
+	}
+
+	public static void setCpuWhite(boolean cpuWhite) {
+		ChessDriver.cpuWhite = cpuWhite;
+	}
+
+	public static void setStartCountingTurns(boolean startCountingTurns) {
+		ChessDriver.startCountingTurns = startCountingTurns;
+	}
+
+	public static void setTurns(int turns) {
+		ChessDriver.turns = turns;
+	}
+
+	public static void setMovingPiece(boolean movingPiece) {
+		ChessDriver.movingPiece = movingPiece;
 	}
 }
