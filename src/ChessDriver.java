@@ -19,7 +19,7 @@ public class ChessDriver {
 	private static String errorMessage;
 	static boolean movingPiece = false;
 	static int fr = -1, fc = -1, tr = -1, tc = -1;
-	private static boolean useJansi = !System.getProperty("os.name").equalsIgnoreCase("moshe");
+	private static boolean useJansi = !System.getProperty("user.name").equalsIgnoreCase("moshe");
 	private static boolean networkGame = false;
 	private static Network net;
 	private static boolean localTurn;
@@ -53,9 +53,14 @@ public class ChessDriver {
 				}
 				else
 				{
+					displayChoice();
 					System.out.println("Waiting for other players move");
 					int[] data = net.getClientData();
 					performMove(data[1], data[0], data[3], data[2]);
+					fr = data[0];
+					fc = data[1];
+					tr = data[2];
+					tc = data[3];
 				}
 			}
 			else {

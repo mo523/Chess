@@ -11,7 +11,7 @@ public class Display {
 		String letters1 = "        A             B             C             D             E             F             G             H        ";
 		String letters2 = "        H             G             F             E             D             C             B             A        ";
 		String reset = "\u001B[0m";
-		String bxWhite = "\u001B[107m";
+		String bxWhite = useJansi ? "\u001B[107m" : "\u001B[48;2;57;32;12m";
 		String bgWhite = useJansi ? "\u001B[47m" : "\u001B[48;2;249;218;180m";
 		String bgBlack = useJansi ? "\u001B[100m" : "\u001B[48;2;127;99;95m";
 		String bgGreen = "\u001B[42m";
@@ -31,7 +31,8 @@ public class Display {
 				boolean from = i / 6 == fr && j == fc;
 				boolean to = i / 6 == tr && j == tc;
 				board += ((from ? bgCyan : to ? bgGreen : ijTheSame ? bgWhite : bgBlack)
-						+ (isNull ? fgBlue : isWhite ? fgWhite : fgBlack) + PieceSection(i, j, whitesTurn, chessBoard)
+						+ (isNull ? fgBlue : isWhite ? fgWhite : fgBlack) + PieceSection(i, j, whitesTurn, chessBoard,
+								(from ? bgCyan : to ? bgGreen : ijTheSame ? bgWhite : bgBlack))
 						+ reset);
 			}
 			board += (bxWhite + fgBlack + (numRow ? " " + (i / 6 + 1) : "  ") + reset);
@@ -41,13 +42,13 @@ public class Display {
 		System.out.println(board);
 	}
 
-	public static String PieceSection(int i, int j, boolean whitesTurn, Piece[][] chessBoard) {
+	public static String PieceSection(int i, int j, boolean whitesTurn, Piece[][] chessBoard, String bg) {
 		boolean numRow = i % 6 == (whitesTurn ? 0 : 5);
 		boolean empty = chessBoard[i / 6][j] == null;
 		String numLet = (char) (72 - j) + "" + (i / 6 + 1);
 		int iconRow = (whitesTurn ? 47 - i : i) % 6;
 		return (empty ? "            " : chessBoard[i / 6][j].getIcon(iconRow))
-				+ (numRow ? ("\u001B[30m" + numLet) : "  ");
+				+ (numRow ? ("\u001B[0m" + bg + "\u001B[30m" + numLet) : "  ");
 	}
 
 	public static void debug(Piece[][] chessBoard, boolean whitesTurn, boolean useJansi, int fr, int fc, int tr,
