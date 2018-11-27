@@ -27,11 +27,13 @@ public class ChessDriver {
 	// !System.getProperty("os.name").contains("10");
 	// private HashMap<String,Piece> pieces = new HashMap<>();
 
-	public static void main(String[] args) throws IOException, ClassNotFoundException {
+	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
 
 		if (useJansi)
 			AnsiConsole.systemInstall(); // MUST BE ON TOP - PARSES ALL THE UNICODE
+		Display.clear();
 		setUpPieces();
+		System.out.println("Welcome to chess!");
 		initialMenu();
 		kyb.close();
 		if (useJansi)
@@ -40,49 +42,32 @@ public class ChessDriver {
 
 	public static void playGame() throws FileNotFoundException, IOException, ClassNotFoundException {
 		do {
-			if (cpuGame && cpuTurn) {
+			if (cpuGame && cpuTurn)
 				AI.cpuMovePiece();
-			} 
 			else if (networkGame)
-			{
-				if (localTurn)
-				{
-					displayChoice();
-					movePiece();
-					net.sendServerData(fr, fc, tr, tc);
-				}
-				else
-				{
-					displayChoice();
-					System.out.println("Waiting for other players move");
-					int[] data = net.getClientData();
-					performMove(data[1], data[0], data[3], data[2]);
-					fr = data[0];
-					fc = data[1];
-					tr = data[2];
-					tc = data[3];
-				}
-			}
+				netMove();
 			else {
 				displayChoice();
-				movePiece();
+				if (movePiece())
+					break;
 			}
 			localTurn = !localTurn;
 			whitesTurn = !whitesTurn;
 			cpuTurn = !cpuTurn;
 		} while (notInCheckMate() && notInStaleMate());
-		endGame(!notInCheckMate());
+		if (!notInCheckMate() || !notInStaleMate())
+			endGame();
 	}
 
-	public static void endGame(boolean checkmate) {
+	public static void endGame() {
 		displayChoice();
-		if (checkmate)
+		if (!notInCheckMate())
 			System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
-		else
+		else 
 			System.out.println("Stalemate.");
 	}
 
-	public static void movePiece() throws FileNotFoundException, IOException, ClassNotFoundException {
+	public static boolean movePiece() throws FileNotFoundException, IOException, ClassNotFoundException {
 		String name = whitesTurn ? "White" : "Black";
 		boolean canMoveThere = true;
 		String move;
@@ -98,6 +83,8 @@ public class ChessDriver {
 				if (!legalMoveInput)
 					System.out.println("\nYou do not have a piece there, try again.");
 				move = getPosition();
+				if (move.equals("m"))
+					return true;
 				fromCol = 104 - move.charAt(0);
 				fromRow = move.charAt(1) - 49;
 				legalMoveInput = isValidPieceThere(fromCol, fromRow);
@@ -106,6 +93,8 @@ public class ChessDriver {
 			System.out.println("\nWhere would you like to move your " + chessBoard[fromRow][fromCol].name + " to?");
 			do {
 				move = getPosition();
+				if (move.equals("m"))
+					return true;
 				toCol = 104 - move.charAt(0);
 				toRow = move.charAt(1) - 49;
 				if (toCol == fromCol && toRow == fromRow)
@@ -139,6 +128,7 @@ public class ChessDriver {
 				((Pawn) chessBoard[toRow][toCol]).changeEnPassantAble(false);
 		}
 		movingPiece = false;
+		return false;
 	}
 
 	public static boolean canMoveThere(int fromCol, int fromRow, int toCol, int toRow) {
@@ -156,9 +146,10 @@ public class ChessDriver {
 		do {
 			badInput = true;
 			pos = kyb.next().toLowerCase();
-			if (pos.equalsIgnoreCase("m"))
-				menu();
-			else if (pos.length() != 2)
+			if (pos.equalsIgnoreCase("m")) {
+				if (menu())
+					return pos;
+			} else if (pos.length() != 2)
 				System.out.println("\nPosition must be 2 characters, try again.");
 			else if (pos.charAt(0) < 97 || pos.charAt(0) > 104 || pos.charAt(1) < 49 || pos.charAt(1) > 56)
 				System.out.println("\nInvalid position entry. It must be a [a-h][1-8], try again.");
@@ -170,45 +161,48 @@ public class ChessDriver {
 
 	public static void initialMenu() throws FileNotFoundException, ClassNotFoundException, IOException {
 		int choice;
-		System.out.println(
-				"0. Quit\n1. New Game (Two Player) \n2. New game (One Player)\n3. New networked game\n4. Open saved game\n\n5. 1 with debug\n6. 2 with debug");
 		do {
-			choice = kyb.nextInt();
-		} while (choice < 0 && choice > 3);
-		switch (choice) {
-		case 0:
-			System.exit(1);
-		case 5:
-			debug = true;
-		case 1:
-			playGame();
-			break;
-		case 6:
-			debug = true;
-		case 2:
-			System.out.println("(B)lack or (W)hite?");
-			cpuTurn = kyb.next().toUpperCase().equals("B") ? true : false;
-			cpuGame = true;
-			playGame();
-			break;
-		case 3:
-			networkGame = true;
-			networkedGame();
-			break;
-		case 4:
-			SaveGameFunctionality.loadSavedGame();
-			break;
-		}
-		System.out.println();
+			System.out.println(
+					"\n\nMain Menu\n\n0. Quit\n1. New Game (Two Player) \n2. New game (One Player)\n3. New networked game\n4. Open saved game\n\n5. 1 with debug\n6. 2 with debug\n7. 3 with debug");
+			do {
+				choice = kyb.nextInt();
+			} while (choice < 0 && choice > 3);
+			switch (choice) {
+			case 0:
+				break;
+			case 5:
+				debug = true;
+			case 1:
+				playGame();
+				break;
+			case 6:
+				debug = true;
+			case 2:
+				System.out.println("(B)lack or (W)hite?");
+				cpuTurn = kyb.next().toUpperCase().equals("B") ? true : false;
+				cpuGame = true;
+				playGame();
+				break;
+			case 7:
+				debug = true;
+			case 3:
+				networkGame = true;
+				networkedGame();
+				break;
+			case 4:
+				SaveGameFunctionality.loadSavedGame();
+				break;
+			}
+			System.out.println();
+		} while (choice != 0);
 	}
 
-	public static void menu() throws FileNotFoundException, ClassNotFoundException, IOException {
-		System.out.println("0. Quit\n1. Save game\n2. Change debug mode\n3. Change gameplay mode");
+	public static boolean menu() throws FileNotFoundException, ClassNotFoundException, IOException {
+		System.out.println("\n\nMenu\n0. Main menu\n1. Save game\n2. Change debug mode\n3. Change gameplay mode");
 		int choice = kyb.nextInt();
 		switch (choice) {
 		case 0:
-			System.exit(1);
-			break;
+			return true;
 		case 1:
 			SaveGameFunctionality.saveGame(chessBoard, debug, whiteKing, blackKing, whitesTurn, cpuGame, cpuTurn,
 					startCountingTurns, turns);
@@ -220,7 +214,7 @@ public class ChessDriver {
 			cpuGame = !cpuGame;
 			break;
 		}
-		System.out.println();
+		return false;
 	}
 
 	public static void networkedGame() throws IOException, ClassNotFoundException {
@@ -229,20 +223,42 @@ public class ChessDriver {
 		do {
 			choice = kyb.nextInt();
 		} while (choice != 1 && choice != 2);
-		if (choice == 1)
-		{
+		if (choice == 1) {
 			net = new Network();
-		}
-		else
-		{
+		} else {
 			System.out.println("IP Address?");
 			kyb.nextLine();
 			String ip = kyb.nextLine();
+			if (ip.equals("0"))
+				ip = "127.0.0.1";
 			net = new Network(ip);
 		}
 		localTurn = net.isServer();
-		playGame();
+		try {
+			playGame();
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
 		}
+	}
+
+	public static boolean netMove() throws IOException, ClassNotFoundException {
+		if (localTurn) {
+			displayChoice();
+			if (movePiece())
+				return true;
+			net.sendServerData(fr, fc, tr, tc);
+		} else {
+			displayChoice();
+			System.out.println("\nWaiting for other players move");
+			int[] data = net.getClientData();
+			performMove(data[1], data[0], data[3], data[2]);
+			fr = data[0];
+			fc = data[1];
+			tr = data[2];
+			tc = data[3];
+		}
+		return false;
+	}
 
 	public static void pawnReachedOtherSide(int row, int col) {
 		displayChoice();
@@ -286,19 +302,19 @@ public class ChessDriver {
 			return eighteenMoveStalemate();
 		return canMove();
 	}
-	
+
 	public static boolean oneKing(boolean white) {
 		int count = 0;
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
 				if (chessBoard[i][j] != null && chessBoard[i][j].isWhite() == white)
-						count++;
+					count++;
 		return count == 1;
 	}
-	
+
 	public static boolean eighteenMoveStalemate() {
 		if (!(startCountingTurns) && (oneKing(true) || oneKing(false)))
-				startCountingTurns = true;
+			startCountingTurns = true;
 		return turns < 18;
 	}
 
@@ -308,7 +324,8 @@ public class ChessDriver {
 				if (chessBoard[i][j] != null && chessBoard[i][j].isWhite() == whitesTurn)
 					for (int x = 0; x < 8; x++)
 						for (int y = 0; y < 8; y++)
-							if (chessBoard[i][j].isLegalMove(j, i, x, y, chessBoard, whitesTurn ? whiteKing : blackKing))
+							if (chessBoard[i][j].isLegalMove(j, i, x, y, chessBoard,
+									whitesTurn ? whiteKing : blackKing))
 								return true;
 		return false;
 	}
