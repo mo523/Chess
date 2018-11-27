@@ -20,6 +20,8 @@ public class ChessDriver {
 	static boolean movingPiece = false;
 	static int fr = -1, fc = -1, tr = -1, tc = -1;
 	private static boolean useJansi = !System.getProperty("os.name").equalsIgnoreCase("moshe");
+	private static boolean networkGame = false;
+	private static Network net;
 	// System.getProperty("os.name").contains("Windows") &&
 	// !System.getProperty("os.name").contains("10");
 	// private HashMap<String,Piece> pieces = new HashMap<>();
@@ -167,6 +169,7 @@ public class ChessDriver {
 			playGame();
 			break;
 		case 3:
+			networkGame = true;
 			networkedGame();
 			break;
 		case 4:
@@ -204,9 +207,14 @@ public class ChessDriver {
 			choice = kyb.nextInt();
 		} while (choice != 1 || choice != 2);
 		if (choice == 1)
-			Server.startServer();
-//		else
-//			Client
+		{
+			net = new Network();
+		}
+		else
+		{
+			System.out.println("IP Address?");
+			net = new Network(kyb.nextLine());
+		}
 	}
 
 	public static void pawnReachedOtherSide(int row, int col) {
@@ -294,6 +302,10 @@ public class ChessDriver {
 	}
 
 	public static void performMove(int fromCol, int fromRow, int toCol, int toRow) {
+		if (networkGame)
+		{
+			
+		}
 		chessBoard[toRow][toCol] = chessBoard[fromRow][fromCol];
 		chessBoard[fromRow][fromCol] = null;
 	}
