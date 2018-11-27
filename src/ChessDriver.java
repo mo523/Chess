@@ -2,7 +2,6 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicBoolean;
 import org.fusesource.jansi.AnsiConsole;
 
 public class ChessDriver {
@@ -21,7 +20,8 @@ public class ChessDriver {
 	static boolean movingPiece = false;
 	static int fr = -1, fc = -1, tr = -1, tc = -1;
 	private static boolean useJansi = !System.getProperty("os.name").equalsIgnoreCase("moshe");
-	//System.getProperty("os.name").contains("Windows") && !System.getProperty("os.name").contains("10");
+	// System.getProperty("os.name").contains("Windows") &&
+	// !System.getProperty("os.name").contains("10");
 	// private HashMap<String,Piece> pieces = new HashMap<>();
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
@@ -36,26 +36,17 @@ public class ChessDriver {
 	}
 
 	public static void playGame() throws FileNotFoundException, IOException, ClassNotFoundException {
-		AtomicBoolean notInStaleMate = new AtomicBoolean();
-		AtomicBoolean notInCheckMate = new AtomicBoolean();
 		do {
-			notInStaleMate.set(true);
-			notInCheckMate.set(true);
-			setStaleAndCheck(notInStaleMate, notInCheckMate);
-			if (cpuGame && cpuTurn)
-			{
+			if (cpuGame && cpuTurn) {
 				AI.cpuMovePiece();
-			}
-			else if (notInCheckMate.get() && notInStaleMate.get()) {
+			} else {
 				displayChoice();
-				if (isInCheck())
-					System.out.println("\nWarning! Your king is in check!\n");
 				movePiece();
 			}
 			whitesTurn = !whitesTurn;
 			cpuTurn = !cpuTurn;
-		} while (notInCheckMate.get() && notInStaleMate.get());
-		endGame(!notInCheckMate.get());
+		} while (notInCheckMate() && notInStaleMate());
+		endGame(!notInCheckMate());
 	}
 
 	public static void endGame(boolean checkmate) {
@@ -64,20 +55,18 @@ public class ChessDriver {
 			System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
 		else
 			System.out.println("Stalemate.");
-
-		System.exit(0);
 	}
 
 	public static void movePiece() throws FileNotFoundException, IOException, ClassNotFoundException {
 		String name = whitesTurn ? "White" : "Black";
-		boolean canPieceMoveThereBasedOnAllItsRules = true;
+		boolean canMoveThere = true;
 		String move;
 		boolean legalMoveInput = true;
 		int fromCol, fromRow, toCol, toRow;
 		movingPiece = true;
 
 		do {
-			if (!canPieceMoveThereBasedOnAllItsRules)
+			if (!canMoveThere)
 				System.out.println(errorMessage);
 			System.out.println("\n" + name + ", Which piece would you like to move?\nType 'm' for menu");
 			do {
@@ -97,12 +86,8 @@ public class ChessDriver {
 				if (toCol == fromCol && toRow == fromRow)
 					System.out.println("\nCan't move to same place, try again.");
 			} while ((toCol == fromCol && toRow == fromRow));
-			canPieceMoveThereBasedOnAllItsRules = canMoveThere(fromCol, fromRow, toCol, toRow);
-
-		} while (!canPieceMoveThereBasedOnAllItsRules);
-
-		if (startCountingTurns)
-			System.out.println("Turns til stalemate : " + (17 - turns++));
+			canMoveThere = canMoveThere(fromCol, fromRow, toCol, toRow);
+		} while (!canMoveThere);
 
 		fc = fromCol;
 		fr = fromRow;
@@ -146,7 +131,7 @@ public class ChessDriver {
 		do {
 			badInput = true;
 			pos = kyb.next().toLowerCase();
-			if (pos.equalsIgnoreCase("M"))
+			if (pos.equalsIgnoreCase("m"))
 				menu();
 			else if (pos.length() != 2)
 				System.out.println("\nPosition must be 2 characters, try again.");
@@ -182,12 +167,13 @@ public class ChessDriver {
 			playGame();
 			break;
 		case 3:
+			networkedGame();
 			break;
 		case 4:
 			SaveGameFunctionality.loadSavedGame();
 			break;
-
 		}
+		System.out.println();
 	}
 
 	public static void menu() throws FileNotFoundException, ClassNotFoundException, IOException {
@@ -208,6 +194,7 @@ public class ChessDriver {
 			cpuGame = !cpuGame;
 			break;
 		}
+		System.out.println();
 	}
 
 	public static void networkedGame() throws IOException {
@@ -218,6 +205,8 @@ public class ChessDriver {
 		} while (choice != 1 || choice != 2);
 		if (choice == 1)
 			Server.startServer();
+//		else
+//			Client
 	}
 
 	public static void pawnReachedOtherSide(int row, int col) {
@@ -253,72 +242,51 @@ public class ChessDriver {
 		return false;
 	}
 
-	public static boolean notInNoAvailableMovesAndOnly2KingsStaleMate() {
-		AtomicBoolean onlyWhiteKing = new AtomicBoolean(true);
-		AtomicBoolean onlyBlackKing = new AtomicBoolean(true);
-		loopForKings(onlyWhiteKing, onlyBlackKing);
-		if (onlyBlackKing.get() && onlyWhiteKing.get())
+	public static boolean notInStaleMate() {
+		boolean white = oneKing(true);
+		boolean black = oneKing(false);
+		if (white && black)
 			return false;
+		if (white || black)
+			return eighteenMoveStalemate();
+		return canMove();
+	}
+	
+	public static boolean oneKing(boolean white) {
+		int count= 0;
+		for (int i = 0; i < 8; i++)
+			for (int j = 0; j < 8; j++)
+				if (chessBoard[i][j] != null && chessBoard[i][j].isWhite() == white)
+						count++;
+		return count == 1;
+	}
+	
+	public static boolean eighteenMoveStalemate() {
+		if (!(startCountingTurns) && (oneKing(true) || oneKing(false)))
+				startCountingTurns = true;
+		return turns < 18;
+	}
 
+	public static boolean canMove() {
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
 				if (chessBoard[i][j] != null && chessBoard[i][j].isWhite() == whitesTurn)
 					for (int x = 0; x < 8; x++)
-						for (int y = 0; y < 8; y++) {
-							Piece king = whitesTurn ? whiteKing : blackKing;
-							if (chessBoard[i][j].isLegalMove(j, i, x, y, chessBoard, king))
+						for (int y = 0; y < 8; y++)
+							if (chessBoard[i][j].isLegalMove(j, i, x, y, chessBoard, whitesTurn ? whiteKing : blackKing))
 								return true;
-						}
 		return false;
-	}
-
-	public static void setStaleAndCheck(AtomicBoolean notInStaleMate, AtomicBoolean notInCheckMate) {
-		staleMateCheckForEveryTurn();
-		if (isInCheck())
-			notInCheckMate.set(notInCheckMate());
-		else
-			notInStaleMate.set(notInNoAvailableMovesAndOnly2KingsStaleMate());
-	}
-
-	public static boolean checkForOneKingFor18MoveStaleMate() {
-		AtomicBoolean onlyWhiteKing = new AtomicBoolean(true);
-		AtomicBoolean onlyBlackKing = new AtomicBoolean(true);
-		loopForKings(onlyWhiteKing, onlyBlackKing);
-
-		if (!onlyBlackKing.get() && !onlyWhiteKing.get())
-			return false;
-		return true;
-
-	}
-
-	public static void loopForKings(AtomicBoolean onlyWhiteKing, AtomicBoolean onlyBlackKing) {
-		outer: for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				if (chessBoard[i][j] != null) {
-					if (!(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == true)
-						onlyWhiteKing.set(false);
-					if (!(chessBoard[i][j] instanceof King) && chessBoard[i][j].isWhite() == false)
-						onlyBlackKing.set(false);
-					if (!onlyWhiteKing.get() && !onlyBlackKing.get())
-						break outer;
-				}
-			}
-		}
-	}
-
-	public static void staleMateCheckForEveryTurn() {
-		if (!startCountingTurns)
-			if (checkForOneKingFor18MoveStaleMate())// true = only king for either side (whichever side doesn't matter)
-				startCountingTurns = true;
-		if (turns > 17)
-			endGame(false);
 	}
 
 	public static void displayChoice() {
 		if (debug)
-			Display.debug(chessBoard, whitesTurn, fr, fc, tr, tc);
+			Display.debug(chessBoard, whitesTurn, useJansi, fr, fc, tr, tc);
 		else
 			Display.display(whitesTurn, useJansi, chessBoard, fr, fc, tr, tc);
+		if (startCountingTurns)
+			System.out.println("Turns til stalemate : " + (17 - turns++));
+		if (isInCheck())
+			System.out.println("\nWarning! Your king is in check!\n");
 	}
 
 	public static boolean isMovingPiece() {
