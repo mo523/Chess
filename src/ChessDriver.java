@@ -22,6 +22,7 @@ public class ChessDriver {
 	private static boolean useJansi = !System.getProperty("os.name").equalsIgnoreCase("moshe");
 	private static boolean networkGame = false;
 	private static Network net;
+	private static boolean localTurn;
 	// System.getProperty("os.name").contains("Windows") &&
 	// !System.getProperty("os.name").contains("10");
 	// private HashMap<String,Piece> pieces = new HashMap<>();
@@ -41,10 +42,27 @@ public class ChessDriver {
 		do {
 			if (cpuGame && cpuTurn) {
 				AI.cpuMovePiece();
-			} else {
+			} 
+			else if (networkGame)
+			{
+				if (localTurn)
+				{
+					displayChoice();
+					movePiece();
+					net.sendServerData(fr, fc, tr, tc);
+				}
+				else
+				{
+					System.out.println("Waiting for other players move");
+					int[] data = net.getClientData();
+					performMove(data[1], data[0], data[3], data[2]);
+				}
+			}
+			else {
 				displayChoice();
 				movePiece();
 			}
+			localTurn = !localTurn;
 			whitesTurn = !whitesTurn;
 			cpuTurn = !cpuTurn;
 		} while (notInCheckMate() && notInStaleMate());
@@ -200,12 +218,12 @@ public class ChessDriver {
 		System.out.println();
 	}
 
-	public static void networkedGame() throws IOException {
+	public static void networkedGame() throws IOException, ClassNotFoundException {
 		System.out.println("Would you like to:\n1. Host a game\n2. Join a game");
 		int choice;
 		do {
 			choice = kyb.nextInt();
-		} while (choice != 1 || choice != 2);
+		} while (choice != 1 && choice != 2);
 		if (choice == 1)
 		{
 			net = new Network();
@@ -213,9 +231,13 @@ public class ChessDriver {
 		else
 		{
 			System.out.println("IP Address?");
-			net = new Network(kyb.nextLine());
+			kyb.nextLine();
+			String ip = kyb.nextLine();
+			net = new Network(ip);
 		}
-	}
+		localTurn = net.isServer();
+		playGame();
+		}
 
 	public static void pawnReachedOtherSide(int row, int col) {
 		displayChoice();
@@ -261,7 +283,7 @@ public class ChessDriver {
 	}
 	
 	public static boolean oneKing(boolean white) {
-		int count= 0;
+		int count = 0;
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
 				if (chessBoard[i][j] != null && chessBoard[i][j].isWhite() == white)
@@ -302,10 +324,6 @@ public class ChessDriver {
 	}
 
 	public static void performMove(int fromCol, int fromRow, int toCol, int toRow) {
-		if (networkGame)
-		{
-			
-		}
 		chessBoard[toRow][toCol] = chessBoard[fromRow][fromCol];
 		chessBoard[fromRow][fromCol] = null;
 	}
