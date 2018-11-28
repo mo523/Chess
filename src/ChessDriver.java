@@ -236,8 +236,11 @@ public class ChessDriver {
 		localTurn = net.isServer();
 		try {
 			playGame();
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
+		} finally {
+			networkGame = false;
+			net.close();
 		}
 	}
 
@@ -399,7 +402,6 @@ public class ChessDriver {
 		chessBoard[7][7] = new Rook(IS_BLACK);
 		whiteKing = chessBoard[0][3];
 		blackKing = chessBoard[7][3];
-		chessBoard[2][0] = new Pawn(false);
 		// // debug for checkmate
 		// chessBoard[6][4] = chessBoard[0][3];
 		// chessBoard[6][5] = chessBoard[0][5];
