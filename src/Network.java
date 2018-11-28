@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,9 +16,16 @@ public class Network {
 	public Network() throws IOException
 	{
 		server = true;
-		InetAddress localhost = InetAddress.getLocalHost(); 
-		System.out.println("Local IP: " + localhost.getHostAddress());
-		
+		InetAddress[] lh = InetAddress.getAllByName(InetAddress.getLocalHost().getHostName());
+		if ( lh.length == 1 )
+			System.out.println("IP Address: " + lh[0].getHostAddress());
+		else
+		{
+			System.out.println("Multiple local IP Addresses found:");
+			for ( int i = 0; i < lh.length; i++ )
+				if ( lh[i] instanceof Inet4Address )
+					System.out.println((i+1) + ": " +lh[i].getHostAddress());
+		}
 		listener= new ServerSocket(9090);
 		socket = listener.accept();
 	}
