@@ -236,7 +236,7 @@ public class ChessDriver {
 		localTurn = net.isServer();
 		try {
 			playGame();
-		} catch (Exception ex) {
+		} catch (IOException ex) {
 			System.out.println(ex.getMessage());
 		} finally {
 			networkGame = false;
@@ -253,6 +253,8 @@ public class ChessDriver {
 		} else {
 			displayChoice();
 			System.out.println("\nWaiting for other players move");
+			if (net.getClientData() == null)
+				throw new IOException();
 			int[] data = net.getClientData();
 			performMove(data[1], data[0], data[3], data[2]);
 			fr = data[0];
