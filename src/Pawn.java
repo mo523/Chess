@@ -1,5 +1,6 @@
 
 
+@SuppressWarnings("serial")
 public class Pawn extends Piece
 {
 	private String icon[] = {
@@ -34,7 +35,7 @@ public class Pawn extends Piece
 		
 		if(xDiff > 1)
 			return false;
-		if(xDiff == 1 && yDiff != 1)
+		if(xDiff == 1 &&  Math.abs(yDiff) != 1)
 			return false;
 		if(xDiff == 1 && CB[toRow][toCol] == null)
 			return false;

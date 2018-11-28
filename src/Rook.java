@@ -1,4 +1,5 @@
 
+@SuppressWarnings("serial")
 public class Rook extends Piece {
 	private String icon[] = {
 			"            ",

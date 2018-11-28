@@ -1,4 +1,5 @@
 
+@SuppressWarnings("serial")
 public class Horse extends Piece {
 	private String icon[] = {
 			"            ",

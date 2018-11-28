@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
-@SuppressWarnings("resource")
 public class SaveGameFunctionality {
 	private static Scanner kyb = new Scanner(System.in);
 
@@ -22,7 +21,7 @@ public class SaveGameFunctionality {
 			ClassNotFoundException {
 
 		SavedGame[] savedGames = readFile();
-		ObjectOutputStream saver = new ObjectOutputStream(new FileOutputStream("Saved Games\\saved"));
+		ObjectOutputStream saver = new ObjectOutputStream(new FileOutputStream("Saved Games"));
 		if (savedGames != null)
 			for (SavedGame s : savedGames)
 				saver.writeObject(s);
@@ -38,7 +37,7 @@ public class SaveGameFunctionality {
 		ObjectInputStream loader = null;
 		boolean found = true;
 		try {
-			loader = new ObjectInputStream(new FileInputStream("Saved Games\\saved"));
+			loader = new ObjectInputStream(new FileInputStream("Saved Games"));
 		} catch (FileNotFoundException e) {
 			found = false;
 		}
@@ -67,7 +66,7 @@ public class SaveGameFunctionality {
 	public static void loadSavedGame() throws FileNotFoundException,
 			IOException, ClassNotFoundException {
 		List<SavedGame> list = new ArrayList<SavedGame>();
-		loopThruFile(list, new ObjectInputStream(new FileInputStream("Saved Games\\saved")));
+		loopThruFile(list, new ObjectInputStream(new FileInputStream("Saved Games")));
 		System.out.println("Which game?");
 		for (int i = 0; i < list.size(); i++) {
 			System.out.println((i + 1) + ") " + list.get(i).getName());

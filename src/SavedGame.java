@@ -1,5 +1,6 @@
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class SavedGame implements Serializable{
 	Piece[][] chessBoard;
 	private boolean debug;

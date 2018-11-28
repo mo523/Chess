@@ -1,4 +1,5 @@
 
+@SuppressWarnings("serial")
 public class Queen extends Piece {
 	private String icon[] = {
 			"            ",

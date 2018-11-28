@@ -1,4 +1,5 @@
 
+@SuppressWarnings("serial")
 public class King extends Piece {
 	private String icon[] = {
 			"      \u2584\u2584    ",
