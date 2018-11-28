@@ -19,11 +19,12 @@ public class Display {
 		String fgWhite = useJansi ? "\u001B[97m" : "\u001B[38;2;205;205;205m";
 		String fgBlack = useJansi ? "\u001B[30m" : "\u001B[38;2;40;40;40m";
 		String fgBlue = useJansi ? "\u001B[34m" : "\u001B[38;2;112;140;78m";
+		String fgNumLets = useJansi ? "\u001B[30m" : "\u001B[38;2;241;222;190m";
 		String board = "";
-		board += ("\n" + bxWhite + fgBlack + (whitesTurn ? letters1 : letters2) + " " + reset + "\n");
+		board += ("\n" + bxWhite + fgNumLets + (whitesTurn ? letters1 : letters2) + " " + reset + "\n");
 		for (int i = out; i != minOut; i += chg) {
 			boolean numRow = i % 6 + 1 == 3;
-			board += (bxWhite + fgBlack + (numRow ? i / 6 + 1 + " " : "  ") + reset);
+			board += (bxWhite + fgNumLets + (numRow ? i / 6 + 1 + " " : "  ") + reset);
 			for (int j = in; j != minIn; j += chg) {
 				Boolean isWhite = chessBoard[i / 6][j] != null ? chessBoard[i / 6][j].isWhite() : null;
 				boolean ijTheSame = i / 6 % 2 == j % 2;
@@ -35,7 +36,7 @@ public class Display {
 								(from ? bgCyan : to ? bgGreen : ijTheSame ? bgWhite : bgBlack))
 						+ reset);
 			}
-			board += (bxWhite + fgBlack + (numRow ? " " + (i / 6 + 1) : "  ") + reset);
+			board += (bxWhite + fgNumLets + (numRow ? " " + (i / 6 + 1) : "  ") + reset);
 			board += "\n";
 		}
 		board += (bxWhite + fgBlack + " " + (whitesTurn ? letters1 : letters2) + reset);
