@@ -44,6 +44,8 @@ public class Network {
 	{
 		BufferedReader input =
 	            new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		if (!input.ready())
+			throw new IOException();
 		String sin[] = input.readLine().split(" ");
 		
 		int[] ins = new int[4];
