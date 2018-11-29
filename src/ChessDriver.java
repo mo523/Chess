@@ -10,8 +10,8 @@ public class ChessDriver {
 	private static final boolean IS_BLACK = false;// this is to make what color the pieces are more clear
 	private static boolean debug;
 	private static Piece whiteKing, blackKing;
-	private static boolean whitesTurn = true;
-	private static Piece[][] chessBoard = new Piece[8][8];
+	private static boolean whitesTurn;
+	private static Piece[][] chessBoard;
 	private static boolean cpuGame;
 	private static boolean cpuTurn;
 	static boolean startCountingTurns;
@@ -23,16 +23,12 @@ public class ChessDriver {
 	private static boolean networkGame = false;
 	private static Network net;
 	private static boolean localTurn;
-	// System.getProperty("os.name").contains("Windows") &&
-	// !System.getProperty("os.name").contains("10");
-	// private HashMap<String,Piece> pieces = new HashMap<>();
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
 
 		if (useJansi)
 			AnsiConsole.systemInstall(); // MUST BE ON TOP - PARSES ALL THE UNICODE
 		Display.clear();
-		setUpPieces();
 		System.out.println("Welcome to chess!");
 		initialMenu();
 		kyb.close();
@@ -163,30 +159,33 @@ public class ChessDriver {
 		int choice;
 		do {
 			System.out.println(
-					"\n\nMain Menu\n\n0. Quit\n1. New Game (Two Player) \n2. New game (One Player)\n3. New networked game\n4. Open saved game\n\n5. 1 with debug\n6. 2 with debug\n7. 3 with debug");
+					"\n\nMain Menu\n\n0. Quit\n1. New Game (Two Player) \n2. New game (One Player)\n3. New networked game\n4. Open saved game\n5. Continue Game\n\n6. 1 with debug\n7. 2 with debug\n8. 3 with debug");
 			do {
 				choice = kyb.nextInt();
 			} while (choice < 0 && choice > 3);
 			switch (choice) {
 			case 0:
 				break;
-			case 5:
+			case 6:
 				debug = true;
 			case 1:
+				setUpPieces();
 				playGame();
 				break;
-			case 6:
+			case 7:
 				debug = true;
 			case 2:
 				System.out.println("(B)lack or (W)hite?");
 				cpuTurn = kyb.next().toUpperCase().equals("B") ? true : false;
 				cpuGame = true;
+				setUpPieces();
 				playGame();
 				break;
-			case 7:
+			case 8:
 				debug = true;
 			case 3:
 				networkGame = true;
+				setUpPieces();
 				networkedGame();
 				break;
 			case 4:
@@ -201,6 +200,9 @@ public class ChessDriver {
 				startCountingTurns = s.isStartCountingTurns();
 				turns = s.getTurns();
 				break;
+			case 5:
+					playGame();
+					break;
 			}
 			System.out.println();
 		} while (choice != 0);
@@ -363,6 +365,8 @@ public class ChessDriver {
 	}
 
 	public static void setUpPieces() {
+		chessBoard = new Piece[8][8];
+		whitesTurn = true;
 		// for tests only
 		// chessBoard[2][4] = new King(IS_WHITE);
 		// chessBoard[5][1] = new Bishop(IS_BLACK);
