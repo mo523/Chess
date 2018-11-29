@@ -190,7 +190,16 @@ public class ChessDriver {
 				networkedGame();
 				break;
 			case 4:
-				SaveGameFunctionality.loadSavedGame();
+				SavedGame s = SaveGameFunctionality.loadSavedGame();
+				chessBoard = s.getChessBoard();
+				debug = s.isDebug();
+				whiteKing = s.getWhiteKing();
+				blackKing = s.getBlackKing();
+				whitesTurn = s.isWhitesTurn();
+				cpuGame = s.isCpuGame();
+				cpuTurn = s.isCpuTurn();
+				startCountingTurns = s.isStartCountingTurns();
+				turns = s.getTurns();
 				break;
 			}
 			System.out.println();

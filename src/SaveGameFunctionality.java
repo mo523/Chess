@@ -63,7 +63,7 @@ public class SaveGameFunctionality {
 		return collection;
 	}
 
-	public static void loadSavedGame() throws FileNotFoundException,
+	public static SavedGame loadSavedGame() throws FileNotFoundException,
 			IOException, ClassNotFoundException {
 		List<SavedGame> list = new ArrayList<SavedGame>();
 		loopThruFile(list, new ObjectInputStream(new FileInputStream("Saved Games")));
@@ -72,8 +72,6 @@ public class SaveGameFunctionality {
 			System.out.println((i + 1) + ") " + list.get(i).getName());
 		}
 
-		SavedGame s = list.get(kyb.nextInt() - 1);
-
-		ChessDriver.setGame(s);
+		return list.get(kyb.nextInt() - 1);
 	}
 }
