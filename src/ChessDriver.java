@@ -190,15 +190,7 @@ public class ChessDriver {
 				break;
 			case 4:
 				SavedGame s = SaveGameFunctionality.loadSavedGame();
-				chessBoard = s.getChessBoard();
-				debug = s.isDebug();
-				whiteKing = s.getWhiteKing();
-				blackKing = s.getBlackKing();
-				whitesTurn = s.isWhitesTurn();
-				cpuGame = s.isCpuGame();
-				cpuTurn = s.isCpuTurn();
-				startCountingTurns = s.isStartCountingTurns();
-				turns = s.getTurns();
+				setGame(s);
 				break;
 			case 5:
 					playGame();
