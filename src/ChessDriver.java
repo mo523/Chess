@@ -59,7 +59,7 @@ public class ChessDriver {
 		displayChoice();
 		if (!notInCheckMate())
 			System.out.println("Sorry " + (whitesTurn ? "White" : "Black") + ". Checkmate, you lose.");
-		else 
+		else
 			System.out.println("Stalemate.");
 	}
 
@@ -193,8 +193,8 @@ public class ChessDriver {
 				setGame(s);
 				break;
 			case 5:
-					playGame();
-					break;
+				playGame();
+				break;
 			}
 			System.out.println();
 		} while (choice != 0);
@@ -227,16 +227,15 @@ public class ChessDriver {
 			choice = kyb.nextInt();
 		} while (choice != 1 && choice != 2);
 		if (choice == 1) {
-			net = new Network();
-		} else {
-			System.out.println("IP Address?");
+			System.out.println("What would you like to call your game?");
 			kyb.nextLine();
-			String ip = kyb.nextLine();
-			if (ip.equals("0"))
-				ip = "127.0.0.1";
-			net = new Network(ip);
+			net = new Network(kyb.nextLine());
+		} else {
+			net = new Network("");
+			System.out.println(net.getGames());
+			net.join(kyb.nextInt());
 		}
-		localTurn = net.isServer();
+		localTurn = net.isHost();
 		try {
 			playGame();
 		} catch (IOException ex) {
