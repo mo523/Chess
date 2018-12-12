@@ -8,6 +8,7 @@ public class King extends Piece {
 			"     \u2590\u2588\u2588\u258C   ",
 			"    \u25A0\u2588\u2588\u2588\u2588\u25A0  ",
 			"   \u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580 "};
+	private final boolean enPassantAble=false;
 	
 	public King( boolean white) {
 		super( white);
@@ -36,5 +37,8 @@ public class King extends Piece {
 		else if(CB[toRow][toCol].isWhite() != this.isWhite())
 			return true;
 		return false;
+	}
+	public boolean isEnPassantAble() {
+		return enPassantAble;
 	}
 }

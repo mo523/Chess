@@ -8,6 +8,7 @@ public class Queen extends Piece {
 			"     \u2590\u2588\u2588\u258C   ",
 			"    \u2584\u2588\u2588\u2588\u2588\u2584  ",
 			"   \u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580 "};
+	private final boolean enPassantAble=false;
 	public Queen( boolean white) {
 		super(white);
 		this.name = "Queen";
@@ -41,5 +42,8 @@ public class Queen extends Piece {
 			return bishop.noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB);
 		else
 			return rook.noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB);		
+	}
+	public boolean isEnPassantAble() {
+		return enPassantAble;
 	}
 }

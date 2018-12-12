@@ -6,6 +6,7 @@ public abstract class Piece implements Serializable{
 	protected boolean white; // boolean to test if the piece is white or black
 	protected String icon[];
 	
+	
 	/**
 	 * @param white tells if the piece is white or black
 	 */
@@ -118,4 +119,6 @@ public abstract class Piece implements Serializable{
 	public String isInstanceOf() {
 		return name;
 	}
+
+	protected abstract boolean isEnPassantAble();
 }
