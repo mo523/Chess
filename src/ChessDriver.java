@@ -107,14 +107,19 @@ public class ChessDriver {
 		if (chessBoard[toRow][toCol] instanceof Pawn && ((whitesTurn && toRow == 7) || (!whitesTurn && toRow == 0)))
 			pawnReachedOtherSide(toRow, toCol);
 		// if pawn enPassantAble it kills
-		if ((whitesTurn && toRow == 5 && chessBoard[4][toCol] != null
-				&& chessBoard[4][toCol].isInstanceOf().equals("Pawn")
-				&& ((Pawn) chessBoard[4][toCol]).isEnPassantAble()))
-			chessBoard[4][toCol] = null;
-		if (!whitesTurn && toRow == 2 && chessBoard[3][toCol] != null
-				&& chessBoard[3][toCol].isInstanceOf().equals("Pawn")
-				&& ((Pawn) chessBoard[3][toCol]).isEnPassantAble())
-			chessBoard[3][toCol] = null;
+			System.out.println("a");
+		
+				if (chessBoard[toRow][toCol].isInstanceOf().equals("Pawn"))
+					if (((Pawn) chessBoard[toRow][toCol]).enPassantMove()) {
+					if(whitesTurn)
+					chessBoard[4][toCol] = null;
+					
+					if(!whitesTurn)
+					chessBoard[3][toCol] = null;
+				}
+
+		
+
 
 		// makes a piece enPassantAble
 		if (chessBoard[toRow][toCol].isInstanceOf().equals("Pawn")) {

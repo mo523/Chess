@@ -9,6 +9,7 @@ public class Rook extends Piece {
 			"    \u2584\u2588\u2588\u2588\u2588\u2584  ",
 			"            "
 			};
+	private final boolean enPassantAble=false;
 	public Rook(boolean white) {
 		super(white);
 		this.name = "Rook";
@@ -66,6 +67,9 @@ public class Rook extends Piece {
 			}
 		}
 		return true;
+	}
+	public boolean isEnPassantAble() {
+		return enPassantAble;
 	}
 	/*
 	public boolean inOneDirection(int diff, int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB){

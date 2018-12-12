@@ -8,7 +8,7 @@ public class Bishop extends Piece {
 			"  \u2584\u2588\u2588\u2588\u2588\u2584",
 			"        "
 			};
-	
+	private final boolean enPassantAble=false;
 	public Bishop( boolean white) {
 		super(white);
 		this.name = "Bishop";
@@ -56,5 +56,8 @@ public class Bishop extends Piece {
 		}
 		while (!done);
 		return true;
+	}
+	public boolean isEnPassantAble() {
+		return enPassantAble;
 	}
 }

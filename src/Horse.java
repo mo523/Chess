@@ -8,7 +8,8 @@ public class Horse extends Piece {
 			"    \u2580\u2588\u2588\u2588\u2584   ",
 			"    \u2584\u2588\u2588\u2588\u2588\u2584  ",
 			"            "
-			};	
+			};
+	private final boolean enPassantAble=false;
 	public Horse(boolean white) {
 		super( white);
 		this.name = "Horse";
@@ -35,5 +36,8 @@ public class Horse extends Piece {
 			int fromRow, int toCol, int toRow,
 			Piece[][] CB) {
 		return true; // because horses jump
+	}
+	public boolean isEnPassantAble() {
+		return enPassantAble;
 	}
 }

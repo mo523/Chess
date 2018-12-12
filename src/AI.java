@@ -1,4 +1,4 @@
-
+ 
 public class AI
 {
 	public static void cpuMovePiece() {
@@ -30,4 +30,6 @@ public class AI
 		ChessDriver.tc = toCol;
 		ChessDriver.tr = toRow;
 	}
+	
+	
 }
