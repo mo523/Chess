@@ -79,7 +79,14 @@ public abstract class Piece implements Serializable{
 		Piece[][] newCB = new Piece[8][8];
 		for (int i = 0; i < CB.length; i++) {
 			for (int j = 0; j < CB[i].length; j++) {
-				if(CB[i][j] instanceof King)
+				if(CB[i][j] instanceof Pawn) {
+					try {
+						newCB[i][j] = ((Pawn) CB[i][j]).clone();
+					} catch (CloneNotSupportedException e) {
+						e.printStackTrace();
+					}
+				}
+				else if(CB[i][j] instanceof King)
 					newCB[i][j] = new King(CB[i][j].isWhite());
 				else if(CB[i][j] instanceof Queen)
 					newCB[i][j] = new Queen(CB[i][j].isWhite());
@@ -89,10 +96,7 @@ public abstract class Piece implements Serializable{
 					newCB[i][j] = new Bishop(CB[i][j].isWhite());
 				else if(CB[i][j] instanceof Horse)
 					newCB[i][j] = new Horse(CB[i][j].isWhite());
-				else if(CB[i][j] instanceof Pawn) {
-					newCB[i][j] = new Pawn(CB[i][j].isWhite());
-					((Pawn) newCB[i][j]).setFirstMove(((Pawn)CB[i][j]).getFirstMove());
-				}
+				 
 			}	
 		}
 		return newCB;
