@@ -2,12 +2,11 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
+
 import org.fusesource.jansi.AnsiConsole;
 
 public class ChessDriver {
 	private static Scanner kyb = new Scanner(System.in);
-	private static final boolean IS_WHITE = true;// this is to make what color the pieces are more clear
-	private static final boolean IS_BLACK = false;// this is to make what color the pieces are more clear
 	private static boolean debug;
 	private static Piece whiteKing, blackKing;
 	private static boolean whitesTurn;
@@ -361,6 +360,8 @@ public class ChessDriver {
 	}
 
 	public static void setUpPieces() {
+		final boolean IS_WHITE = true;// this is to make what color the pieces are more clear
+		final boolean IS_BLACK = false;// this is to make what color the pieces are more clear
 		chessBoard = new Piece[8][8];
 		whitesTurn = true;
 		// for tests only
