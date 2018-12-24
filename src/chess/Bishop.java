@@ -1,3 +1,4 @@
+package chess;
 @SuppressWarnings("serial")
 public class Bishop extends Piece {
 	private String icon[] = {

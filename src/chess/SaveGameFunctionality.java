@@ -1,3 +1,4 @@
+package chess;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,6 +15,21 @@ import java.util.Scanner;
 public class SaveGameFunctionality {
 	private static Scanner kyb = new Scanner(System.in);
 
+	/**
+	 * 
+	 * @param chessBoard
+	 * @param debug
+	 * @param whiteKing
+	 * @param blackKing
+	 * @param whitesTurn
+	 * @param cpuGame
+	 * @param cpuTurn
+	 * @param startCountingTurns
+	 * @param turns
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	public static void saveGame(Piece[][] chessBoard, boolean debug,
 			Piece whiteKing, Piece blackKing, boolean whitesTurn,
 			boolean cpuGame, boolean cpuTurn, boolean startCountingTurns,

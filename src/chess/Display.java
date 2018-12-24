@@ -1,3 +1,4 @@
+package chess;
 import java.io.IOException;
 
 public class Display {

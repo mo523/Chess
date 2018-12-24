@@ -1,3 +1,4 @@
+package chess;
 import java.io.Serializable;
 @SuppressWarnings("serial")
 public abstract class Piece implements Serializable{

@@ -1,3 +1,4 @@
+package chess;
 
 @SuppressWarnings("serial")
 public class Pawn extends Piece {
