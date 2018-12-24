@@ -52,7 +52,7 @@ public class Display {
 		return (empty ? "            " : chessBoard[i / 6][j].getIcon(iconRow))
 				+ (numRow ? ("\u001B[0m" + bg + "\u001B[30m" + numLet) : "  ");
 	}
-
+	//do we need the 4 ints?
 	public static void debug(Piece[][] chessBoard, boolean whitesTurn, boolean useJansi, int fr, int fc, int tr,
 			int tc) {
 		String lets = whitesTurn || useJansi ? "  | A  | B  | C  | D  | E  | F  | G  | H  |"
@@ -70,7 +70,7 @@ public class Display {
 			for (int j = in; j != minIn; j += chg) {
 				System.out.print((j == out ? (i + 1) : "") + " | "
 						+ (chessBoard[i][j] == null ? "  "
-								: ((chessBoard[i][j].white ? "w" : "b") + chessBoard[i][j].toString().charAt(0)))
+								: ((chessBoard[i][j].white ? "w" : "b") + chessBoard[i][j].toString().charAt(6)))
 						+ (j == minIn - chg ? " |" : ""));
 			}
 			System.out.println();
