@@ -423,8 +423,8 @@ public class ChessDriver {
 //		chessBoard[5][5] = new Queen(true,5,5);
 //		chessBoard[6][7] = new Queen(true,6,7);
 //		chessBoard[6][2] = new King(false,6,2);
-		blackKing = chessBoard[6][2];
-		whiteKing = chessBoard[0][3];
+//		blackKing = chessBoard[6][2];
+//		whiteKing = chessBoard[0][3];
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++) {
 				if (chessBoard[i][j] != null)
