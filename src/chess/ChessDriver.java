@@ -462,4 +462,8 @@ public class ChessDriver {
 	public static void setChessBoard(Piece[][] chessBoard) {
 		ChessDriver.chessBoard = chessBoard;
 	}
+	public static ArrayList<ArrayList<Piece>> getPieces()
+	{
+		return pieces;
+	}
 }
