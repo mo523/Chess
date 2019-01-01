@@ -53,8 +53,8 @@ public abstract class Piece implements Serializable{
 				if (CB[y][x] instanceof King && CB[y][x].isWhite() == this.isWhite())
 					break outer;
 		for (int i = 0; i < 8; i++)
-			for (int j = 0; j < 8; j++)
-				if(moveCheckForCheck(i, j, y, x, CB))
+			for (int j = 0; j < 8; j++) 
+				if(moveCheckForCheck(i, j, y, x, CB)) 
 					return true;//can kill
 		return false;
 	}
