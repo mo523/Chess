@@ -26,6 +26,22 @@ public abstract class Piece implements Serializable {
 		return white;
 	}
 
+	public int getRow() {
+		return row;
+	}
+
+	public int getCol() {
+		return col;
+	}
+
+	public void setRow(int row) {
+		this.row = row;
+	}
+
+	public void setCol(int col) {
+		this.col = col;
+	}
+
 	public String getIcon(int line) {
 		return icon[line];
 	}
@@ -52,15 +68,9 @@ public abstract class Piece implements Serializable {
 	}
 
 	public boolean inCheck(Piece King, Piece[][] CB) {
-		int y = 0, x = 0;
-
-		outer: for (y = 0; y < 8; y++)
-			for (x = 0; x < 8; x++)
-				if (CB[y][x] instanceof King && CB[y][x].isWhite() == this.isWhite())
-					break outer;
-		for (int i = 0; i < 8; i++)
-			for (int j = 0; j < 8; j++)
-				if (moveCheckForCheck(i, j, y, x, CB))
+		for (int fromRow = 0; fromRow < 8; fromRow++)
+			for (int fromCol = 0; fromCol < 8; fromCol++)
+				if (moveCheckForCheck(fromRow, fromCol, King.getRow(), King.getCol(), CB))
 					return true;// can kill
 		return false;
 	}
@@ -79,8 +89,8 @@ public abstract class Piece implements Serializable {
 		return !inCheck(King, newCB);
 	}
 
-	public boolean notInCheckmate(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB, Piece King){
-		//makes a temporary board and moves the piece in it
+	public boolean notInCheckmate(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB, Piece King) {
+		// makes a temporary board and moves the piece in it
 		Piece[][] newCB = null;
 		try {
 			newCB = makeNewBoard(CB);
@@ -88,13 +98,18 @@ public abstract class Piece implements Serializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (moveCheckForCheck( fromRow,  fromCol,  toRow,  toCol, newCB))
-		{
+		if (moveCheckForCheck(fromRow, fromCol, toRow, toCol, newCB)) {
+			newCB[fromRow][fromCol].setRow(toRow);
+			newCB[fromRow][fromCol].setCol(toCol);
 			newCB[toRow][toCol] = newCB[fromRow][fromCol];
 			newCB[fromRow][fromCol] = null;
-			return !inCheck(King, newCB);
-			}
-		else
+			Piece king = null;
+			for (int i =0; i < 8; i++)
+				for (int j = 0; j < 8; j++)
+					if (newCB[i][j] instanceof King && newCB[i][j].isWhite() == King.isWhite())
+						king = newCB[i][j];
+			return !inCheck(king, newCB);
+		} else
 			return false;
 	}
 
@@ -111,15 +126,15 @@ public abstract class Piece implements Serializable {
 						e.printStackTrace();
 					}
 				} else if (curr instanceof Queen)
-					newCB[i][j] = new Queen(curr.isWhite(), curr.row, curr.col);
+					newCB[i][j] = new Queen(curr.isWhite(), curr.getRow(), curr.getCol());
 				else if (curr instanceof Rook)
-					newCB[i][j] = new Rook(curr.isWhite(), curr.row, curr.col);
+					newCB[i][j] = new Rook(curr.isWhite(), curr.getRow(), curr.getCol());
 				else if (curr instanceof Bishop)
-					newCB[i][j] = new Bishop(curr.isWhite(), curr.row, curr.col);
+					newCB[i][j] = new Bishop(curr.isWhite(), curr.getRow(), curr.getCol());
 				else if (curr instanceof Horse)
-					newCB[i][j] = new Horse(curr.isWhite(), curr.row, curr.col);
+					newCB[i][j] = new Horse(curr.isWhite(), curr.getRow(), curr.getCol());
 				else if (curr instanceof King)
-					newCB[i][j] = new King(curr.isWhite(), curr.row, curr.col);
+					newCB[i][j] = new King(curr.isWhite(), curr.getRow(), curr.getCol());
 				else if (curr == null)
 					;// do nothing
 				else

@@ -61,7 +61,7 @@ public class Pawn extends Piece {
 
 	@Override
 	protected Pawn clone() throws CloneNotSupportedException {
-		Pawn p = new Pawn(this.white,this.row,this.col);
+		Pawn p = new Pawn(this.white,this.getRow(),this.getCol());
 		p.enPassantAble = this.enPassantAble;
 		p.enPassantMove = this.enPassantMove;
 		p.firstMove = this.firstMove;
