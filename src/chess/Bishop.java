@@ -3,22 +3,14 @@ package chess;
 @SuppressWarnings("serial")
 public class Bishop extends Piece {
 
-	private String icon[] = { "        ", "   \u2584\u2588\u2580\u2584 ", "  \u2580\u2588\u2584\u2588\u2588\u2580",
-			"    \u2588\u2588  ", "  \u2584\u2588\u2588\u2588\u2588\u2584", "        " };
+	private String icon[] = { "            ", "     \u2584\u2588\u2580\u2584   ", "    \u2580\u2588\u2584\u2588\u2588\u2580  ",
+			"      \u2588\u2588    ", "    \u2584\u2588\u2588\u2588\u2588\u2584  ", "            " };
 
 	private final boolean enPassantAble = false;
 
 	public Bishop(boolean white, int row, int col) {
 		super(white, row, col);
-		this.name = "Bishop";
-	}
-
-	public String getIcon(int row) {
-		return "  " + icon[row] + "  ";
-	}
-
-	public boolean isWhite() {
-		return white;
+		super.icon = icon;
 	}
 
 	@Override

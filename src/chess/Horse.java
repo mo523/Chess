@@ -13,15 +13,9 @@ public class Horse extends Piece {
 	private final boolean enPassantAble=false;
 	public Horse(boolean white, int row, int col) {
 		super(white, row, col);
-		this.name = "Horse";
+		super.icon = icon;
 	}
-	public String getIcon(int row){
-		return icon[row];
-	}
-	public boolean isWhite(){
-		return white;
-	}
-	
+
 	@Override
 	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB ){
 		Queen queen = new Queen(white,-1,-1);

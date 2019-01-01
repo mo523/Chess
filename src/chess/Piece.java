@@ -7,7 +7,6 @@ import exceptions.InvalidPieceException;
 @SuppressWarnings("serial")
 public abstract class Piece implements Serializable {
 
-	protected String name; // name of the piece
 	protected boolean white; // boolean to test if the piece is white or black
 	protected String icon[];
 	protected int row;
@@ -16,7 +15,7 @@ public abstract class Piece implements Serializable {
 	/**
 	 * @param white tells if the piece is white or black
 	 */
-	public Piece(boolean white, int row, int col) {
+	public Piece(boolean white, int row, int col){
 		this.white = white;
 		this.row = row;
 		this.col = col;
@@ -164,10 +163,5 @@ public abstract class Piece implements Serializable {
 			return false;
 		return true;
 	}
-
-	public String isInstanceOf() {
-		return name;
-	}
-
 	protected abstract boolean isEnPassantAble();
 }

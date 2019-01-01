@@ -9,15 +9,7 @@ public class Queen extends Piece {
 
 	public Queen(boolean white, int row, int col) {
 		super(white, row, col);
-		this.name = "Queen";
-	}
-
-	public String getIcon(int row) {
-		return icon[row];
-	}
-
-	public boolean isWhite() {
-		return white;
+		super.icon = icon;
 	}
 
 	@Override

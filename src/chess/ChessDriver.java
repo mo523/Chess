@@ -87,8 +87,8 @@ public class ChessDriver {
 				fromRow = move.charAt(1) - 49;
 				legalMoveInput = isValidPieceThere(fromRow, fromCol);
 			} while (!legalMoveInput);
-
-			System.out.println("\nWhere would you like to move your " + chessBoard[fromRow][fromCol].name + " to?");
+			String movingPiece = chessBoard[fromRow][fromCol].toString();
+			System.out.println("\nWhere would you like to move your " + movingPiece.substring(6, movingPiece.length() -9) + " to?");
 			do {
 				move = getPosition();
 				if (move.equals("m"))
@@ -111,7 +111,7 @@ public class ChessDriver {
 		// if pawn enPassantAble it kills
 		System.out.println("a");
 
-		if (chessBoard[toRow][toCol].isInstanceOf().equals("Pawn"))
+		if (chessBoard[toRow][toCol] instanceof Pawn)
 			if (((Pawn) chessBoard[toRow][toCol]).enPassantMove()) {
 				if (whitesTurn)
 					chessBoard[4][toCol] = null;
@@ -121,7 +121,7 @@ public class ChessDriver {
 			}
 
 		// makes a piece enPassantAble
-		if (chessBoard[toRow][toCol].isInstanceOf().equals("Pawn")) {
+		if (chessBoard[toRow][toCol] instanceof Pawn) {
 			if (Math.abs(toRow - fromRow) == 2)
 				((Pawn) chessBoard[toRow][toCol]).changeEnPassantAble(true);
 			else
@@ -166,7 +166,7 @@ public class ChessDriver {
 					"\n\nMain Menu\n\n0. Quit\n1. New Game (Two Player) \n2. New game (One Player)\n3. New networked game\n4. Open saved game\n5. Continue Game\n\n6. 1 with debug\n7. 2 with debug\n8. 3 with debug");
 			do {
 				choice = kyb.nextInt();
-			} while (choice < 0 && choice > 3);
+			} while (choice < 0 || choice > 8);
 			switch (choice) {
 			case 0:
 				break;
@@ -205,7 +205,7 @@ public class ChessDriver {
 	}
 
 	public static boolean menu() throws FileNotFoundException, ClassNotFoundException, IOException {
-		System.out.println("\n\nMenu\n0. Main menu\n1. Save game\n2. Change debug mode\n3. Change gameplay mode");
+		System.out.println("\n\nMenu\n0. Main menu\n1. Save game\n2. Change debug mode\n3. Change gameplay mode\n4. Continue game");
 		int choice = kyb.nextInt();
 		switch (choice) {
 		case 0:
@@ -219,6 +219,8 @@ public class ChessDriver {
 			break;
 		case 3:
 			cpuGame = !cpuGame;
+			break;
+		case 4:
 			break;
 		}
 		return false;
@@ -276,9 +278,9 @@ public class ChessDriver {
 			System.out.println("\nWhat would you like to convert your pawn to?");
 			System.out.println("1. Queen\n2. Bishop\n3. Rook\n4. Horse");
 			choice = kyb.nextInt();
-			if (choice > 4 || choice < 1)
+			if (choice < 1 || choice > 4)
 				System.out.println("Not a valid choice, 1-4");
-		} while (choice > 4 || choice < 1);
+		} while (choice < 1 || choice > 4);
 
 		chessBoard[row][col] = choice == 1 ? new Queen(whitesTurn, row, col)
 				: choice == 2 ? new Bishop(whitesTurn, row, col)
@@ -324,9 +326,9 @@ public class ChessDriver {
 
 	public static boolean canMove() {
 		for (Piece piece : pieces.get(whitesTurn ? 0 : 1))
-			for (int i = 0; i < 8; i++)
-				for (int j = 0; j < 8; j++)
-					if (piece.isLegalMove(piece.getRow(), piece.getCol(), i, j, chessBoard,
+			for (int toRow = 0; toRow < 8; toRow++)
+				for (int toCol = 0; toCol < 8; toCol++)
+					if (piece.isLegalMove(piece.getRow(), piece.getCol(), toRow, toCol, chessBoard,
 							whitesTurn ? whiteKing : blackKing))
 						return true;
 		return false;
@@ -350,7 +352,7 @@ public class ChessDriver {
 	public static void performMove(int fromRow, int fromCol, int toRow, int toCol) {
 		chessBoard[fromRow][fromCol].setRow(toRow);
 		chessBoard[fromRow][fromCol].setCol(toCol);
-		pieces.get(whitesTurn ? 1 : 0).removeIf(p -> p.getCol() == toCol && p.getRow() == toRow);
+		pieces.get(whitesTurn ? 1 : 0).remove(chessBoard[toRow][toCol]);
 		chessBoard[toRow][toCol] = chessBoard[fromRow][fromCol];
 		chessBoard[fromRow][fromCol] = null;
 	}

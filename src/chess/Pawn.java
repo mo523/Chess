@@ -12,16 +12,8 @@ public class Pawn extends Piece {
 
 	public Pawn(boolean white, int row, int col) {
 		super(white, row, col);
-		this.name = "Pawn";
+		super.icon = icon;
 		verticalMoveMax = white ? 1 : -1;
-	}
-
-	public String getIcon(int row) {
-		return icon[row];
-	}
-
-	public boolean isWhite() {
-		return white;
 	}
 
 	@Override

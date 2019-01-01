@@ -13,13 +13,7 @@ public class King extends Piece {
 	
 	public King(boolean white, int row, int col) {
 		super(white, row, col);
-		this.name = "King";
-	}
-	public String getIcon(int row){
-		return icon[row];
-	}
-	public boolean isWhite(){
-		return white;
+		super.icon = icon;
 	}
 
 	@Override
