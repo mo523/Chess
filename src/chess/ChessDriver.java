@@ -293,8 +293,8 @@ public class ChessDriver {
 		if (!isInCheck())
 			return true;
 		for (Piece piece : pieces.get(whitesTurn ? 0 : 1))
-			for (int i = 7; i < 8; i++)
-				for (int j = 2; j < 8; j++)
+			for (int i = 0; i < 8; i++)
+				for (int j = 0; j < 8; j++)
 					if (whitesTurn
 							? whiteKing.notInCheckmate(piece.getRow(), piece.getCol(), i, j, chessBoard, whiteKing)
 							: blackKing.notInCheckmate(piece.getRow(), piece.getCol(), i, j, chessBoard, blackKing))
