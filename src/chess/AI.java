@@ -5,7 +5,7 @@ public class AI
 	public static void cpuMovePiece() {
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
 		boolean legalMoveInput = true;
-		int fromRow, fromRow, toRow, toCol;
+		int fromRow, fromCol, toRow, toCol;
 		ChessDriver.movingPiece = true;
 		do {
 
