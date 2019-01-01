@@ -5,31 +5,31 @@ public class AI
 	public static void cpuMovePiece() {
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
 		boolean legalMoveInput = true;
-		int fromRow, fromCol, toRow, toCol;
+		int fromCol, fromRow, toCol, toRow;
 		ChessDriver.movingPiece = true;
 		do {
 
 			do {
-				fromRow = (int) (Math.random() * ((7 - 0) + 1));
 				fromCol = (int) (Math.random() * ((7 - 0) + 1));
-				legalMoveInput = ChessDriver.isValidPieceThere(fromRow, fromCol);
+				fromRow = (int) (Math.random() * ((7 - 0) + 1));
+				legalMoveInput = ChessDriver.isValidPieceThere(fromCol, fromRow);
 			} while (!legalMoveInput);
 
 			do {
-				toRow = (int) (Math.random() * ((7 - 0) + 1));
 				toCol = (int) (Math.random() * ((7 - 0) + 1));
-			} while ((toRow == fromRow && toCol == fromCol));
-			canPieceMoveThereBasedOnAllItsRules = ChessDriver.canMoveThere(fromRow, fromCol, toRow, toCol);
+				toRow = (int) (Math.random() * ((7 - 0) + 1));
+			} while ((toCol == fromCol && toRow == fromRow));
+			canPieceMoveThereBasedOnAllItsRules = ChessDriver.canMoveThere(fromCol, fromRow, toCol, toRow);
 
 		} while (!canPieceMoveThereBasedOnAllItsRules);
 		if (ChessDriver.startCountingTurns)
 			System.out.println("Turns til stalemate : " + (17 - ChessDriver.turns++));
-		ChessDriver.performMove(fromRow, fromCol, toRow, toCol);
+		ChessDriver.performMove(fromCol, fromRow, toCol, toRow);
 		ChessDriver.movingPiece = false;
-		ChessDriver.fr = fromCol;
-		ChessDriver.fc = fromRow;
-		ChessDriver.tc = toRow;
-		ChessDriver.tr = toCol;
+		ChessDriver.fr = fromRow;
+		ChessDriver.fc = fromCol;
+		ChessDriver.tc = toCol;
+		ChessDriver.tr = toRow;
 	}
 	
 	
