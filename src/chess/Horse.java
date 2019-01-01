@@ -11,8 +11,8 @@ public class Horse extends Piece {
 			"            "
 			};
 	private final boolean enPassantAble=false;
-	public Horse(boolean white) {
-		super( white);
+	public Horse(boolean white, int row, int col) {
+		super(white, row, col);
 		this.name = "Horse";
 	}
 	public String getIcon(int row){
@@ -24,7 +24,7 @@ public class Horse extends Piece {
 	
 	@Override
 	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB ){
-		Queen queen = new Queen(white);
+		Queen queen = new Queen(white,-1,-1);
 		if (!queen.canPieceMoveLikeThat(fromRow, fromCol, toRow, toCol, CB)&&
 				Math.abs(fromCol - toCol) < 3 && Math.abs(fromRow - toRow) < 3 )
 			return true;

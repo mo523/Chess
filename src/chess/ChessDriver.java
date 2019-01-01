@@ -2,6 +2,7 @@ package chess;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.fusesource.jansi.AnsiConsole;
@@ -12,6 +13,7 @@ public class ChessDriver {
 	private static Piece whiteKing, blackKing;
 	private static boolean whitesTurn;
 	private static Piece[][] chessBoard;
+	private static ArrayList<ArrayList<Piece>> pieces;
 	private static boolean cpuGame;
 	private static boolean cpuTurn;
 	static boolean startCountingTurns;
@@ -107,19 +109,16 @@ public class ChessDriver {
 		if (chessBoard[toRow][toCol] instanceof Pawn && ((whitesTurn && toRow == 7) || (!whitesTurn && toRow == 0)))
 			pawnReachedOtherSide(toRow, toCol);
 		// if pawn enPassantAble it kills
-			System.out.println("a");
-		
-				if (chessBoard[toRow][toCol].isInstanceOf().equals("Pawn"))
-					if (((Pawn) chessBoard[toRow][toCol]).enPassantMove()) {
-					if(whitesTurn)
+		System.out.println("a");
+
+		if (chessBoard[toRow][toCol].isInstanceOf().equals("Pawn"))
+			if (((Pawn) chessBoard[toRow][toCol]).enPassantMove()) {
+				if (whitesTurn)
 					chessBoard[4][toCol] = null;
-					
-					if(!whitesTurn)
+
+				if (!whitesTurn)
 					chessBoard[3][toCol] = null;
-				}
-
-		
-
+			}
 
 		// makes a piece enPassantAble
 		if (chessBoard[toRow][toCol].isInstanceOf().equals("Pawn")) {
@@ -281,8 +280,9 @@ public class ChessDriver {
 				System.out.println("Not a valid choice, 1-4");
 		} while (choice > 4 || choice < 1);
 
-		chessBoard[row][col] = choice == 1 ? new Queen(whitesTurn)
-				: choice == 2 ? new Bishop(whitesTurn) : choice == 3 ? new Rook(whitesTurn) : new Horse(whitesTurn);
+		chessBoard[row][col] = choice == 1 ? new Queen(whitesTurn, row, col)
+				: choice == 2 ? new Bishop(whitesTurn, row, col)
+						: choice == 3 ? new Rook(whitesTurn, row, col) : new Horse(whitesTurn, row, col);
 	}
 
 	public static boolean isInCheck() {
@@ -292,14 +292,13 @@ public class ChessDriver {
 	public static boolean notInCheckMate() {
 		if (!isInCheck())
 			return true;
-		for (int i = 0; i < 8; i++)
-			for (int j = 0; j < 8; j++)
-				if (chessBoard[i][j] != null && chessBoard[i][j].isWhite() == whitesTurn)
-					for (int x = 0; x < 8; x++)
-						for (int y = 0; y < 8; y++)
-							if ((whitesTurn ? whiteKing.notInCheckmate(j, i, y, x, chessBoard, whiteKing)
-									: blackKing.notInCheckmate(j, i, y, x, chessBoard, blackKing)))
-								return true;
+		for (Piece piece : pieces.get(whitesTurn ? 0 : 1))
+			for (int i = 7; i < 8; i++)
+				for (int j = 2; j < 8; j++)
+					if (whitesTurn
+							? whiteKing.notInCheckmate(piece.getRow(), piece.getCol(), i, j, chessBoard, whiteKing)
+							: blackKing.notInCheckmate(piece.getRow(), piece.getCol(), i, j, chessBoard, blackKing))
+						return true;
 		return false;
 	}
 
@@ -314,12 +313,7 @@ public class ChessDriver {
 	}
 
 	public static boolean oneKing(boolean white) {
-		int count = 0;
-		for (int i = 0; i < 8; i++)
-			for (int j = 0; j < 8; j++)
-				if (chessBoard[i][j] != null && chessBoard[i][j].isWhite() == white)
-					count++;
-		return count == 1;
+		return pieces.get(white ? 0 : 1).size() == 1;
 	}
 
 	public static boolean eighteenMoveStalemate() {
@@ -329,14 +323,12 @@ public class ChessDriver {
 	}
 
 	public static boolean canMove() {
-		for (int i = 0; i < 8; i++)
-			for (int j = 0; j < 8; j++)
-				if (chessBoard[i][j] != null && chessBoard[i][j].isWhite() == whitesTurn)
-					for (int x = 0; x < 8; x++)
-						for (int y = 0; y < 8; y++)
-							if (chessBoard[i][j].isLegalMove(j, i, x, y, chessBoard,
-									whitesTurn ? whiteKing : blackKing))
-								return true;
+		for (Piece piece : pieces.get(whitesTurn ? 0 : 1))
+			for (int i = 0; i < 8; i++)
+				for (int j = 0; j < 8; j++)
+					if (piece.isLegalMove(piece.getRow(), piece.getCol(), i, j, chessBoard,
+							whitesTurn ? whiteKing : blackKing))
+						return true;
 		return false;
 	}
 
@@ -356,6 +348,9 @@ public class ChessDriver {
 	}
 
 	public static void performMove(int fromRow, int fromCol, int toRow, int toCol) {
+		chessBoard[fromRow][fromCol].setRow(toRow);
+		chessBoard[fromRow][fromCol].setCol(toCol);
+		pieces.get(whitesTurn ? 1 : 0).removeIf(p -> p.getCol() == toCol && p.getRow() == toRow);
 		chessBoard[toRow][toCol] = chessBoard[fromRow][fromCol];
 		chessBoard[fromRow][fromCol] = null;
 	}
@@ -364,6 +359,9 @@ public class ChessDriver {
 		final boolean IS_WHITE = true;// this is to make what color the pieces are more clear
 		final boolean IS_BLACK = false;// this is to make what color the pieces are more clear
 		chessBoard = new Piece[8][8];
+		pieces = new ArrayList<>();
+		pieces.add(new ArrayList<Piece>());
+		pieces.add(new ArrayList<Piece>());
 		whitesTurn = true;
 		// for tests only
 		// chessBoard[2][4] = new King(IS_WHITE);
@@ -379,40 +377,66 @@ public class ChessDriver {
 		 */
 		// chessBoard[0][0] = new Pawn(true);
 
-		chessBoard[1][0] = new Pawn(IS_WHITE);
-		chessBoard[1][1] = new Pawn(IS_WHITE);
-		chessBoard[1][2] = new Pawn(IS_WHITE);
-		chessBoard[1][3] = new Pawn(IS_WHITE);
-		chessBoard[1][4] = new Pawn(IS_WHITE);
-		chessBoard[1][5] = new Pawn(IS_WHITE);
-		chessBoard[1][6] = new Pawn(IS_WHITE);
-		chessBoard[1][7] = new Pawn(IS_WHITE);
-		chessBoard[6][0] = new Pawn(IS_BLACK);
-		chessBoard[6][1] = new Pawn(IS_BLACK);
-		chessBoard[6][2] = new Pawn(IS_BLACK);
-		chessBoard[6][3] = new Pawn(IS_BLACK);
-		chessBoard[6][4] = new Pawn(IS_BLACK);
-		chessBoard[6][5] = new Pawn(IS_BLACK);
-		chessBoard[6][6] = new Pawn(IS_BLACK);
-		chessBoard[6][7] = new Pawn(IS_BLACK);
-		chessBoard[0][0] = new Rook(IS_WHITE);
-		chessBoard[0][1] = new Horse(IS_WHITE);
-		chessBoard[0][2] = new Bishop(IS_WHITE);
-		chessBoard[0][3] = new King(IS_WHITE);
-		chessBoard[0][4] = new Queen(IS_WHITE);
-		chessBoard[0][5] = new Bishop(IS_WHITE);
-		chessBoard[0][6] = new Horse(IS_WHITE);
-		chessBoard[0][7] = new Rook(IS_WHITE);
-		chessBoard[7][0] = new Rook(IS_BLACK);
-		chessBoard[7][1] = new Horse(IS_BLACK);
-		chessBoard[7][2] = new Bishop(IS_BLACK);
-		chessBoard[7][3] = new King(IS_BLACK);
-		chessBoard[7][4] = new Queen(IS_BLACK);
-		chessBoard[7][5] = new Bishop(IS_BLACK);
-		chessBoard[7][6] = new Horse(IS_BLACK);
-		chessBoard[7][7] = new Rook(IS_BLACK);
+		chessBoard[1][0] = new Pawn(IS_WHITE, 1, 0);
+		chessBoard[1][1] = new Pawn(IS_WHITE, 1, 1);
+		chessBoard[1][2] = new Pawn(IS_WHITE, 1, 2);
+		chessBoard[1][3] = new Pawn(IS_WHITE, 1, 3);
+		chessBoard[1][4] = new Pawn(IS_WHITE, 1, 4);
+		chessBoard[1][5] = new Pawn(IS_WHITE, 1, 5);
+		chessBoard[1][6] = new Pawn(IS_WHITE, 1, 6);
+		chessBoard[1][7] = new Pawn(IS_WHITE, 1, 7);
+		chessBoard[6][0] = new Pawn(IS_BLACK, 6, 0);
+		chessBoard[6][1] = new Pawn(IS_BLACK, 6, 1);
+		chessBoard[6][2] = new Pawn(IS_BLACK, 6, 2);
+		chessBoard[6][3] = new Pawn(IS_BLACK, 6, 3);
+		chessBoard[6][4] = new Pawn(IS_BLACK, 6, 4);
+		chessBoard[6][5] = new Pawn(IS_BLACK, 6, 5);
+		chessBoard[6][6] = new Pawn(IS_BLACK, 6, 6);
+		chessBoard[6][7] = new Pawn(IS_BLACK, 6, 7);
+		chessBoard[0][0] = new Rook(IS_WHITE, 0, 0);
+		chessBoard[0][1] = new Horse(IS_WHITE, 0, 1);
+		chessBoard[0][2] = new Bishop(IS_WHITE, 0, 2);
+		chessBoard[0][3] = new King(IS_WHITE, 0, 3);
+		chessBoard[0][4] = new Queen(IS_WHITE, 0, 4);
+		chessBoard[0][5] = new Bishop(IS_WHITE, 0, 5);
+		chessBoard[0][6] = new Horse(IS_WHITE, 0, 6);
+		chessBoard[0][7] = new Rook(IS_WHITE, 0, 7);
+		chessBoard[7][0] = new Rook(IS_BLACK, 7, 0);
+		chessBoard[7][1] = new Horse(IS_BLACK, 7, 1);
+		chessBoard[7][2] = new Bishop(IS_BLACK, 7, 2);
+		chessBoard[7][3] = new King(IS_BLACK, 7, 3);
+		chessBoard[7][4] = new Queen(IS_BLACK, 7, 4);
+		chessBoard[7][5] = new Bishop(IS_BLACK, 7, 5);
+		chessBoard[7][6] = new Horse(IS_BLACK, 7, 6);
+		chessBoard[7][7] = new Rook(IS_BLACK, 7, 7);
 		whiteKing = chessBoard[0][3];
 		blackKing = chessBoard[7][3];
+//		chessBoard[0][0] = new Rook(true,0,0);
+//		chessBoard[0][1] = new Horse(true,0,1);
+//		chessBoard[0][2] = new Bishop(true,0,2);
+//		chessBoard[0][3] = new King(true,0,3);
+//		chessBoard[0][5] = new Bishop(true,0,5);
+//		chessBoard[0][6] = new Horse(true,0,6);
+//		chessBoard[0][7] = new Rook(true,0,7);
+//		chessBoard[1][0] = new Pawn(true,1,0);
+//		chessBoard[1][1] = new Pawn(true,1,1);
+//		chessBoard[1][2] = new Pawn(true,1,2);
+//		chessBoard[1][4] = new Pawn(true,1,4);
+//		chessBoard[1][5] = new Pawn(true,1,5);
+//		chessBoard[3][3] = new Pawn(true,3,3);
+//		chessBoard[5][5] = new Queen(true,5,5);
+//		chessBoard[6][7] = new Queen(true,6,7);
+//		chessBoard[6][2] = new King(false,6,2);
+		blackKing = chessBoard[6][2];
+		whiteKing = chessBoard[0][3];
+		for (int i = 0; i < 8; i++)
+			for (int j = 0; j < 8; j++) {
+				if (chessBoard[i][j] != null)
+					if (chessBoard[i][j].isWhite())
+						pieces.get(0).add(chessBoard[i][j]);
+					else if (!chessBoard[i][j].isWhite())
+						pieces.get(1).add(chessBoard[i][j]);
+			}
 		// // debug for checkmate
 		// chessBoard[6][4] = chessBoard[0][3];
 		// chessBoard[6][5] = chessBoard[0][5];
@@ -441,7 +465,8 @@ public class ChessDriver {
 	public static void setMovingPiece(boolean movingPiece) {
 		ChessDriver.movingPiece = movingPiece;
 	}
-	//needed for junit
+
+	// needed for junit
 	public static void setChessBoard(Piece[][] chessBoard) {
 		ChessDriver.chessBoard = chessBoard;
 	}

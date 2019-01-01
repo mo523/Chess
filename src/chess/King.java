@@ -11,8 +11,8 @@ public class King extends Piece {
 			"   \u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580 "};
 	private final boolean enPassantAble=false;
 	
-	public King( boolean white) {
-		super( white);
+	public King(boolean white, int row, int col) {
+		super(white, row, col);
 		this.name = "King";
 	}
 	public String getIcon(int row){

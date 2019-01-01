@@ -10,8 +10,8 @@ public class Pawn extends Piece {
 	private boolean enPassantAble;
 	private boolean enPassantMove = false;
 
-	public Pawn(boolean white) {
-		super(white);
+	public Pawn(boolean white, int row, int col) {
+		super(white, row, col);
 		this.name = "Pawn";
 		verticalMoveMax = white ? 1 : -1;
 	}
@@ -61,7 +61,7 @@ public class Pawn extends Piece {
 
 	@Override
 	protected Pawn clone() throws CloneNotSupportedException {
-		Pawn p = new Pawn(this.white);
+		Pawn p = new Pawn(this.white,this.getRow(),this.getCol());
 		p.enPassantAble = this.enPassantAble;
 		p.enPassantMove = this.enPassantMove;
 		p.firstMove = this.firstMove;
