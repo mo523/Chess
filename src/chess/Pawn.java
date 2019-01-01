@@ -21,18 +21,17 @@ public class Pawn extends Piece {
 		int yDiff = toRow - fromRow;
 		int xDiff = Math.abs(toCol - fromCol);
 		int tempY;
-		
-		if (toRow==2||toRow==5)
-		  enPassantMove(fromRow, fromCol, toRow, toCol, CB);
 
+		if (toRow == 2 || toRow == 5)
+			enPassantMove(fromRow, fromCol, toRow, toCol, CB);
 
 		if ((xDiff > 1 && !enPassantMove) || (xDiff != 1 && enPassantMove))
 			return false;
-		if (xDiff == 1 && (Math.abs(yDiff) != 1)&&!enPassantMove)
+		if (xDiff == 1 && (Math.abs(yDiff) != 1) && !enPassantMove)
 			return false;
-		if (xDiff == 1 && CB[toRow][toCol] == null &&!enPassantMove)
+		if (xDiff == 1 && CB[toRow][toCol] == null && !enPassantMove)
 			return false;
-		
+
 		if (CB[toRow][toCol] != null)
 			if ((xDiff == 1 && CB[toRow][toCol].isWhite() == this.isWhite()))
 				return false;
@@ -41,19 +40,14 @@ public class Pawn extends Piece {
 
 		tempY = verticalMoveMax * (firstMove ? 2 : 1);
 
-		if (yDiff == tempY || yDiff == verticalMoveMax) {
-			if (ChessDriver.isMovingPiece())
-				firstMove = false;
+		if (yDiff == tempY || yDiff == verticalMoveMax)
 			return true;
-		}
-		
 		return false;
-		
 	}
 
 	@Override
 	protected Pawn clone() throws CloneNotSupportedException {
-		Pawn p = new Pawn(this.white,this.getRow(),this.getCol());
+		Pawn p = new Pawn(this.white, this.getRow(), this.getCol());
 		p.enPassantAble = this.enPassantAble;
 		p.enPassantMove = this.enPassantMove;
 		p.firstMove = this.firstMove;
@@ -66,12 +60,8 @@ public class Pawn extends Piece {
 		return true;
 	}
 
-	public void setFirstMove(boolean first) {
-		this.firstMove = first;
-	}
-
-	public boolean getFirstMove() {
-		return this.firstMove;
+	public void moved() {
+		firstMove = false;
 	}
 
 	public boolean isEnPassantAble() {
@@ -86,14 +76,13 @@ public class Pawn extends Piece {
 		if (CB[fromRow][fromCol] != null) {
 			if (CB[4][toCol] != null)
 				if ((CB[fromRow][fromCol].isWhite() && CB[4][toCol].isEnPassantAble()))
-					enPassantMove= true;
+					enPassantMove = true;
 			if (CB[3][toCol] != null)
 				if ((!CB[fromRow][fromCol].isWhite() && CB[3][toCol].isEnPassantAble()))
-					enPassantMove= true;
+					enPassantMove = true;
 		}
-	
 	}
-	
+
 	public boolean enPassantMove() {
 		return enPassantMove;
 	}

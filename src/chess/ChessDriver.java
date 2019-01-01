@@ -19,7 +19,6 @@ public class ChessDriver {
 	static boolean startCountingTurns;
 	static int turns = 0;
 	private static String errorMessage;
-	static boolean movingPiece = false;
 	static int fr = -1, fc = -1, tr = -1, tc = -1;
 	private static boolean useJansi = !System.getProperty("user.name").equalsIgnoreCase("moshe");
 	private static boolean networkGame = false;
@@ -71,7 +70,6 @@ public class ChessDriver {
 		String move;
 		boolean legalMoveInput = true;
 		int fromRow, fromCol, toRow, toCol;
-		movingPiece = true;
 
 		do {
 			if (!canMoveThere)
@@ -110,7 +108,8 @@ public class ChessDriver {
 			pawnReachedOtherSide(toRow, toCol);
 		// if pawn enPassantAble it kills
 		System.out.println("a");
-
+		if (chessBoard[toRow][toCol] instanceof Pawn)
+			((Pawn) chessBoard[toRow][toCol]).moved();
 		if (chessBoard[toRow][toCol] instanceof Pawn)
 			if (((Pawn) chessBoard[toRow][toCol]).enPassantMove()) {
 				if (whitesTurn)
@@ -127,7 +126,6 @@ public class ChessDriver {
 			else
 				((Pawn) chessBoard[toRow][toCol]).changeEnPassantAble(false);
 		}
-		movingPiece = false;
 		return false;
 	}
 
@@ -345,10 +343,6 @@ public class ChessDriver {
 			System.out.println("\nWarning! Your king is in check!\n");
 	}
 
-	public static boolean isMovingPiece() {
-		return movingPiece;
-	}
-
 	public static void performMove(int fromRow, int fromCol, int toRow, int toCol) {
 		chessBoard[fromRow][fromCol].setRow(toRow);
 		chessBoard[fromRow][fromCol].setCol(toCol);
@@ -462,10 +456,6 @@ public class ChessDriver {
 
 	public static void setErrorMessage(String errorMessage) {
 		ChessDriver.errorMessage = errorMessage;
-	}
-
-	public static void setMovingPiece(boolean movingPiece) {
-		ChessDriver.movingPiece = movingPiece;
 	}
 
 	// needed for junit
