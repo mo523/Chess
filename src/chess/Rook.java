@@ -23,46 +23,46 @@ public class Rook extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB ) {
-		int yDiff = Math.abs(toRow - fromRow);
-		int xDiff = Math.abs(toCol - fromCol);
+	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB ) {
+		int yDiff = Math.abs(toCol - fromCol);
+		int xDiff = Math.abs(toRow - fromRow);
 		if(yDiff > 0 && xDiff > 0)
 			return false;
 		return true;
 	}
 	
 	@Override
-	public boolean noPieceInTheWay(int fromCol,int fromRow, int toCol, int toRow, Piece[][] CB) {
-		int yDiff = toRow - fromRow;
-		int xDiff = toCol - fromCol;
+	public boolean noPieceInTheWay(int fromRow,int fromCol, int toRow, int toCol, Piece[][] CB) {
+		int yDiff = toCol - fromCol;
+		int xDiff = toRow - fromRow;
 		if(xDiff == 0){
 			if (yDiff > 0){
-				for (int i = fromRow + 1; yDiff != 1; i++) {
+				for (int i = fromCol + 1; yDiff != 1; i++) {
 					yDiff--;
-					if (CB[i][fromCol] != null)
+					if (CB[i][fromRow] != null)
 						return false;
 				}
 			}
 			else{
-				for (int i = fromRow - 1; yDiff != -1; i--) {
+				for (int i = fromCol - 1; yDiff != -1; i--) {
 					yDiff++;
-					if (CB[i][fromCol] != null)
+					if (CB[i][fromRow] != null)
 						return false;
 				}
 			}
 		}
 		else{
 			if (xDiff > 0){
-				for (int i = fromCol + 1; xDiff != 1; i++) {
+				for (int i = fromRow + 1; xDiff != 1; i++) {
 					xDiff--;
-					if (CB[fromRow][i] != null)
+					if (CB[fromCol][i] != null)
 						return false;
 				}
 			}
 			else{
-				for (int i = fromCol - 1; xDiff != -1; i--) {
+				for (int i = fromRow - 1; xDiff != -1; i--) {
 					xDiff++;
-					if (CB[fromRow][i] != null)
+					if (CB[fromCol][i] != null)
 						return false;
 				}
 			}
@@ -73,7 +73,7 @@ public class Rook extends Piece {
 		return enPassantAble;
 	}
 	/*
-	public boolean inOneDirection(int diff, int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB){
+	public boolean inOneDirection(int diff, int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB){
 		for (int i = 0; i <= diff; i++) {
 			
 		}

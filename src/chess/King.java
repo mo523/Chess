@@ -23,19 +23,19 @@ public class King extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int fromCol,int fromRow, int toCol, int toRow, Piece[][] CB ) {
-		if(Math.abs(fromCol - toCol) > 1 || Math.abs(fromRow - toRow) > 1)
+	public boolean canPieceMoveLikeThat(int fromRow,int fromCol, int toRow, int toCol, Piece[][] CB ) {
+		if(Math.abs(fromRow - toRow) > 1 || Math.abs(fromCol - toCol) > 1)
 			return false;
 		return true;
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int fromCol,
-			int fromRow, int toCol, int toRow,
+	public boolean noPieceInTheWay(int fromRow,
+			int fromCol, int toRow, int toCol,
 			Piece[][] CB) {
-		if(CB[toRow][toCol] == null)
+		if(CB[toCol][toRow] == null)
 			return true;
-		else if(CB[toRow][toCol].isWhite() != this.isWhite())
+		else if(CB[toCol][toRow].isWhite() != this.isWhite())
 			return true;
 		return false;
 	}

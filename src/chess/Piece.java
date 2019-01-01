@@ -25,20 +25,20 @@ public abstract class Piece implements Serializable{
 	}
 	
 	//all other methods go in this one
-	public boolean isLegalMove(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB, Piece King){
-		if(!canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB)){
+	public boolean isLegalMove(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB, Piece King){
+		if(!canPieceMoveLikeThat(fromRow, fromCol, toRow, toCol, CB)){
 			ChessDriver.setErrorMessage("WARNING! Piece cannot move like that");
 			return false;
 		}
-		if(!willNotKillSameColor(fromCol, fromRow, toCol, toRow, CB )){
+		if(!willNotKillSameColor(fromRow, fromCol, toRow, toCol, CB )){
 			ChessDriver.setErrorMessage("WARNING! Piece will kill same color");
 			return false;
 		}
-		if(!noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB)){
+		if(!noPieceInTheWay(fromRow, fromCol, toRow, toCol, CB)){
 			ChessDriver.setErrorMessage("WARNING! Piece in the way");
 			return false;
 		}
-		if (!doesntLeaveKingInCheck(fromCol, fromRow, toCol, toRow, CB, King)){
+		if (!doesntLeaveKingInCheck(fromRow, fromCol, toRow, toCol, CB, King)){
 			ChessDriver.setErrorMessage("Warning! Leaves king in check");
 			return false;
 		}		
@@ -59,7 +59,7 @@ public abstract class Piece implements Serializable{
 		return false;
 	}
 	
-	public boolean doesntLeaveKingInCheck(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB, Piece King){
+	public boolean doesntLeaveKingInCheck(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB, Piece King){
 		//makes a temporary board and moves the piece in it
 		Piece[][] newCB = null;
 		try {
@@ -68,11 +68,11 @@ public abstract class Piece implements Serializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-			newCB[toRow][toCol] = newCB[fromRow][fromCol];
-			newCB[fromRow][fromCol] = null;
+			newCB[toCol][toRow] = newCB[fromCol][fromRow];
+			newCB[fromCol][fromRow] = null;
 		return !inCheck(King, newCB);
 	}
-	public boolean notInCheckmate(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB, Piece King){
+	public boolean notInCheckmate(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB, Piece King){
 		//makes a temporary board and moves the piece in it
 		Piece[][] newCB = null;
 		try {
@@ -81,10 +81,10 @@ public abstract class Piece implements Serializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (moveCheckForCheck( fromCol,  fromRow,  toCol,  toRow, newCB))
+		if (moveCheckForCheck( fromRow,  fromCol,  toRow,  toCol, newCB))
 		{
-			newCB[toRow][toCol] = newCB[fromRow][fromCol];
-			newCB[fromRow][fromCol] = null;
+			newCB[toCol][toRow] = newCB[fromCol][fromRow];
+			newCB[fromCol][fromRow] = null;
 			return !inCheck(King, newCB);
 			}
 		else
@@ -118,21 +118,21 @@ public abstract class Piece implements Serializable{
 		}
 		return newCB;
 	}
-	private boolean moveCheckForCheck(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB){
-		if(CB[fromRow][fromCol] != null)
-			return CB[fromRow][fromCol].canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB)
-				&& CB[fromRow][fromCol].willNotKillSameColor(fromCol, fromRow, toCol, toRow, CB)
-				&& CB[fromRow][fromCol].noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB);
+	private boolean moveCheckForCheck(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB){
+		if(CB[fromCol][fromRow] != null)
+			return CB[fromCol][fromRow].canPieceMoveLikeThat(fromRow, fromCol, toRow, toCol, CB)
+				&& CB[fromCol][fromRow].willNotKillSameColor(fromRow, fromCol, toRow, toCol, CB)
+				&& CB[fromCol][fromRow].noPieceInTheWay(fromRow, fromCol, toRow, toCol, CB);
 		return false;
 	}
-	public abstract boolean noPieceInTheWay(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB );
+	public abstract boolean noPieceInTheWay(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB );
 
-	public abstract boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB );
+	public abstract boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB );
 	//method works
-	public boolean willNotKillSameColor(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB ) {
-		if(CB[toRow][toCol] == null)
+	public boolean willNotKillSameColor(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB ) {
+		if(CB[toCol][toRow] == null)
 			return true;
-		if(this.isWhite() == CB[toRow][toCol].isWhite())
+		if(this.isWhite() == CB[toCol][toRow].isWhite())
 			return false;
 		return true;
 	}

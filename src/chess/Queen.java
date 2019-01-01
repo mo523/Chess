@@ -22,27 +22,27 @@ public class Queen extends Piece {
 	}
 	
 	@Override
-	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB ) {
+	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB ) {
 		Rook rook = new Rook(white);
 		Bishop bishop = new Bishop(white);
-		return (rook.canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB)||
-				bishop.canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB));
+		return (rook.canPieceMoveLikeThat(fromRow, fromCol, toRow, toCol, CB)||
+				bishop.canPieceMoveLikeThat(fromRow, fromCol, toRow, toCol, CB));
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int fromCol,
-			int fromRow, int toCol, int toRow,
+	public boolean noPieceInTheWay(int fromRow,
+			int fromCol, int toRow, int toCol,
 			Piece[][] CB) {
 		
 		Rook rook = new Rook(white);
 		Bishop bishop = new Bishop(white);
 		
-		int yDiff = Math.abs(toRow - fromRow);
-		int xDiff = Math.abs(toCol - fromCol);
+		int yDiff = Math.abs(toCol - fromCol);
+		int xDiff = Math.abs(toRow - fromRow);
 		if(yDiff == xDiff)
-			return bishop.noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB);
+			return bishop.noPieceInTheWay(fromRow, fromCol, toRow, toCol, CB);
 		else
-			return rook.noPieceInTheWay(fromCol, fromRow, toCol, toRow, CB);		
+			return rook.noPieceInTheWay(fromRow, fromCol, toRow, toCol, CB);		
 	}
 	public boolean isEnPassantAble() {
 		return enPassantAble;

@@ -68,7 +68,7 @@ public class ChessDriver {
 		boolean canMoveThere = true;
 		String move;
 		boolean legalMoveInput = true;
-		int fromCol, fromRow, toCol, toRow;
+		int fromRow, fromCol, toRow, toCol;
 		movingPiece = true;
 
 		do {
@@ -81,59 +81,59 @@ public class ChessDriver {
 				move = getPosition();
 				if (move.equals("m"))
 					return true;
-				fromCol = 104 - move.charAt(0);
-				fromRow = move.charAt(1) - 49;
-				legalMoveInput = isValidPieceThere(fromCol, fromRow);
+				fromRow = 104 - move.charAt(0);
+				fromCol = move.charAt(1) - 49;
+				legalMoveInput = isValidPieceThere(fromRow, fromCol);
 			} while (!legalMoveInput);
 
-			System.out.println("\nWhere would you like to move your " + chessBoard[fromRow][fromCol].name + " to?");
+			System.out.println("\nWhere would you like to move your " + chessBoard[fromCol][fromRow].name + " to?");
 			do {
 				move = getPosition();
 				if (move.equals("m"))
 					return true;
-				toCol = 104 - move.charAt(0);
-				toRow = move.charAt(1) - 49;
-				if (toCol == fromCol && toRow == fromRow)
+				toRow = 104 - move.charAt(0);
+				toCol = move.charAt(1) - 49;
+				if (toRow == fromRow && toCol == fromCol)
 					System.out.println("\nCan't move to same place, try again.");
-			} while ((toCol == fromCol && toRow == fromRow));
-			canMoveThere = canMoveThere(fromCol, fromRow, toCol, toRow);
+			} while ((toRow == fromRow && toCol == fromCol));
+			canMoveThere = canMoveThere(fromRow, fromCol, toRow, toCol);
 		} while (!canMoveThere);
 
-		fc = fromCol;
-		fr = fromRow;
-		tc = toCol;
-		tr = toRow;
-		performMove(fromCol, fromRow, toCol, toRow);
-		if (chessBoard[toRow][toCol] instanceof Pawn && ((whitesTurn && toRow == 7) || (!whitesTurn && toRow == 0)))
-			pawnReachedOtherSide(toRow, toCol);
+		fc = fromRow;
+		fr = fromCol;
+		tc = toRow;
+		tr = toCol;
+		performMove(fromRow, fromCol, toRow, toCol);
+		if (chessBoard[toCol][toRow] instanceof Pawn && ((whitesTurn && toCol == 7) || (!whitesTurn && toCol == 0)))
+			pawnReachedOtherSide(toCol, toRow);
 		// if pawn enPassantAble it kills
 			System.out.println("a");
 		
-				if (chessBoard[toRow][toCol].isInstanceOf().equals("Pawn"))
-					if (((Pawn) chessBoard[toRow][toCol]).enPassantMove()) {
+				if (chessBoard[toCol][toRow].isInstanceOf().equals("Pawn"))
+					if (((Pawn) chessBoard[toCol][toRow]).enPassantMove()) {
 					if(whitesTurn)
-					chessBoard[4][toCol] = null;
+					chessBoard[4][toRow] = null;
 					
 					if(!whitesTurn)
-					chessBoard[3][toCol] = null;
+					chessBoard[3][toRow] = null;
 				}
 
 		
 
 
 		// makes a piece enPassantAble
-		if (chessBoard[toRow][toCol].isInstanceOf().equals("Pawn")) {
-			if (Math.abs(toRow - fromRow) == 2)
-				((Pawn) chessBoard[toRow][toCol]).changeEnPassantAble(true);
+		if (chessBoard[toCol][toRow].isInstanceOf().equals("Pawn")) {
+			if (Math.abs(toCol - fromCol) == 2)
+				((Pawn) chessBoard[toCol][toRow]).changeEnPassantAble(true);
 			else
-				((Pawn) chessBoard[toRow][toCol]).changeEnPassantAble(false);
+				((Pawn) chessBoard[toCol][toRow]).changeEnPassantAble(false);
 		}
 		movingPiece = false;
 		return false;
 	}
 
-	public static boolean canMoveThere(int fromCol, int fromRow, int toCol, int toRow) {
-		return chessBoard[fromRow][fromCol].isLegalMove(fromCol, fromRow, toCol, toRow, chessBoard,
+	public static boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol) {
+		return chessBoard[fromCol][fromRow].isLegalMove(fromRow, fromCol, toRow, toCol, chessBoard,
 				(whitesTurn ? whiteKing : blackKing));
 	}
 
@@ -355,9 +355,9 @@ public class ChessDriver {
 		return movingPiece;
 	}
 
-	public static void performMove(int fromCol, int fromRow, int toCol, int toRow) {
-		chessBoard[toRow][toCol] = chessBoard[fromRow][fromCol];
-		chessBoard[fromRow][fromCol] = null;
+	public static void performMove(int fromRow, int fromCol, int toRow, int toCol) {
+		chessBoard[toCol][toRow] = chessBoard[fromCol][fromRow];
+		chessBoard[fromCol][fromRow] = null;
 	}
 
 	public static void setUpPieces() {

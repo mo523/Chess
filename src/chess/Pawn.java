@@ -25,26 +25,26 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB) {
-		int yDiff = toRow - fromRow;
-		int xDiff = Math.abs(toCol - fromCol);
+	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
+		int yDiff = toCol - fromCol;
+		int xDiff = Math.abs(toRow - fromRow);
 		int tempY;
 		
-		if (toRow==2||toRow==5)
-		  enPassantMove(fromCol, fromRow, toCol, toRow, CB);
+		if (toCol==2||toCol==5)
+		  enPassantMove(fromRow, fromCol, toRow, toCol, CB);
 
 
 		if ((xDiff > 1 && !enPassantMove) || (xDiff != 1 && enPassantMove))
 			return false;
 		if (xDiff == 1 && (Math.abs(yDiff) != 1)&&!enPassantMove)
 			return false;
-		if (xDiff == 1 && CB[toRow][toCol] == null &&!enPassantMove)
+		if (xDiff == 1 && CB[toCol][toRow] == null &&!enPassantMove)
 			return false;
 		
-		if (CB[toRow][toCol] != null)
-			if ((xDiff == 1 && CB[toRow][toCol].isWhite() == this.isWhite()))
+		if (CB[toCol][toRow] != null)
+			if ((xDiff == 1 && CB[toCol][toRow].isWhite() == this.isWhite()))
 				return false;
-		if (xDiff == 0 && CB[toRow][toCol] != null)
+		if (xDiff == 0 && CB[toCol][toRow] != null)
 			return false;
 
 		tempY = verticalMoveMax * (firstMove ? 2 : 1);
@@ -69,7 +69,7 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB) {
+	public boolean noPieceInTheWay(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
 		// this is taken care of by canPieceMoveLikeThat
 		return true;
 	}
@@ -90,13 +90,13 @@ public class Pawn extends Piece {
 		enPassantAble = change;
 	}
 
-	public void enPassantMove(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB) {
-		if (CB[fromRow][fromCol] != null) {
-			if (CB[4][toCol] != null)
-				if ((CB[fromRow][fromCol].isWhite() && CB[4][toCol].isEnPassantAble()))
+	public void enPassantMove(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
+		if (CB[fromCol][fromRow] != null) {
+			if (CB[4][toRow] != null)
+				if ((CB[fromCol][fromRow].isWhite() && CB[4][toRow].isEnPassantAble()))
 					enPassantMove= true;
-			if (CB[3][toCol] != null)
-				if ((!CB[fromRow][fromCol].isWhite() && CB[3][toCol].isEnPassantAble()))
+			if (CB[3][toRow] != null)
+				if ((!CB[fromCol][fromRow].isWhite() && CB[3][toRow].isEnPassantAble()))
 					enPassantMove= true;
 		}
 	

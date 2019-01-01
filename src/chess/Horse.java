@@ -23,18 +23,18 @@ public class Horse extends Piece {
 	}
 	
 	@Override
-	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB ){
+	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB ){
 		Queen queen = new Queen(white);
-		if (!queen.canPieceMoveLikeThat(fromCol, fromRow, toCol, toRow, CB)&&
-				Math.abs(fromCol - toCol) < 3 && Math.abs(fromRow - toRow) < 3 )
+		if (!queen.canPieceMoveLikeThat(fromRow, fromCol, toRow, toCol, CB)&&
+				Math.abs(fromRow - toRow) < 3 && Math.abs(fromCol - toCol) < 3 )
 			return true;
 		else
 			return false;
 	}
 	
 	@Override
-	public boolean noPieceInTheWay(int fromCol,
-			int fromRow, int toCol, int toRow,
+	public boolean noPieceInTheWay(int fromRow,
+			int fromCol, int toRow, int toCol,
 			Piece[][] CB) {
 		return true; // because horses jump
 	}

@@ -21,23 +21,23 @@ public class Bishop extends Piece {
 		return white;
 	}
 	@Override
-	public boolean canPieceMoveLikeThat(int fromCol,int fromRow, int toCol, int toRow, Piece[][] CB ) {
-		int yDiff = Math.abs(toRow - fromRow);
-		int xDiff = Math.abs(toCol - fromCol);
+	public boolean canPieceMoveLikeThat(int fromRow,int fromCol, int toRow, int toCol, Piece[][] CB ) {
+		int yDiff = Math.abs(toCol - fromCol);
+		int xDiff = Math.abs(toRow - fromRow);
 		if(yDiff == xDiff)
 			return true;
 		return false;
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB) {
-		int  XMoveDistance =(fromCol-toCol);
-		int  YMoveDistance =(fromRow-toRow);
+	public boolean noPieceInTheWay(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
+		int  XMoveDistance =(fromRow-toRow);
+		int  YMoveDistance =(fromCol-toCol);
 		boolean done = false;
 		do
 		{
-			if(CB[fromRow-YMoveDistance][fromCol-XMoveDistance] != null && 
-					!(fromRow-YMoveDistance == toRow && fromCol- XMoveDistance == toCol))
+			if(CB[fromCol-YMoveDistance][fromRow-XMoveDistance] != null && 
+					!(fromCol-YMoveDistance == toCol && fromRow- XMoveDistance == toRow))
 				return false;
 			else {
 				if (XMoveDistance>0)
