@@ -1,5 +1,7 @@
 package chess;
 import java.io.Serializable;
+
+import exceptions.InvalidPieceException;
 @SuppressWarnings("serial")
 public abstract class Piece implements Serializable{
 
@@ -59,14 +61,26 @@ public abstract class Piece implements Serializable{
 	
 	public boolean doesntLeaveKingInCheck(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB, Piece King){
 		//makes a temporary board and moves the piece in it
-		Piece[][] newCB = makeNewBoard(CB);
+		Piece[][] newCB = null;
+		try {
+			newCB = makeNewBoard(CB);
+		} catch (InvalidPieceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 			newCB[toRow][toCol] = newCB[fromRow][fromCol];
 			newCB[fromRow][fromCol] = null;
 		return !inCheck(King, newCB);
 	}
 	public boolean notInCheckmate(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB, Piece King){
 		//makes a temporary board and moves the piece in it
-		Piece[][] newCB = makeNewBoard(CB);
+		Piece[][] newCB = null;
+		try {
+			newCB = makeNewBoard(CB);
+		} catch (InvalidPieceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if (moveCheckForCheck( fromCol,  fromRow,  toCol,  toRow, newCB))
 		{
 			newCB[toRow][toCol] = newCB[fromRow][fromCol];
@@ -76,7 +90,7 @@ public abstract class Piece implements Serializable{
 		else
 			return false;
 	}
-	private Piece[][] makeNewBoard(Piece[][] CB){
+	private Piece[][] makeNewBoard(Piece[][] CB) throws InvalidPieceException{
 		Piece[][] newCB = new Piece[8][8];
 		for (int i = 0; i < CB.length; i++) {
 			for (int j = 0; j < CB[i].length; j++) {
@@ -87,8 +101,6 @@ public abstract class Piece implements Serializable{
 						e.printStackTrace();
 					}
 				}
-				else if(CB[i][j] instanceof King)
-					newCB[i][j] = new King(CB[i][j].isWhite());
 				else if(CB[i][j] instanceof Queen)
 					newCB[i][j] = new Queen(CB[i][j].isWhite());
 				else if(CB[i][j] instanceof Rook)
@@ -97,7 +109,11 @@ public abstract class Piece implements Serializable{
 					newCB[i][j] = new Bishop(CB[i][j].isWhite());
 				else if(CB[i][j] instanceof Horse)
 					newCB[i][j] = new Horse(CB[i][j].isWhite());
-				 
+				else if(CB[i][j] instanceof King)
+					newCB[i][j] = new King(CB[i][j].isWhite());
+				else if(CB[i][j] == null);//do nothing
+				else
+					throw new InvalidPieceException("That piece does not exist");
 			}	
 		}
 		return newCB;
