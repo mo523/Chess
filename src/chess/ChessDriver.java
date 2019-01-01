@@ -68,7 +68,7 @@ public class ChessDriver {
 		boolean canMoveThere = true;
 		String move;
 		boolean legalMoveInput = true;
-		int fromCol, fromRow, toCol, toRow;
+		int fromRow, fromCol, toRow, toCol;
 		movingPiece = true;
 
 		do {
@@ -83,7 +83,7 @@ public class ChessDriver {
 					return true;
 				fromCol = 104 - move.charAt(0);
 				fromRow = move.charAt(1) - 49;
-				legalMoveInput = isValidPieceThere(fromCol, fromRow);
+				legalMoveInput = isValidPieceThere(fromRow, fromCol);
 			} while (!legalMoveInput);
 
 			System.out.println("\nWhere would you like to move your " + chessBoard[fromRow][fromCol].name + " to?");
@@ -96,14 +96,14 @@ public class ChessDriver {
 				if (toCol == fromCol && toRow == fromRow)
 					System.out.println("\nCan't move to same place, try again.");
 			} while ((toCol == fromCol && toRow == fromRow));
-			canMoveThere = canMoveThere(fromCol, fromRow, toCol, toRow);
+			canMoveThere = canMoveThere(fromRow, fromCol, toRow, toCol);
 		} while (!canMoveThere);
 
 		fc = fromCol;
 		fr = fromRow;
 		tc = toCol;
 		tr = toRow;
-		performMove(fromCol, fromRow, toCol, toRow);
+		performMove(fromRow, fromCol, toRow, toCol);
 		if (chessBoard[toRow][toCol] instanceof Pawn && ((whitesTurn && toRow == 7) || (!whitesTurn && toRow == 0)))
 			pawnReachedOtherSide(toRow, toCol);
 		// if pawn enPassantAble it kills
@@ -132,12 +132,12 @@ public class ChessDriver {
 		return false;
 	}
 
-	public static boolean canMoveThere(int fromCol, int fromRow, int toCol, int toRow) {
-		return chessBoard[fromRow][fromCol].isLegalMove(fromCol, fromRow, toCol, toRow, chessBoard,
+	public static boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol) {
+		return chessBoard[fromRow][fromCol].isLegalMove(fromRow, fromCol, toRow, toCol, chessBoard,
 				(whitesTurn ? whiteKing : blackKing));
 	}
 
-	public static boolean isValidPieceThere(int col, int row) {
+	public static boolean isValidPieceThere(int row, int col) {
 		return !(chessBoard[row][col] == null || chessBoard[row][col].white != whitesTurn);
 	}
 
@@ -355,7 +355,7 @@ public class ChessDriver {
 		return movingPiece;
 	}
 
-	public static void performMove(int fromCol, int fromRow, int toCol, int toRow) {
+	public static void performMove(int fromRow, int fromCol, int toRow, int toCol) {
 		chessBoard[toRow][toCol] = chessBoard[fromRow][fromCol];
 		chessBoard[fromRow][fromCol] = null;
 	}

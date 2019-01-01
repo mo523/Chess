@@ -25,13 +25,13 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB) {
+	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
 		int yDiff = toRow - fromRow;
 		int xDiff = Math.abs(toCol - fromCol);
 		int tempY;
 		
 		if (toRow==2||toRow==5)
-		  enPassantMove(fromCol, fromRow, toCol, toRow, CB);
+		  enPassantMove(fromRow, fromCol, toRow, toCol, CB);
 
 
 		if ((xDiff > 1 && !enPassantMove) || (xDiff != 1 && enPassantMove))
@@ -69,7 +69,7 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB) {
+	public boolean noPieceInTheWay(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
 		// this is taken care of by canPieceMoveLikeThat
 		return true;
 	}
@@ -90,7 +90,7 @@ public class Pawn extends Piece {
 		enPassantAble = change;
 	}
 
-	public void enPassantMove(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB) {
+	public void enPassantMove(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
 		if (CB[fromRow][fromCol] != null) {
 			if (CB[4][toCol] != null)
 				if ((CB[fromRow][fromCol].isWhite() && CB[4][toCol].isEnPassantAble()))

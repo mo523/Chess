@@ -4,7 +4,7 @@ package chess;
 public class Rook extends Piece {
 	private String icon[] = {
 			"            ",
-			"    \u258C\u2588\u2590\u258C\u2588\u2590  " ,
+			"    \u258C\u2588\u2590\u258C\u2588\u2590  ",
 			"    \u2580\u2588\u2588\u2588\u2588\u2580  ",
 			"     \u2588\u2588\u2588\u2588   ",
 			"    \u2584\u2588\u2588\u2588\u2588\u2584  ",
@@ -23,7 +23,7 @@ public class Rook extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB ) {
+	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB ) {
 		int yDiff = Math.abs(toRow - fromRow);
 		int xDiff = Math.abs(toCol - fromCol);
 		if(yDiff > 0 && xDiff > 0)
@@ -32,7 +32,7 @@ public class Rook extends Piece {
 	}
 	
 	@Override
-	public boolean noPieceInTheWay(int fromCol,int fromRow, int toCol, int toRow, Piece[][] CB) {
+	public boolean noPieceInTheWay(int fromRow,int fromCol, int toRow, int toCol, Piece[][] CB) {
 		int yDiff = toRow - fromRow;
 		int xDiff = toCol - fromCol;
 		if(xDiff == 0){
@@ -73,7 +73,7 @@ public class Rook extends Piece {
 		return enPassantAble;
 	}
 	/*
-	public boolean inOneDirection(int diff, int fromCol, int fromRow, int toCol, int toRow, Piece[][] CB){
+	public boolean inOneDirection(int diff, int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB){
 		for (int i = 0; i <= diff; i++) {
 			
 		}
