@@ -42,8 +42,8 @@ public class Pawn extends Piece {
 			return false;
 		
 		if (CB[toRow][toCol] != null)
-		if ((xDiff == 1 && CB[toRow][toCol].isWhite() == this.isWhite()))
-			return false;
+			if ((xDiff == 1 && CB[toRow][toCol].isWhite() == this.isWhite()))
+				return false;
 		if (xDiff == 0 && CB[toRow][toCol] != null)
 			return false;
 

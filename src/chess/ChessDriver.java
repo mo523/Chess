@@ -441,4 +441,8 @@ public class ChessDriver {
 	public static void setMovingPiece(boolean movingPiece) {
 		ChessDriver.movingPiece = movingPiece;
 	}
+	//needed for junit
+	public static void setChessBoard(Piece[][] chessBoard) {
+		ChessDriver.chessBoard = chessBoard;
+	}
 }
