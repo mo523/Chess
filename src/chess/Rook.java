@@ -11,8 +11,8 @@ public class Rook extends Piece {
 			"            "
 			};
 	private final boolean enPassantAble=false;
-	public Rook(boolean white) {
-		super(white);
+	public Rook(boolean white, int row, int col) {
+		super(white, row, col);
 		this.name = "Rook";
 	}
 	public String getIcon(int row){
