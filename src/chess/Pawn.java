@@ -2,69 +2,66 @@ package chess;
 
 @SuppressWarnings("serial")
 public class Pawn extends Piece {
-	private String icon[] = { "            ", "      \u2584\u2584    ", "     \u2580\u2588\u2588\u2580   ",
-			"    \u2584\u2588\u2588\u2588\u2588\u2584  ", "    \u2580\u2580\u2580\u2580\u2580\u2580  ",
-			"            ", };
-	private int verticalMoveMax;
-	private boolean firstMove = true;
-	private boolean enPassantAble;
-	private boolean enPassantMove = false;
+	private int verticalMove;
+	private boolean enPassantAble = false;
 
 	public Pawn(boolean white, int row, int col) {
-		super(white, row, col);
-		this.name = "Pawn";
-		verticalMoveMax = white ? 1 : -1;
-	}
-
-	public String getIcon(int row) {
-		return icon[row];
-	}
-
-	public boolean isWhite() {
-		return white;
+		super(white, row, col,
+				new String[] { "            ", "      \u2584\u2584    ", "     \u2580\u2588\u2588\u2580   ",
+						"    \u2584\u2588\u2588\u2588\u2588\u2584  ", "    \u2580\u2580\u2580\u2580\u2580\u2580  ",
+						"            ", });
+		verticalMove = white ? 1 : -1;
 	}
 
 	@Override
 	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
 		int yDiff = toRow - fromRow;
-		int xDiff = Math.abs(toCol - fromCol);
-		int tempY;
-		
-		if (toRow==2||toRow==5)
-		  enPassantMove(fromRow, fromCol, toRow, toCol, CB);
+		int xDiff = toCol - fromCol;
+		int yDiffAbs = Math.abs(yDiff);
+		int xDiffAbs = Math.abs(xDiff);
+		boolean firstMove = fromRow == (this.isWhite() ? 1 : 6);
+		// System.out.println(fromRow + " " + fromCol + " " + toRow + " " + toCol + " "+ yDiff + " " + xDiff + " " + verticalMove);
 
+		// If left or right is > 1
+		// If up is more than 2
+		// If vertical direction is wrong
 
-		if ((xDiff > 1 && !enPassantMove) || (xDiff != 1 && enPassantMove))
-			return false;
-		if (xDiff == 1 && (Math.abs(yDiff) != 1)&&!enPassantMove)
-			return false;
-		if (xDiff == 1 && CB[toRow][toCol] == null &&!enPassantMove)
-			return false;
-		
-		if (CB[toRow][toCol] != null)
-			if ((xDiff == 1 && CB[toRow][toCol].isWhite() == this.isWhite()))
-				return false;
-		if (xDiff == 0 && CB[toRow][toCol] != null)
+		if (xDiffAbs > 1 || yDiffAbs > 2 || yDiff / verticalMove < 0) // xDiffAbs > yDiffAbs
 			return false;
 
-		tempY = verticalMoveMax * (firstMove ? 2 : 1);
-
-		if (yDiff == tempY || yDiff == verticalMoveMax) {
-			if (ChessDriver.isMovingPiece())
-				firstMove = false;
+		// If moving forward one and nothing in the way
+		if (xDiffAbs == 0 && yDiffAbs == 1 && CB[toRow][toCol] == null)
 			return true;
+
+		// If moving forward 2 and first move and nothing in the way
+		if (xDiffAbs == 0 && yDiffAbs == 2 && firstMove && CB[toRow][toCol] == null
+				&& CB[toRow + verticalMove][toCol] == null)
+			return true;
+
+		// If killing by one diagonal
+		if (xDiffAbs == yDiffAbs && CB[toRow][toCol] != null && CB[toRow][toCol].isWhite() != this.isWhite())
+			return true;
+
+		// If enPassanting
+		if ((toRow == 5 || toRow == 2) && CB[toRow - verticalMove][toCol] instanceof Pawn) {
+			Piece enps = CB[toRow - verticalMove][toCol];
+			if (enps.enPassantAble()) {
+				CB[toRow][toCol] = enps;
+				CB[enps.getRow()][enps.getCol()] = null;
+				enps.setRowCol(enps.getRow() - verticalMove, enps.getCol());
+				return true;
+			}
 		}
-		
+
+		// If moving left or right but not up
+		// When it's not enPassantable
 		return false;
-		
 	}
 
 	@Override
 	protected Pawn clone() throws CloneNotSupportedException {
-		Pawn p = new Pawn(this.white,this.getRow(),this.getCol());
+		Pawn p = new Pawn(this.isWhite(), this.getRow(), this.getCol());
 		p.enPassantAble = this.enPassantAble;
-		p.enPassantMove = this.enPassantMove;
-		p.firstMove = this.firstMove;
 		return p;
 	}
 
@@ -74,35 +71,12 @@ public class Pawn extends Piece {
 		return true;
 	}
 
-	public void setFirstMove(boolean first) {
-		this.firstMove = first;
-	}
-
-	public boolean getFirstMove() {
-		return this.firstMove;
-	}
-
-	public boolean isEnPassantAble() {
+	// @Override - automatic
+	public boolean enPassantAble() {
 		return enPassantAble;
 	}
 
-	public void changeEnPassantAble(boolean change) {
-		enPassantAble = change;
-	}
-
-	public void enPassantMove(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
-		if (CB[fromRow][fromCol] != null) {
-			if (CB[4][toCol] != null)
-				if ((CB[fromRow][fromCol].isWhite() && CB[4][toCol].isEnPassantAble()))
-					enPassantMove= true;
-			if (CB[3][toCol] != null)
-				if ((!CB[fromRow][fromCol].isWhite() && CB[3][toCol].isEnPassantAble()))
-					enPassantMove= true;
-		}
-	
-	}
-	
-	public boolean enPassantMove() {
-		return enPassantMove;
+	public void setEnPassant(boolean enp) {
+		enPassantAble = enp;
 	}
 }
