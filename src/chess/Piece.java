@@ -7,15 +7,15 @@ import exceptions.InvalidPieceException;
 @SuppressWarnings("serial")
 public abstract class Piece implements Serializable {
 
-	protected boolean white; // boolean to test if the piece is white or black
-	protected String icon[];
-	protected int row;
-	protected int col;
+	private boolean white; // boolean to test if the piece is white or black
+	private String icon[];
+	private int row;
+	private int col;
 
 	/**
 	 * @param white tells if the piece is white or black
 	 */
-	public Piece(boolean white, int row, int col){
+	public Piece(boolean white, int row, int col, String[] icon) {
 		this.white = white;
 		this.row = row;
 		this.col = col;
@@ -33,11 +33,8 @@ public abstract class Piece implements Serializable {
 		return col;
 	}
 
-	public void setRow(int row) {
+	public void setRowCol(int row, int col) {
 		this.row = row;
-	}
-
-	public void setCol(int col) {
 		this.col = col;
 	}
 
@@ -98,12 +95,11 @@ public abstract class Piece implements Serializable {
 			e.printStackTrace();
 		}
 		if (moveCheckForCheck(fromRow, fromCol, toRow, toCol, newCB)) {
-			newCB[fromRow][fromCol].setRow(toRow);
-			newCB[fromRow][fromCol].setCol(toCol);
+			newCB[fromRow][fromCol].setRowCol(toRow, toCol);
 			newCB[toRow][toCol] = newCB[fromRow][fromCol];
 			newCB[fromRow][fromCol] = null;
 			Piece king = null;
-			for (int i =0; i < 8; i++)
+			for (int i = 0; i < 8; i++)
 				for (int j = 0; j < 8; j++)
 					if (newCB[i][j] instanceof King && newCB[i][j].isWhite() == King.isWhite())
 						king = newCB[i][j];
@@ -155,6 +151,13 @@ public abstract class Piece implements Serializable {
 
 	public abstract boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB);
 
+	public boolean enPassantAble() {
+		return false;
+	}
+
+	public void setEnPassant(boolean enp) {
+	}
+
 	// method works
 	public boolean willNotKillSameColor(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
 		if (CB[toRow][toCol] == null)
@@ -163,5 +166,4 @@ public abstract class Piece implements Serializable {
 			return false;
 		return true;
 	}
-	protected abstract boolean isEnPassantAble();
 }

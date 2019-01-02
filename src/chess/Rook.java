@@ -2,14 +2,11 @@ package chess;
 
 @SuppressWarnings("serial")
 public class Rook extends Piece {
-	private String icon[] = { "            ", "    \u258C\u2588\u2590\u258C\u2588\u2590  ",
-			"    \u2580\u2588\u2588\u2588\u2588\u2580  ", "     \u2588\u2588\u2588\u2588   ",
-			"    \u2584\u2588\u2588\u2588\u2588\u2584  ", "            " };
-	private final boolean enPassantAble = false;
-
 	public Rook(boolean white, int row, int col) {
-		super(white, row, col);
-		super.icon = icon;
+		super(white, row, col,
+				new String[] { "            ", "    \u258C\u2588\u2590\u258C\u2588\u2590  ",
+						"    \u2580\u2588\u2588\u2588\u2588\u2580  ", "     \u2588\u2588\u2588\u2588   ",
+						"    \u2584\u2588\u2588\u2588\u2588\u2584  ", "            " });
 	}
 
 	@Override
@@ -56,15 +53,4 @@ public class Rook extends Piece {
 		}
 		return true;
 	}
-
-	public boolean isEnPassantAble() {
-		return enPassantAble;
-	}
-	/*
-	 * public boolean inOneDirection(int diff, int fromRow, int fromCol, int toRow,
-	 * int toCol, Piece[][] CB){ for (int i = 0; i <= diff; i++) {
-	 * 
-	 * } }
-	 */
-
 }

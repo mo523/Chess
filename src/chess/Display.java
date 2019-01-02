@@ -70,7 +70,7 @@ public class Display {
 			for (int j = in; j != minIn; j += chg) {
 				System.out.print((j == out ? (i + 1) : "") + " | "
 						+ (chessBoard[i][j] == null ? "  "
-								: ((chessBoard[i][j].white ? "w" : "b") + chessBoard[i][j].toString().charAt(6)))
+								: ((chessBoard[i][j].isWhite() ? "w" : "b") + chessBoard[i][j].toString().charAt(6)))
 						+ (j == minIn - chg ? " |" : ""));
 			}
 			System.out.println();
