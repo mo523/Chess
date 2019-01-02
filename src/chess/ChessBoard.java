@@ -83,11 +83,11 @@ public class ChessBoard {
 		currKing = whiteKing;
 
 		// TESTS
-		chessBoard[3][1] = new Pawn(false, 3, 1);
-		chessBoard[3][0] = new Pawn(false, 3, 0);
-		chessBoard[6][0] = null;
-		chessBoard[6][6] = null;
-		chessBoard[5][6] = new Pawn(true, 5, 6);
+//		chessBoard[3][1] = new Pawn(false, 3, 1);
+//		chessBoard[3][0] = new Pawn(false, 3, 0);
+//		chessBoard[6][0] = null;
+//		chessBoard[6][6] = null;
+//		chessBoard[5][6] = new Pawn(true, 5, 6);
 	}
 
 	public boolean isValidPieceThere(int row, int col) {
