@@ -24,6 +24,15 @@ public class Rook extends Piece {
 		int fromCol = this.getCol();
 		int yDiff = toRow - fromRow;
 		int xDiff = toCol - fromCol;
+//		int yDirection = yDiff == 0 ? 0 : yDiff > 0 ? 1 : -1;
+//		int xDirection = xDiff == 0 ? 0 : xDiff > 0 ? 1 : -1;
+//		int distance = Math.abs(yDiff + xDiff);
+//		do
+//		{
+//			if (CB[this.getRow() - xDirection][this.getCol() - yDirection] != null && )
+//			distance--;
+//		}	while (distance != 0); 
+		
 		if (xDiff == 0) {
 			if (yDiff > 0) {
 				for (int i = fromRow + 1; yDiff != 1; i++) {

@@ -43,7 +43,10 @@ public class King extends Piece {
 	public boolean inCheck(Piece king, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard) {
 		for (Piece piece : pieces.get(king.isWhite() ? 1 : 0))
 			if (piece.isLegalMove(this.getRow(), this.getCol(), pieces, chessBoard, this))
+			{
+				System.out.print(piece);
 				return true;// can kill
+			}
 		return false;
 	}
 

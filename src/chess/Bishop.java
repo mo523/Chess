@@ -12,7 +12,7 @@ public class Bishop extends Piece {
 	@Override
 	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB) {
 		//The absolute value of the x minus y distance should be 0
-		if (Math.abs(toRow - toCol) == 0)
+		if (Math.abs(this.getRow() - toRow) == Math.abs(this.getCol() - toCol))
 			return true;
 		return false;
 	}
@@ -23,7 +23,7 @@ public class Bishop extends Piece {
 		int xDirection = this.getRow() - toRow > 0 ? 1 : -1;
 		int yDirection = this.getCol() - toCol > 0 ? 1 : -1;
 		do {      
-			if (CB[this.getRow() - xDirection][this.getCol() - yDirection] != null && this.getRow() - distance != toRow )
+			if (CB[this.getRow() - xDirection][this.getCol() - yDirection] != null)
 				return true;
 			distance--;
 		} while (distance != 0);

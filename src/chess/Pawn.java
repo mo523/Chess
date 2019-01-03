@@ -67,7 +67,7 @@ public class Pawn extends Piece {
 	@Override
 	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
 		// this is taken care of by canPieceMoveLikeThat
-		return true;
+		return false;
 	}
 
 	// @Override - automatic

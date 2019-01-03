@@ -2,7 +2,6 @@ package chess;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import exceptions.InvalidPieceException;
 
 @SuppressWarnings("serial")
 public abstract class Piece implements Serializable {
