@@ -28,11 +28,11 @@ public class Bishop extends Piece {
 		// for column right is positive and left is negative
 		int rowDirection = toRow - fromRow > 0 ? 1 : -1;
 		int colDirection = toCol - fromCol > 0 ? 1 : -1;
-		do {
+		while (distance != 0) {
 			if (CB[fromRow + distance * rowDirection][fromCol + distance * colDirection] != null)
 				return true;
 			distance--;
-		} while (distance != 0);
+		}
 		return false;
 	}
 

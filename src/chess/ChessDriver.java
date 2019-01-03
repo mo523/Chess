@@ -71,17 +71,16 @@ public class ChessDriver {
 	}
 
 	public static void playGame() throws FileNotFoundException, IOException, ClassNotFoundException {
+		CB.displayChoice();
 		do {
 			if (CB.getCpuGame() && CB.getCpuTurn())
 				AI.cpuMovePiece(CB);
 			else if (CB.getNetGame())
 				netMove();
-			else {
-				CB.displayChoice();
-				if (movePiece())
-					break;
-			}
-		} while ( CB.gameStatus());
+			else if (movePiece())
+				break;
+			CB.displayChoice();
+		} while (CB.gameStatus());
 	}
 
 	public static boolean movePiece() throws FileNotFoundException, IOException, ClassNotFoundException {

@@ -19,11 +19,11 @@ public class ChessBoard implements Serializable {
 	private boolean localTurn;
 	boolean useJansi;
 	private Piece currKing;
-	private boolean startCountingTurns = false;
-	private int staleTurns = 0;
+	private boolean countingTurns = false;
+	private int staleTurns = 14;
 	private int fr = -1, fc = -1, tr = -1, tc = -1;
-	private boolean endedOnCheckmate = false;
 
+	// Constructor
 	public ChessBoard(boolean debug, boolean cpuGame, boolean cpuTurn, boolean networkGame, boolean useJansi) {
 		this.debug = debug;
 		this.cpuGame = cpuGame;
@@ -34,6 +34,7 @@ public class ChessBoard implements Serializable {
 		setUpArray();
 	}
 
+	// Board and Array setup
 	private void setUpArray() {
 		pieces = new ArrayList<>();
 		pieces.add(new ArrayList<Piece>());
@@ -44,7 +45,6 @@ public class ChessBoard implements Serializable {
 					pieces.get(currPiece.isWhite() ? 0 : 1).add(currPiece);
 		System.out.println();
 	}
-
 
 	private void setUpBoard() {
 		final boolean IS_WHITE = true;
@@ -102,16 +102,7 @@ public class ChessBoard implements Serializable {
 //		chessBoard[5][6] = new Pawn(true, 5, 6);
 	}
 
-	public boolean isValidPieceThere(int row, int col) {
-		Piece currPiece = chessBoard[row][col];
-		return currPiece != null && currPiece.isWhite() == whitesTurn;
-	}
-
-	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol) {
-		Piece currPiece = chessBoard[fromRow][fromCol];
-		return currPiece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing);
-	}
-
+	// Public methods that effect the board
 	public boolean performMove(int fromRow, int fromCol, int toRow, int toCol) {
 		fr = fromRow;
 		fc = fromCol;
@@ -128,10 +119,20 @@ public class ChessBoard implements Serializable {
 				currPiece.setEnPassant(true);
 			else
 				currPiece.setEnPassant(false);
-		moved();
+		localTurn = !localTurn;
+		whitesTurn = !whitesTurn;
+		cpuTurn = !cpuTurn;
+		currKing = whitesTurn ? whiteKing : blackKing;
 		return (currPiece instanceof Pawn && toRow == (whitesTurn ? 0 : 7));
 	}
 
+	public void promotion(int row, int col, int choice) {
+		chessBoard[row][col] = choice == 1 ? new Queen(whitesTurn, row, col)
+				: choice == 2 ? new Bishop(whitesTurn, row, col)
+						: choice == 3 ? new Rook(whitesTurn, row, col) : new Horse(whitesTurn, row, col);
+	}
+
+	// Public methods that effect the driver
 	public void displayChoice() {
 		if (debug)
 			Display.debug(chessBoard);
@@ -140,21 +141,23 @@ public class ChessBoard implements Serializable {
 	}
 
 	public boolean gameStatus() {
-		if (startCountingTurns)
-			if (staleTurns == 0) {
-				System.out.println("Game Over. Stalemate");
-				return false;
-			} else
-				System.out.println("Turns til stalemate : " + (17 - staleTurns++));
 		if (inCheck())
 			if (checkmate()) {
 				System.out.println("Checkmate, You lost " + (whitesTurn ? "White." : "Black."));
 				return false;
 			} else
 				System.out.println("\nWarning! Your king is in check!\n");
+		if (staleMate())
+		{
+			System.out.println("Game Over. Stalemate");
+			return false;
+		}
+		if(countingTurns)
+			System.out.println((18 - staleTurns++) + " turns left before stalemate");
 		return true;
 	}
 
+	// private end game checks
 	private boolean inCheck() {
 		return currKing.inCheck(pieces, chessBoard);
 	}
@@ -163,7 +166,7 @@ public class ChessBoard implements Serializable {
 		return currKing.checkmate(pieces, chessBoard);
 	}
 
-	public boolean inStaleMate() {
+	private boolean staleMate() {
 		boolean white = oneKing(true);
 		boolean black = oneKing(false);
 		if (white && black)
@@ -187,16 +190,22 @@ public class ChessBoard implements Serializable {
 	}
 
 	private boolean eighteenMoveStalemate() {
-		startCountingTurns = true;
-		return staleTurns < 18;
+		countingTurns = true;
+		return staleTurns == 18;
 	}
 
-	public void promotion(int row, int col, int choice) {
-		chessBoard[row][col] = choice == 1 ? new Queen(whitesTurn, row, col)
-				: choice == 2 ? new Bishop(whitesTurn, row, col)
-						: choice == 3 ? new Rook(whitesTurn, row, col) : new Horse(whitesTurn, row, col);
+	// public move checks
+	public boolean isValidPieceThere(int row, int col) {
+		Piece currPiece = chessBoard[row][col];
+		return currPiece != null && currPiece.isWhite() == whitesTurn;
 	}
 
+	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol) {
+		Piece currPiece = chessBoard[fromRow][fromCol];
+		return currPiece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing);
+	}
+
+	// public getters
 	public boolean getCpuGame() {
 		return cpuGame;
 	}
@@ -209,25 +218,23 @@ public class ChessBoard implements Serializable {
 		return networkGame;
 	}
 
-	private void moved() {
-		localTurn = !localTurn;
-		whitesTurn = !whitesTurn;
-		cpuTurn = !cpuTurn;
-		currKing = whitesTurn ? whiteKing : blackKing;
+	public boolean getLocal() {
+		return localTurn;
 	}
 
 	public boolean getWhite() {
 		return whitesTurn;
 	}
 
-	public boolean getEnd() {
-		return endedOnCheckmate;
-	}
-
 	public String getName(int row, int col) {
 		String move = chessBoard[row][col].toString();
 		move = move.substring(6, move.length() - 9);
 		return move;
+	}
+
+	// public setters
+	public void endNet() {
+		networkGame = false;
 	}
 
 	public void reverseDebug() {
@@ -242,17 +249,10 @@ public class ChessBoard implements Serializable {
 		this.localTurn = localTurn;
 	}
 
-	public void endNet() {
-		networkGame = false;
-	}
-
-	public boolean getLocal() {
-		return localTurn;
-	}
-
+	// Saved game methods
 	public void saveGame() throws FileNotFoundException, ClassNotFoundException, IOException {
 		SaveGameFunctionality.saveGame(chessBoard, debug, whiteKing, blackKing, whitesTurn, cpuGame, cpuTurn,
-				startCountingTurns, staleTurns);
+				countingTurns, staleTurns);
 	}
 
 	public void loadGame(SavedGame s) {
@@ -263,7 +263,8 @@ public class ChessBoard implements Serializable {
 		chessBoard = s.getChessBoard();
 		cpuGame = s.isCpuGame();
 		cpuTurn = s.isCpuTurn();
-		startCountingTurns = s.isStartCountingTurns();
+		countingTurns = s.isStartCountingTurns();
 		staleTurns = s.getTurns();
 	}
+
 }

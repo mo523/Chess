@@ -27,12 +27,12 @@ public class Rook extends Piece {
 		int colDirection = colDiff == 0 ? 0 : colDiff > 0 ? 1 : -1;
 		int rowDirection = rowDiff == 0 ? 0 : rowDiff > 0 ? 1 : -1;
 		int distance = Math.abs(rowDiff + colDiff) - 1;
-		do
+		while (distance != 0)
 		{
 			if (CB[fromRow + distance * rowDirection][fromCol + distance * colDirection] != null )
 				return true;
 			distance--;
-		}	while (distance != 0); 
+		}
 		return false;
 	}
 }
