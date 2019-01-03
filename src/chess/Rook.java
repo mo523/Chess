@@ -12,7 +12,7 @@ public class Rook extends Piece {
 	@Override
 	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB) {
 		int yDiff = Math.abs(toRow - this.getRow());
-		int xDiff = Math.abs(toCol - this.getRow());
+		int xDiff = Math.abs(toCol - this.getCol());
 		if (yDiff > 0 && xDiff > 0)
 			return false;
 		return true;

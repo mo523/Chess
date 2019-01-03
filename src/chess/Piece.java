@@ -47,26 +47,16 @@ public abstract class Piece implements Serializable {
 	// Main legality check
 	public boolean isLegalMove(int toRow, int toCol, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard,
 			Piece King) {
-		if (!canPieceMoveLikeThat(toRow, toCol, chessBoard)) {
-			ChessDriver.setErrorMessage("WARNING! Piece cannot move like that");
+		if (!isLegalCheck(toRow, toCol, pieces, chessBoard, King))
 			return false;
-		}
-		if (sameColor(toRow, toCol, chessBoard)) {
-			ChessDriver.setErrorMessage("WARNING! Piece will kill same color");
-			return false;
-		}
-		if (pieceInTheWay(toRow, toCol, chessBoard)) {
-			ChessDriver.setErrorMessage("WARNING! Piece in the way");
-			return false;
-		}
 		if (leavesKingInCheck(toRow, toCol, pieces, chessBoard, King)) {
 			ChessDriver.setErrorMessage("Warning! Leaves king in check");
 			return false;
 		}
 		return true;
 	}
-	
-	public boolean isLegalerMove(int toRow, int toCol, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard,
+
+	public boolean isLegalCheck(int toRow, int toCol, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard,
 			Piece King) {
 		if (!canPieceMoveLikeThat(toRow, toCol, chessBoard)) {
 			ChessDriver.setErrorMessage("WARNING! Piece cannot move like that");
@@ -80,7 +70,8 @@ public abstract class Piece implements Serializable {
 			ChessDriver.setErrorMessage("WARNING! Piece in the way");
 			return false;
 		}
-		return true;}
+		return true;
+	}
 
 	// Private methods for legal move check
 	private boolean sameColor(int toRow, int toCol, Piece[][] chessBoard) {
@@ -93,7 +84,7 @@ public abstract class Piece implements Serializable {
 
 	private boolean leavesKingInCheck(int toRow, int toCol, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard,
 			Piece King) {
-		if (this.isLegalerMove(toRow, toCol, pieces, chessBoard, this)) {
+		if (this.isLegalCheck(toRow, toCol, pieces, chessBoard, this)) {
 			int oldRow = this.getRow();
 			int oldCol = this.getCol();
 			Piece currPiece = this;

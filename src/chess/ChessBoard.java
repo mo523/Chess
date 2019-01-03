@@ -65,7 +65,7 @@ public class ChessBoard {
 		chessBoard[0][0] = new Rook(IS_WHITE, 0, 0);
 		chessBoard[0][1] = new Horse(IS_WHITE, 0, 1);
 		chessBoard[0][2] = new Bishop(IS_WHITE, 0, 2);
-		chessBoard[0][3] = new King(IS_WHITE, 0, 3);
+		//chessBoard[0][3] = new King(IS_WHITE, 0, 3);
 		chessBoard[0][4] = new Queen(IS_WHITE, 0, 4);
 		chessBoard[0][5] = new Bishop(IS_WHITE, 0, 5);
 		chessBoard[0][6] = new Horse(IS_WHITE, 0, 6);
@@ -78,14 +78,14 @@ public class ChessBoard {
 		chessBoard[7][5] = new Bishop(IS_BLACK, 7, 5);
 		chessBoard[7][6] = new Horse(IS_BLACK, 7, 6);
 		chessBoard[7][7] = new Rook(IS_BLACK, 7, 7);
-		whiteKing = chessBoard[0][3];
-		blackKing = chessBoard[7][3];
-		currKing = whiteKing;
-
-//		chessBoard[5][4] = new King(true, 5, 4);
-//		whiteKing = chessBoard[5][4];
+//		whiteKing = chessBoard[0][3];
 //		blackKing = chessBoard[7][3];
 //		currKing = whiteKing;
+
+		chessBoard[5][4] = new King(true, 5, 4);
+		whiteKing = chessBoard[5][4];
+		blackKing = chessBoard[7][3];
+		currKing = whiteKing;
 		// TESTS
 //		chessBoard[3][1] = new Pawn(false, 3, 1);
 //		chessBoard[3][0] = new Pawn(false, 3, 0);
