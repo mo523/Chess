@@ -106,37 +106,6 @@ public abstract class Piece implements Serializable {
 		return true;
 	}
 
-	public Piece[][] makeNewBoard(Piece[][] chessBoard) throws InvalidPieceException {
-		Piece[][] newchessBoard = new Piece[8][8];
-		Piece curr;
-		for (int i = 0; i < chessBoard.length; i++) {
-			for (int j = 0; j < chessBoard[i].length; j++) {
-				curr = chessBoard[i][j];
-				if (curr instanceof Pawn) {
-					try {
-						newchessBoard[i][j] = ((Pawn) curr).clone();
-					} catch (CloneNotSupportedException e) {
-						e.printStackTrace();
-					}
-				} else if (curr instanceof Queen)
-					newchessBoard[i][j] = new Queen(curr.isWhite(), curr.getRow(), curr.getCol());
-				else if (curr instanceof Rook)
-					newchessBoard[i][j] = new Rook(curr.isWhite(), curr.getRow(), curr.getCol());
-				else if (curr instanceof Bishop)
-					newchessBoard[i][j] = new Bishop(curr.isWhite(), curr.getRow(), curr.getCol());
-				else if (curr instanceof Horse)
-					newchessBoard[i][j] = new Horse(curr.isWhite(), curr.getRow(), curr.getCol());
-				else if (curr instanceof King)
-					newchessBoard[i][j] = new King(curr.isWhite(), curr.getRow(), curr.getCol());
-				else if (curr == null)
-					;// do nothing
-				else
-					throw new InvalidPieceException("That piece does not exist");
-			}
-		}
-		return newchessBoard;
-	}
-
 	// Abstract methods needed and overridden by all pieces
 	public abstract boolean pieceInTheWay(int toRow, int toCol, Piece[][] chessBoard);
 
