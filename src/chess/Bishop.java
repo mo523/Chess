@@ -11,7 +11,7 @@ public class Bishop extends Piece {
 
 	@Override
 	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB) {
-		//The absolute value of the x minus y distance should be 0
+		//Check if the absolute move distance 
 		if (Math.abs(this.getRow() - toRow) == Math.abs(this.getCol() - toCol))
 			return true;
 		return false;
@@ -19,11 +19,15 @@ public class Bishop extends Piece {
 
 	@Override
 	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
+		//Get the total distance the piece would like to go
 		int distance = Math.abs(this.getCol() - toCol);
-		int xDirection = this.getRow() - toRow > 0 ? 1 : -1;
-		int yDirection = this.getCol() - toCol > 0 ? 1 : -1;
+		//Get the direction the piece would like to go
+		//for row up is positive and down is negative
+		//for
+		int rowDirection = this.getRow() - toRow > 0 ? 1 : -1;
+		int colDirection = this.getCol() - toCol > 0 ? 1 : -1;
 		do {      
-			if (CB[this.getRow() - xDirection][this.getCol() - yDirection] != null)
+			if (CB[this.getRow() - rowDirection][this.getCol() - colDirection] != null)
 				return true;
 			distance--;
 		} while (distance != 0);

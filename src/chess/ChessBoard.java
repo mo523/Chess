@@ -2,9 +2,11 @@ package chess;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ChessBoard {
+@SuppressWarnings("serial")
+public class ChessBoard implements Serializable{
 	private Piece[][] chessBoard;
 	private ArrayList<ArrayList<Piece>> pieces;
 	private Piece blackKing;
@@ -65,27 +67,26 @@ public class ChessBoard {
 		chessBoard[0][0] = new Rook(IS_WHITE, 0, 0);
 		chessBoard[0][1] = new Horse(IS_WHITE, 0, 1);
 		chessBoard[0][2] = new Bishop(IS_WHITE, 0, 2);
-		chessBoard[0][3] = new King(IS_WHITE, 0, 3);
-		chessBoard[0][4] = new Queen(IS_WHITE, 0, 4);
+		chessBoard[0][4] = new King(IS_WHITE, 0, 3);
+		chessBoard[0][3] = new Queen(IS_WHITE, 0, 4);
 		chessBoard[0][5] = new Bishop(IS_WHITE, 0, 5);
 		chessBoard[0][6] = new Horse(IS_WHITE, 0, 6);
 		chessBoard[0][7] = new Rook(IS_WHITE, 0, 7);
 		chessBoard[7][0] = new Rook(IS_BLACK, 7, 0);
 		chessBoard[7][1] = new Horse(IS_BLACK, 7, 1);
 		chessBoard[7][2] = new Bishop(IS_BLACK, 7, 2);
-		chessBoard[7][3] = new King(IS_BLACK, 7, 3);
-		chessBoard[7][4] = new Queen(IS_BLACK, 7, 4);
+		chessBoard[7][4] = new King(IS_BLACK, 7, 3);
+		chessBoard[7][3] = new Queen(IS_BLACK, 7, 4);
 		chessBoard[7][5] = new Bishop(IS_BLACK, 7, 5);
 		chessBoard[7][6] = new Horse(IS_BLACK, 7, 6);
 		chessBoard[7][7] = new Rook(IS_BLACK, 7, 7);
 		whiteKing = chessBoard[0][3];
 		blackKing = chessBoard[7][3];
 		currKing = whiteKing;
-		
-		
+
 //		chessBoard[2][4] = new Pawn(true, 2, 4);
 //		chessBoard[5][0] = new Pawn(false,5,0);
-		//Easy Checkmate test
+		// Easy Checkmate test
 //		chessBoard[5][4] = new King(true, 5, 4);
 //		whiteKing = chessBoard[5][4];
 //		blackKing = chessBoard[7][3];
@@ -225,7 +226,7 @@ public class ChessBoard {
 
 	public void displayChoice() {
 		if (debug)
-			Display.debug(chessBoard, whitesTurn, useJansi, fr, fc, tr, tc);
+			Display.debug(chessBoard);
 		else
 			Display.display(whitesTurn, useJansi, chessBoard, fr, fc, tr, tc);
 		if (startCountingTurns)

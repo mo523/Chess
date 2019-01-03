@@ -116,7 +116,7 @@ public class ChessDriver {
 				move = getPosition();
 				if (move.equals("m"))
 					return true;
-				fromCol = 104 - move.charAt(0);
+				fromCol = move.charAt(0) - 97;
 				fromRow = move.charAt(1) - 49;
 				legalMoveInput = CB.isValidPieceThere(fromRow, fromCol);
 			} while (!legalMoveInput);
@@ -125,7 +125,7 @@ public class ChessDriver {
 				move = getPosition();
 				if (move.equals("m"))
 					return true;
-				toCol = 104 - move.charAt(0);
+				toCol = move.charAt(0) - 97;
 				toRow = move.charAt(1) - 49;
 				if (toCol == fromCol && toRow == fromRow)
 					System.out.println("\nCan't move to same place, try again.");

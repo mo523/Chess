@@ -5,9 +5,9 @@ public class Display {
 	public static void display(boolean whitesTurn, boolean useJansi, Piece[][] chessBoard, int fr, int fc, int tr,
 			int tc) {
 		int out = whitesTurn ? 47 : 0;
-		int in = whitesTurn ? 7 : 0;
+		int in = whitesTurn ? 0 : 7;
 		int minOut = whitesTurn ? -1 : 48;
-		int minIn = whitesTurn ? -1 : 8;
+		int minIn = whitesTurn ? 8 : -1;
 		int chg = whitesTurn ? -1 : 1;
 		String letters1 = "        A             B             C             D             E             F             G             H        ";
 		String letters2 = "        H             G             F             E             D             C             B             A        ";
@@ -26,7 +26,7 @@ public class Display {
 		for (int i = out; i != minOut; i += chg) {
 			boolean numRow = i % 6 + 1 == 3;
 			board += (bxWhite + fgNumLets + (numRow ? i / 6 + 1 + " " : "  ") + reset);
-			for (int j = in; j != minIn; j += chg) {
+			for (int j = in; j != minIn; j -= chg) {
 				Boolean isWhite = chessBoard[i / 6][j] != null ? chessBoard[i / 6][j].isWhite() : null;
 				boolean ijTheSame = i / 6 % 2 == j % 2;
 				boolean isNull = chessBoard[i / 6][j] == null;
@@ -53,25 +53,17 @@ public class Display {
 				+ (numRow ? ("\u001B[0m" + bg + "\u001B[30m" + numLet) : "  ");
 	}
 	//do we need the 4 ints?
-	public static void debug(Piece[][] chessBoard, boolean whitesTurn, boolean useJansi, int fr, int fc, int tr,
-			int tc) {
-		String lets = whitesTurn || useJansi ? "  | A  | B  | C  | D  | E  | F  | G  | H  |"
-				: "  | H  | G  | F  | E  | D  | C  | B  | A  |";
+	public static void debug(Piece[][] chessBoard) {
+		String lets = "  | A  | B  | C  | D  | E  | F  | G  | H  |";
 		String dash = "--|----|----|----|----|----|----|----|----|";
-		int out = whitesTurn || useJansi ? 7 : 0;
-		int in = out;
-		int minOut = whitesTurn || useJansi ? -1 : 8;
-		int minIn = minOut;
-		int chg = whitesTurn || useJansi ? -1 : 1;
-
 		System.out.println(lets);
-		for (int i = out; i != minOut; i += chg) {
+		for (int i = 7; i >=0; i--) {
 			System.out.println(dash);
-			for (int j = in; j != minIn; j += chg) {
-				System.out.print((j == out ? (i + 1) : "") + " | "
+			for (int j = 0; j < 8; j ++) {
+				System.out.print((j == 0 ? (i + 1) : "") + " | "
 						+ (chessBoard[i][j] == null ? "  "
 								: ((chessBoard[i][j].isWhite() ? "w" : "b") + chessBoard[i][j].toString().charAt(6)))
-						+ (j == minIn - chg ? " |" : ""));
+						+ (j == 7 ? " |" : ""));
 			}
 			System.out.println();
 		}
