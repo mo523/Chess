@@ -17,16 +17,16 @@ public class Queen extends Piece {
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int toRow, int toCol, Piece[][] CB) {
+	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
 
-		Rook rook = new Rook(isWhite(), -1, -1);
-		Bishop bishop = new Bishop(isWhite(), -1, -1);
+		Rook rook = new Rook(isWhite(), this.getRow(), this.getCol());
+		Bishop bishop = new Bishop(isWhite(), this.getRow(), this.getCol());
 
 		int yDiff = Math.abs(toRow - this.getRow());
 		int xDiff = Math.abs(toCol - this.getCol());
 		if (yDiff == xDiff)
-			return bishop.noPieceInTheWay(toRow, toCol, CB);
+			return bishop.pieceInTheWay(toRow, toCol, CB);
 		else
-			return rook.noPieceInTheWay(toRow, toCol, CB);
+			return rook.pieceInTheWay(toRow, toCol, CB);
 	}
 }

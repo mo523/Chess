@@ -18,15 +18,16 @@ public class Bishop extends Piece {
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int toRow, int toCol, Piece[][] CB) {
-		int distance = (this.getCol() - toCol);
-		int direction = distance > 0 ? 1 : -1;
+	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
+		int distance = Math.abs(this.getCol() - toCol);
+		int xDirection = this.getRow() - toRow > 0 ? 1 : -1;
+		int yDirection = this.getCol() - toCol > 0 ? 1 : -1;
 		do {      
-			if (CB[this.getRow() + direction][this.getCol() + direction] != null && this.getRow() - distance != toRow )
-				return false;
-			distance += direction;
+			if (CB[this.getRow() - xDirection][this.getCol() - yDirection] != null && this.getRow() - distance != toRow )
+				return true;
+			distance--;
 		} while (distance != 0);
-		return true;
+		return false;
 	}
 
 }

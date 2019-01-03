@@ -19,11 +19,11 @@ public class King extends Piece {
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int toRow, int toCol, Piece[][] CB) {
+	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
 		Piece piece = CB[toRow][toCol];
 		if (piece == null || piece.isWhite() != this.isWhite())
-			return true;
-		return false;
+			return false;
+		return true;
 	}
 
 	// CheckMate methods overriding Piece
@@ -36,25 +36,8 @@ public class King extends Piece {
 					toRow++;
 				if (toCol == -1)
 					toCol++;
-				if (this.isLegalMove(toRow, toCol, pieces, chessBoard, this)) {
-					int oldRow = this.getRow();
-					int oldCol = this.getCol();
-					Piece currPiece = this;
-					Piece killPiece = chessBoard[toRow][toCol];
-					currPiece.setRowCol(toRow, toCol);
-					pieces.get(this.isWhite() ? 1 : 0).remove(killPiece);
-					chessBoard[toRow][toCol] = currPiece;
-					chessBoard[oldRow][oldCol] = null;
-					boolean safe = false;
-					if (!this.inCheck(this, pieces, chessBoard))
-						safe = true;
-					pieces.get(this.isWhite() ? 1 : 0).add(killPiece);
-					chessBoard[toRow][toCol] = killPiece;
-					chessBoard[oldRow][oldCol] = this;
-					this.setRowCol(oldRow, oldCol);
-					if (safe)
-						return false;
-				}
+				if (this.isLegalMove(toRow, toCol, pieces, chessBoard, this))
+					return false;
 			}
 		return true;
 	}

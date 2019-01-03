@@ -19,7 +19,7 @@ public class Rook extends Piece {
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int toRow, int toCol, Piece[][] CB) {
+	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
 		int fromRow = this.getRow();
 		int fromCol = this.getCol();
 		int yDiff = toRow - fromRow;
@@ -29,13 +29,13 @@ public class Rook extends Piece {
 				for (int i = fromRow + 1; yDiff != 1; i++) {
 					yDiff--;
 					if (CB[i][fromCol] != null)
-						return false;
+						return true;
 				}
 			} else {
 				for (int i = fromRow - 1; yDiff != -1; i--) {
 					yDiff++;
 					if (CB[i][fromCol] != null)
-						return false;
+						return true;
 				}
 			}
 		} else {
@@ -43,16 +43,16 @@ public class Rook extends Piece {
 				for (int i = fromCol + 1; xDiff != 1; i++) {
 					xDiff--;
 					if (CB[fromRow][i] != null)
-						return false;
+						return true;
 				}
 			} else {
 				for (int i = fromCol - 1; xDiff != -1; i--) {
 					xDiff++;
 					if (CB[fromRow][i] != null)
-						return false;
+						return true;
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 }

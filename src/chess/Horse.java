@@ -20,7 +20,7 @@ public class Horse extends Piece {
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int toRow, int toCol, Piece[][] CB) {
-		return true; // because horses jump
+	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
+		return false; // because horses jump
 	}
 }

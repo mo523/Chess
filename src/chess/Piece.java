@@ -51,44 +51,68 @@ public abstract class Piece implements Serializable {
 			ChessDriver.setErrorMessage("WARNING! Piece cannot move like that");
 			return false;
 		}
-		if (!willNotKillSameColor(toRow, toCol, chessBoard)) {
+		if (sameColor(toRow, toCol, chessBoard)) {
 			ChessDriver.setErrorMessage("WARNING! Piece will kill same color");
 			return false;
 		}
-		if (!noPieceInTheWay(toRow, toCol, chessBoard)) {
+		if (pieceInTheWay(toRow, toCol, chessBoard)) {
 			ChessDriver.setErrorMessage("WARNING! Piece in the way");
 			return false;
 		}
-		if (!doesntLeaveKingInCheck(toRow, toCol, pieces, chessBoard, King)) {
+		if (leavesKingInCheck(toRow, toCol, pieces, chessBoard, King)) {
 			ChessDriver.setErrorMessage("Warning! Leaves king in check");
 			return false;
 		}
 		return true;
 	}
+	
+	public boolean isLegalerMove(int toRow, int toCol, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard,
+			Piece King) {
+		if (!canPieceMoveLikeThat(toRow, toCol, chessBoard)) {
+			ChessDriver.setErrorMessage("WARNING! Piece cannot move like that");
+			return false;
+		}
+		if (sameColor(toRow, toCol, chessBoard)) {
+			ChessDriver.setErrorMessage("WARNING! Piece will kill same color");
+			return false;
+		}
+		if (pieceInTheWay(toRow, toCol, chessBoard)) {
+			ChessDriver.setErrorMessage("WARNING! Piece in the way");
+			return false;
+		}
+		return true;}
 
 	// Private methods for legal move check
-	private boolean willNotKillSameColor(int toRow, int toCol, Piece[][] chessBoard) {
+	private boolean sameColor(int toRow, int toCol, Piece[][] chessBoard) {
 		if (chessBoard[toRow][toCol] == null)
-			return true;
-		if (this.isWhite() == chessBoard[toRow][toCol].isWhite())
 			return false;
-		return true;
+		if (this.isWhite() == chessBoard[toRow][toCol].isWhite())
+			return true;
+		return false;
 	}
 
-	private boolean doesntLeaveKingInCheck(int toRow, int toCol, ArrayList<ArrayList<Piece>> pieces,
-			Piece[][] chessBoard, Piece King) {
-		// makes a temporary board and moves the piece in it
-		Piece[][] newchessBoard = null;
-		try {
-			newchessBoard = makeNewBoard(chessBoard);
-		} catch (InvalidPieceException e) {
-			e.printStackTrace();
+	private boolean leavesKingInCheck(int toRow, int toCol, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard,
+			Piece King) {
+		if (this.isLegalerMove(toRow, toCol, pieces, chessBoard, this)) {
+			int oldRow = this.getRow();
+			int oldCol = this.getCol();
+			Piece currPiece = this;
+			Piece killPiece = chessBoard[toRow][toCol];
+			currPiece.setRowCol(toRow, toCol);
+			pieces.get(this.isWhite() ? 1 : 0).remove(killPiece);
+			chessBoard[toRow][toCol] = currPiece;
+			chessBoard[oldRow][oldCol] = null;
+			boolean safe = false;
+			if (!this.inCheck(this, pieces, chessBoard))
+				safe = true;
+			pieces.get(this.isWhite() ? 1 : 0).add(killPiece);
+			chessBoard[toRow][toCol] = killPiece;
+			chessBoard[oldRow][oldCol] = this;
+			this.setRowCol(oldRow, oldCol);
+			if (safe)
+				return false;
 		}
-		int fromRow = this.getRow();
-		int fromCol = this.getCol();
-		newchessBoard[toRow][toCol] = newchessBoard[fromRow][fromCol];
-		newchessBoard[fromRow][fromCol] = null;
-		return !inCheck(King, pieces, newchessBoard);
+		return true;
 	}
 
 	public Piece[][] makeNewBoard(Piece[][] chessBoard) throws InvalidPieceException {
@@ -123,7 +147,7 @@ public abstract class Piece implements Serializable {
 	}
 
 	// Abstract methods needed and overridden by all pieces
-	public abstract boolean noPieceInTheWay(int toRow, int toCol, Piece[][] chessBoard);
+	public abstract boolean pieceInTheWay(int toRow, int toCol, Piece[][] chessBoard);
 
 	public abstract boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] chessBoard);
 
