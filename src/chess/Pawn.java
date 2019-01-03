@@ -20,7 +20,6 @@ public class Pawn extends Piece {
 		int yDiffAbs = Math.abs(yDiff);
 		int xDiffAbs = Math.abs(xDiff);
 		boolean firstMove = this.getRow() == (this.isWhite() ? 1 : 6);
-		// System.out.println(fromRow + " " + fromCol + " " + toRow + " " + toCol + " "+ yDiff + " " + xDiff + " " + verticalMove);
 
 		// If left or right is > 1
 		// If up is more than 2

@@ -32,10 +32,8 @@ public class King extends Piece {
 			for (int toCol = this.getCol() - 1; toCol < this.getRow() + 1; toCol++) {
 				if (toRow > 8 || toCol > 8)
 					break;
-				if (toRow == -1)
-					toRow++;
-				if (toCol == -1)
-					toCol++;
+				if (toRow == -1 || toCol == -1)
+					continue;
 				if (this.isLegalMove(toRow, toCol, pieces, chessBoard, this))
 					return false;
 			}
