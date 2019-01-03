@@ -17,18 +17,19 @@ public class ChessBoard implements Serializable{
 	private boolean cpuTurn;
 	private boolean networkGame;
 	private boolean localTurn;
+	boolean useJansi;
 	private Piece currKing;
 	private boolean startCountingTurns = false;
 	private int staleTurns = 0;
 	private int fr = -1, fc = -1, tr = -1, tc = -1;
 	private boolean endedOnCheckmate = false;
-	boolean useJansi = false;
 
-	public ChessBoard(boolean debug, boolean cpuGame, boolean cpuTurn, boolean networkGame) {
+	public ChessBoard(boolean debug, boolean cpuGame, boolean cpuTurn, boolean networkGame, boolean useJansi) {
 		this.debug = debug;
 		this.cpuGame = cpuGame;
 		this.cpuTurn = cpuTurn;
 		this.networkGame = networkGame;
+		this.useJansi = useJansi;
 		setUpBoard();
 		setUpArray();
 	}

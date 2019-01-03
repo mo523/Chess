@@ -4,26 +4,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
-import org.fusesource.jansi.AnsiConsole;
-
 public class ChessDriver {
 	private static Scanner kyb = new Scanner(System.in);
 
 	private static ChessBoard CB;
 	private static String errorMessage;
-	private static boolean useJansi = !System.getProperty("user.name").equalsIgnoreCase("moshe");
 	private static Network net;
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
-
-		if (useJansi)
-			AnsiConsole.systemInstall(); // MUST BE ON TOP - PARSES ALL THE UNICODE
-		Display.clear();
 		System.out.println("Welcome to chess!");
 		initialMenu();
 		kyb.close();
-		if (useJansi)
-			AnsiConsole.systemUninstall();
 	}
 
 	public static void initialMenu() throws FileNotFoundException, ClassNotFoundException, IOException {
@@ -32,14 +23,20 @@ public class ChessDriver {
 		boolean cpuGame = false;
 		boolean cpuTurn = false;
 		boolean networkGame = false;
+		boolean useJansi = true;
 		SavedGame s = null;
 		do {
 			System.out.println(
-					"\n\nMain Menu\n\n0. Quit\n1. New Game (Two Player) \n2. New game (One Player)\n3. New networked game\n4. Open saved game\n5. Continue Game\n\n6. 1 with debug\n7. 2 with debug\n8. 3 with debug");
+					"\n\nMain Menu\n\n0. Quit\n1. New Game (Two Player) \n2. New game (One Player)\n3. New networked game"
+							+ "\n4. Open saved game\n5. Continue Game\n\n6. 1 with debug\n7. 2 with debug\n8. 3 with debug"
+							+ "\n9. Zero Players\n-1. no jansi");
 			do {
 				choice = kyb.nextInt();
-			} while (choice < 0 || choice > 8);
+			} while (choice < -1 || choice > 9);
 			switch (choice) {
+			case -1:
+				useJansi = false;
+				break;
 			case 0:
 				break;
 			case 6:
@@ -63,7 +60,7 @@ public class ChessDriver {
 			default: // 0, 1, 5
 				break;
 			}
-			CB = new ChessBoard(debug, cpuGame, cpuTurn, networkGame);
+			CB = new ChessBoard(debug, cpuGame, cpuTurn, networkGame, useJansi);
 			if (choice != 0) {
 				if (s != null)
 					CB.loadGame(s);

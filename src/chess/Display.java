@@ -1,9 +1,11 @@
 package chess;
-import java.io.IOException;
+import org.fusesource.jansi.AnsiConsole;
 
 public class Display {
 	public static void display(boolean whitesTurn, boolean useJansi, Piece[][] chessBoard, int fr, int fc, int tr,
 			int tc) {
+		if (useJansi)
+			AnsiConsole.systemInstall();
 		int out = whitesTurn ? 47 : 0;
 		int in = whitesTurn ? 0 : 7;
 		int minOut = whitesTurn ? -1 : 48;
@@ -42,6 +44,8 @@ public class Display {
 		}
 		board += (bxWhite + fgBlack + " " + (whitesTurn ? letters1 : letters2) + reset);
 		System.out.println(board);
+		if (useJansi)
+			AnsiConsole.systemUninstall();
 	}
 
 	public static String PieceSection(int i, int j, boolean whitesTurn, Piece[][] chessBoard, String bg) {
@@ -52,14 +56,15 @@ public class Display {
 		return (empty ? "            " : chessBoard[i / 6][j].getIcon(iconRow))
 				+ (numRow ? ("\u001B[0m" + bg + "\u001B[30m" + numLet) : "  ");
 	}
-	//do we need the 4 ints?
+
+	// do we need the 4 ints?
 	public static void debug(Piece[][] chessBoard) {
 		String lets = "  | A  | B  | C  | D  | E  | F  | G  | H  |";
 		String dash = "--|----|----|----|----|----|----|----|----|";
 		System.out.println(lets);
-		for (int i = 7; i >=0; i--) {
+		for (int i = 7; i >= 0; i--) {
 			System.out.println(dash);
-			for (int j = 0; j < 8; j ++) {
+			for (int j = 0; j < 8; j++) {
 				System.out.print((j == 0 ? (i + 1) : "") + " | "
 						+ (chessBoard[i][j] == null ? "  "
 								: ((chessBoard[i][j].isWhite() ? "w" : "b") + chessBoard[i][j].toString().charAt(6)))
@@ -68,9 +73,5 @@ public class Display {
 			System.out.println();
 		}
 		System.out.println(dash);
-	}
-
-	public static void clear() throws InterruptedException, IOException {
-		new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 	}
 }
