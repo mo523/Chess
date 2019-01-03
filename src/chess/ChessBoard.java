@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 @SuppressWarnings("serial")
-public class ChessBoard implements Serializable{
+public class ChessBoard implements Serializable {
 	private Piece[][] chessBoard;
 	private ArrayList<ArrayList<Piece>> pieces;
 	private Piece blackKing;
@@ -42,7 +42,9 @@ public class ChessBoard implements Serializable{
 			for (Piece currPiece : pa)
 				if (currPiece != null)
 					pieces.get(currPiece.isWhite() ? 0 : 1).add(currPiece);
+		System.out.println();
 	}
+
 
 	private void setUpBoard() {
 		final boolean IS_WHITE = true;
@@ -68,21 +70,21 @@ public class ChessBoard implements Serializable{
 		chessBoard[0][0] = new Rook(IS_WHITE, 0, 0);
 		chessBoard[0][1] = new Horse(IS_WHITE, 0, 1);
 		chessBoard[0][2] = new Bishop(IS_WHITE, 0, 2);
-		chessBoard[0][4] = new King(IS_WHITE, 0, 3);
-		chessBoard[0][3] = new Queen(IS_WHITE, 0, 4);
+		chessBoard[0][4] = new King(IS_WHITE, 0, 4);
+		chessBoard[0][3] = new Queen(IS_WHITE, 0, 3);
 		chessBoard[0][5] = new Bishop(IS_WHITE, 0, 5);
 		chessBoard[0][6] = new Horse(IS_WHITE, 0, 6);
 		chessBoard[0][7] = new Rook(IS_WHITE, 0, 7);
 		chessBoard[7][0] = new Rook(IS_BLACK, 7, 0);
 		chessBoard[7][1] = new Horse(IS_BLACK, 7, 1);
 		chessBoard[7][2] = new Bishop(IS_BLACK, 7, 2);
-		chessBoard[7][4] = new King(IS_BLACK, 7, 3);
-		chessBoard[7][3] = new Queen(IS_BLACK, 7, 4);
+		chessBoard[7][4] = new King(IS_BLACK, 7, 4);
+		chessBoard[7][3] = new Queen(IS_BLACK, 7, 3);
 		chessBoard[7][5] = new Bishop(IS_BLACK, 7, 5);
 		chessBoard[7][6] = new Horse(IS_BLACK, 7, 6);
 		chessBoard[7][7] = new Rook(IS_BLACK, 7, 7);
-		whiteKing = chessBoard[0][3];
-		blackKing = chessBoard[7][3];
+		whiteKing = chessBoard[0][4];
+		blackKing = chessBoard[7][4];
 		currKing = whiteKing;
 
 //		chessBoard[2][4] = new Pawn(true, 2, 4);
@@ -126,14 +128,38 @@ public class ChessBoard implements Serializable{
 				currPiece.setEnPassant(true);
 			else
 				currPiece.setEnPassant(false);
-		return (currPiece instanceof Pawn && toRow == (whitesTurn ? 7 : 0));
+		moved();
+		return (currPiece instanceof Pawn && toRow == (whitesTurn ? 0 : 7));
 	}
 
-	public boolean inCheck() {
-		return currKing.inCheck(currKing, pieces, chessBoard);
+	public void displayChoice() {
+		if (debug)
+			Display.debug(chessBoard);
+		else
+			Display.display(whitesTurn, useJansi, chessBoard, fr, fc, tr, tc);
 	}
 
-	public boolean checkmate() {
+	public boolean gameStatus() {
+		if (startCountingTurns)
+			if (staleTurns == 0) {
+				System.out.println("Game Over. Stalemate");
+				return false;
+			} else
+				System.out.println("Turns til stalemate : " + (17 - staleTurns++));
+		if (inCheck())
+			if (checkmate()) {
+				System.out.println("Checkmate, You lost " + (whitesTurn ? "White." : "Black."));
+				return false;
+			} else
+				System.out.println("\nWarning! Your king is in check!\n");
+		return true;
+	}
+
+	private boolean inCheck() {
+		return currKing.inCheck(pieces, chessBoard);
+	}
+
+	private boolean checkmate() {
 		return currKing.checkmate(pieces, chessBoard);
 	}
 
@@ -183,12 +209,11 @@ public class ChessBoard implements Serializable{
 		return networkGame;
 	}
 
-	public boolean moved() {
+	private void moved() {
 		localTurn = !localTurn;
 		whitesTurn = !whitesTurn;
 		cpuTurn = !cpuTurn;
 		currKing = whitesTurn ? whiteKing : blackKing;
-		return false;
 	}
 
 	public boolean getWhite() {
@@ -223,17 +248,6 @@ public class ChessBoard implements Serializable{
 
 	public boolean getLocal() {
 		return localTurn;
-	}
-
-	public void displayChoice() {
-		if (debug)
-			Display.debug(chessBoard);
-		else
-			Display.display(whitesTurn, useJansi, chessBoard, fr, fc, tr, tc);
-		if (startCountingTurns)
-			System.out.println("Turns til stalemate : " + (17 - staleTurns++));
-		if (inCheck())
-			System.out.println("\nWarning! Your king is in check!\n");
 	}
 
 	public void saveGame() throws FileNotFoundException, ClassNotFoundException, IOException {

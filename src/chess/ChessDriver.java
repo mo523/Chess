@@ -71,7 +71,6 @@ public class ChessDriver {
 	}
 
 	public static void playGame() throws FileNotFoundException, IOException, ClassNotFoundException {
-		boolean gameOver = false;
 		do {
 			if (CB.getCpuGame() && CB.getCpuTurn())
 				AI.cpuMovePiece(CB);
@@ -82,18 +81,7 @@ public class ChessDriver {
 				if (movePiece())
 					break;
 			}
-			gameOver = CB.moved();
-		} while (!gameOver);
-		if (gameOver)
-			endGame();
-	}
-
-	public static void endGame() {
-		CB.displayChoice();
-		if (CB.getEnd())
-			System.out.println("Sorry " + (CB.getWhite() ? "White" : "Black") + ". Checkmate, you lose.");
-		else
-			System.out.println("Stalemate.");
+		} while ( CB.gameStatus());
 	}
 
 	public static boolean movePiece() throws FileNotFoundException, IOException, ClassNotFoundException {

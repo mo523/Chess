@@ -11,7 +11,7 @@ public class PawnTests {
 	public PawnTests() {
 	}
 
-	private static ChessBoard CB = new ChessBoard(false,false,false,false);
+	private static ChessBoard CB = new ChessBoard(false,false,false,false, false);
 	
 	
 	@Test

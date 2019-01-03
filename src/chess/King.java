@@ -28,25 +28,18 @@ public class King extends Piece {
 
 	// CheckMate methods overriding Piece
 	public boolean checkmate(ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard) {
-		for (int toRow = this.getRow() - 1; toRow < this.getRow() + 1; toRow++)
-			for (int toCol = this.getCol() - 1; toCol < this.getRow() + 1; toCol++) {
-				if (toRow > 8 || toCol > 8)
-					break;
-				if (toRow == -1 || toCol == -1)
-					continue;
-				if (this.isLegalMove(toRow, toCol, pieces, chessBoard, this))
-					return false;
-			}
+		for (Piece piece : pieces.get(this.isWhite() ? 0 : 1))
+			for (int i = 0; i < 8; i++)
+				for (int j = 0; j < 8; j++)
+					if (piece.isLegalMove(i, j, pieces, chessBoard, this))
+						return false;
 		return true;
 	}
 
-	public boolean inCheck(Piece king, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard) {
-		for (Piece piece : pieces.get(king.isWhite() ? 1 : 0))
-			if (piece.isLegalMove(this.getRow(), this.getCol(), pieces, chessBoard, this))
-			{
-				System.out.print(piece);
-				return true;// can kill
-			}
+	public boolean inCheck(ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard) {
+		for (Piece piece : pieces.get(this.isWhite() ? 1 : 0))
+			if (piece.isLegalCheck(this.getRow(), this.getCol(), pieces, chessBoard, this))
+				return true;
 		return false;
 	}
 

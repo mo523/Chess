@@ -83,25 +83,24 @@ public abstract class Piece implements Serializable {
 
 	private boolean leavesKingInCheck(int toRow, int toCol, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard,
 			Piece King) {
-		if (this.isLegalCheck(toRow, toCol, pieces, chessBoard, this)) {
-			int oldRow = this.getRow();
-			int oldCol = this.getCol();
-			Piece currPiece = this;
-			Piece killPiece = chessBoard[toRow][toCol];
-			currPiece.setRowCol(toRow, toCol);
-			pieces.get(this.isWhite() ? 1 : 0).remove(killPiece);
-			chessBoard[toRow][toCol] = currPiece;
-			chessBoard[oldRow][oldCol] = null;
-			boolean safe = false;
-			if (!this.inCheck(this, pieces, chessBoard))
-				safe = true;
+		int oldRow = this.getRow();
+		int oldCol = this.getCol();
+		Piece currPiece = this;
+		Piece killPiece = chessBoard[toRow][toCol];
+		currPiece.setRowCol(toRow, toCol);
+		pieces.get(this.isWhite() ? 1 : 0).remove(killPiece);
+		chessBoard[toRow][toCol] = currPiece;
+		chessBoard[oldRow][oldCol] = null;
+		boolean safe = false;
+		if (!King.inCheck(pieces, chessBoard))
+			safe = true;
+		if (killPiece != null)
 			pieces.get(this.isWhite() ? 1 : 0).add(killPiece);
-			chessBoard[toRow][toCol] = killPiece;
-			chessBoard[oldRow][oldCol] = this;
-			this.setRowCol(oldRow, oldCol);
-			if (safe)
-				return false;
-		}
+		chessBoard[toRow][toCol] = killPiece;
+		chessBoard[oldRow][oldCol] = this;
+		this.setRowCol(oldRow, oldCol);
+		if (safe)
+			return false;
 		return true;
 	}
 
@@ -115,7 +114,7 @@ public abstract class Piece implements Serializable {
 		return false;
 	}
 
-	public boolean inCheck(Piece king, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard) {
+	public boolean inCheck(ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard) {
 		return false;
 	}
 
