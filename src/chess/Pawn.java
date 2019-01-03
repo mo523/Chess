@@ -14,12 +14,12 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
-		int yDiff = toRow - fromRow;
-		int xDiff = toCol - fromCol;
+	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB) {
+		int yDiff = toRow - this.getRow();
+		int xDiff = toCol - this.getCol();
 		int yDiffAbs = Math.abs(yDiff);
 		int xDiffAbs = Math.abs(xDiff);
-		boolean firstMove = fromRow == (this.isWhite() ? 1 : 6);
+		boolean firstMove = this.getRow() == (this.isWhite() ? 1 : 6);
 		// System.out.println(fromRow + " " + fromCol + " " + toRow + " " + toCol + " "+ yDiff + " " + xDiff + " " + verticalMove);
 
 		// If left or right is > 1
@@ -66,7 +66,7 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
+	public boolean noPieceInTheWay(int toRow, int toCol, Piece[][] CB) {
 		// this is taken care of by canPieceMoveLikeThat
 		return true;
 	}

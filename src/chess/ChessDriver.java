@@ -64,10 +64,12 @@ public class ChessDriver {
 				break;
 			}
 			CB = new ChessBoard(debug, cpuGame, cpuTurn, networkGame);
-			if (s != null)
-				CB.loadGame(s);
-			System.out.println();
-			playGame();
+			if (choice != 0) {
+				if (s != null)
+					CB.loadGame(s);
+				System.out.println();
+				playGame();
+			}
 		} while (choice != 0);
 	}
 
@@ -75,7 +77,7 @@ public class ChessDriver {
 		boolean gameOver = false;
 		do {
 			if (CB.getCpuGame() && CB.getCpuTurn())
-				AI.cpuMovePiece();
+				AI.cpuMovePiece(CB);
 			else if (CB.getNetGame())
 				netMove();
 			else {

@@ -65,7 +65,7 @@ public class ChessBoard {
 		chessBoard[0][0] = new Rook(IS_WHITE, 0, 0);
 		chessBoard[0][1] = new Horse(IS_WHITE, 0, 1);
 		chessBoard[0][2] = new Bishop(IS_WHITE, 0, 2);
-		chessBoard[0][3] = new King(IS_WHITE, 0, 3);
+		//chessBoard[0][3] = new King(IS_WHITE, 0, 3);
 		chessBoard[0][4] = new Queen(IS_WHITE, 0, 4);
 		chessBoard[0][5] = new Bishop(IS_WHITE, 0, 5);
 		chessBoard[0][6] = new Horse(IS_WHITE, 0, 6);
@@ -78,10 +78,14 @@ public class ChessBoard {
 		chessBoard[7][5] = new Bishop(IS_BLACK, 7, 5);
 		chessBoard[7][6] = new Horse(IS_BLACK, 7, 6);
 		chessBoard[7][7] = new Rook(IS_BLACK, 7, 7);
-		whiteKing = chessBoard[0][3];
+//		whiteKing = chessBoard[0][3];
+//		blackKing = chessBoard[7][3];
+//		currKing = whiteKing;
+
+		chessBoard[5][4] = new King(true, 5, 4);
+		whiteKing = chessBoard[5][4];
 		blackKing = chessBoard[7][3];
 		currKing = whiteKing;
-
 		// TESTS
 //		chessBoard[3][1] = new Pawn(false, 3, 1);
 //		chessBoard[3][0] = new Pawn(false, 3, 0);
@@ -97,7 +101,7 @@ public class ChessBoard {
 
 	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol) {
 		Piece currPiece = chessBoard[fromRow][fromCol];
-		return currPiece.isLegalMove(fromRow, fromCol, toRow, toCol, chessBoard, (whitesTurn ? whiteKing : blackKing));
+		return currPiece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing);
 	}
 
 	public boolean performMove(int fromRow, int fromCol, int toRow, int toCol) {
@@ -112,26 +116,19 @@ public class ChessBoard {
 		chessBoard[toRow][toCol] = currPiece;
 		chessBoard[fromRow][fromCol] = null;
 		if (currPiece instanceof Pawn)
-			if( Math.abs(fromRow - toRow) == 2 )
+			if (Math.abs(fromRow - toRow) == 2)
 				currPiece.setEnPassant(true);
-			else 
+			else
 				currPiece.setEnPassant(false);
 		return (currPiece instanceof Pawn && toRow == (whitesTurn ? 7 : 0));
 	}
 
 	public boolean inCheck() {
-		return currKing.inCheck(currKing, chessBoard);
+		return currKing.inCheck(currKing, pieces, chessBoard);
 	}
 
-	public boolean inCheckMate() {
-		if (!inCheck())
-			return false;
-		for (Piece piece : pieces.get(whitesTurn ? 0 : 1))
-			for (int i = 0; i < 8; i++)
-				for (int j = 0; j < 8; j++)
-					if (currKing.notInCheckmate(piece.getRow(), piece.getCol(), i, j, chessBoard, currKing))
-						return false;
-		return true;
+	public boolean checkmate() {
+		return currKing.checkmate(pieces, chessBoard);
 	}
 
 	public boolean inStaleMate() {
@@ -141,15 +138,14 @@ public class ChessBoard {
 			return true;
 		if (white || black)
 			return eighteenMoveStalemate();
-		return canMove();
+		return canMove(); // if false - stalemate
 	}
 
 	private boolean canMove() {
 		for (Piece piece : pieces.get(whitesTurn ? 0 : 1))
 			for (int toRow = 0; toRow < 8; toRow++)
 				for (int toCol = 0; toCol < 8; toCol++)
-					if (piece.isLegalMove(piece.getRow(), piece.getCol(), toRow, toCol, chessBoard,
-							whitesTurn ? whiteKing : blackKing))
+					if (piece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing))
 						return true;
 		return false;
 	}

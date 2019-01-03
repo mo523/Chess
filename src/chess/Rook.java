@@ -10,16 +10,18 @@ public class Rook extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
-		int yDiff = Math.abs(toRow - fromRow);
-		int xDiff = Math.abs(toCol - fromCol);
+	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB) {
+		int yDiff = Math.abs(toRow - this.getRow());
+		int xDiff = Math.abs(toCol - this.getRow());
 		if (yDiff > 0 && xDiff > 0)
 			return false;
 		return true;
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
+	public boolean noPieceInTheWay(int toRow, int toCol, Piece[][] CB) {
+		int fromRow = this.getRow();
+		int fromCol = this.getCol();
 		int yDiff = toRow - fromRow;
 		int xDiff = toCol - fromCol;
 		if (xDiff == 0) {
