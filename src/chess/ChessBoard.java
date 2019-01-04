@@ -214,9 +214,10 @@ public class ChessBoard implements Serializable {
 
 	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol) {
 		// this null check makes sure you dont call isLegalMove on a null piece, which would result in a NullPointerException
-		if(chessBoard[fromRow][fromCol] == null)
+		Piece currPiece;
+		if((currPiece = chessBoard[fromRow][fromCol]) == null)
 			return false;
-		Piece currPiece = chessBoard[fromRow][fromCol];
+		//Piece currPiece = chessBoard[fromRow][fromCol];
 		return currPiece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing);
 	}
 
