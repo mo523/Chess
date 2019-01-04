@@ -8,6 +8,7 @@ public class ChessBoard implements Serializable {
 	/**
 	 * 
 	 */
+	//there is an error without the uid
 	private static final long serialVersionUID = 382550797992205908L;
 	private Piece[][] chessBoard;
 	private ArrayList<ArrayList<Piece>> pieces;

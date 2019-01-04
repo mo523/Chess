@@ -73,5 +73,6 @@ public class Display {
 			}
 			System.out.println(dash);
 		}
+		System.out.println("\n");
 	}
 }
