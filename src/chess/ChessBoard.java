@@ -23,7 +23,8 @@ public class ChessBoard implements Serializable {
 	private int fr = -1, fc = -1, tr = -1, tc = -1;
 	private Network net;
 	private boolean forceEnd = false;
-
+	private String name;//for saved games
+	
 	// Constructor
 	public ChessBoard(boolean debug, boolean cpuGame, boolean playerTurn, boolean networkGame, boolean useJansi) {
 		this.debug = debug;
@@ -269,7 +270,7 @@ public class ChessBoard implements Serializable {
 			forceEnd = true;
 		}
 	}
-
+/*
 	// Saved game methods
 	public void saveGame() throws FileNotFoundException, ClassNotFoundException, IOException {
 		SaveGameFunctionality.saveGame(chessBoard, debug, whiteKing, blackKing, whitesTurn, cpuGame, playerTurn,
@@ -286,6 +287,17 @@ public class ChessBoard implements Serializable {
 		playerTurn = s.isCpuTurn();
 		countingTurns = s.isStartCountingTurns();
 		staleTurns = s.getTurns();
+	}*/
+
+	//this method may not be necessary
+	/*public String getName() {
+		return name;
+	}*/
+	/**
+	 * This method is used to reference saved games
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

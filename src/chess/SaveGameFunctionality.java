@@ -30,64 +30,53 @@ public class SaveGameFunctionality {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	public static void saveGame(Piece[][] chessBoard, boolean debug,
-			Piece whiteKing, Piece blackKing, boolean whitesTurn,
-			boolean cpuGame, boolean cpuTurn, boolean startCountingTurns,
-			int turns) throws FileNotFoundException, IOException,
-			ClassNotFoundException {
-
-		SavedGame[] savedGames = readFile();
+	public static void saveGame(ChessBoard CB) throws FileNotFoundException, IOException, ClassNotFoundException {
+		ChessBoard[] savedGames = readFile("Saved Games");
 		ObjectOutputStream saver = new ObjectOutputStream(new FileOutputStream("Saved Games"));
 		if (savedGames != null)
-			for (SavedGame s : savedGames)
+			for (ChessBoard s : savedGames)
 				saver.writeObject(s);
 		System.out.println("What name do you want to save the game as?");
-		saver.writeObject(new SavedGame(chessBoard, debug, whiteKing,
-				blackKing, whitesTurn, cpuGame, cpuTurn, startCountingTurns,
-				turns, kyb.next()));
+		CB.setName(kyb.next());
+		saver.writeObject(CB);
 		saver.close();
 	}
 
-	private static SavedGame[] readFile() throws IOException,
-			ClassNotFoundException {
+	private static ChessBoard[] readFile(String fileName) throws IOException, ClassNotFoundException {
 		ObjectInputStream loader = null;
 		boolean found = true;
 		try {
-			loader = new ObjectInputStream(new FileInputStream("Saved Games"));
+			loader = new ObjectInputStream(new FileInputStream(fileName));
 		} catch (FileNotFoundException e) {
 			found = false;
 		}
 
 		if (found) {
-			Collection<SavedGame> list = new LinkedList<SavedGame>();
-			return (SavedGame[]) loopThruFile(list, loader).toArray(
-					new SavedGame[list.size()]);
+			Collection<ChessBoard> collection = loopThruFile(loader);//i define the collection here and not in loopThruFile so i can use collection.size()
+			return (ChessBoard[]) collection.toArray(new ChessBoard[collection.size()]);
 		}
 		return null;
 	}
 
-	private static Collection<SavedGame> loopThruFile(
-			Collection<SavedGame> collection, ObjectInputStream loader)
-			throws ClassNotFoundException, IOException {
+	private static Collection<ChessBoard> loopThruFile(ObjectInputStream loader) throws ClassNotFoundException, IOException {
+		Collection<ChessBoard> collection = new LinkedList<ChessBoard>();
 		while (true) {
 			try {
-				collection.add((SavedGame) loader.readObject());
+				collection.add((ChessBoard) loader.readObject());
 			} catch (EOFException e) {
 				break;
 			}
 		}
+		loader.close();
 		return collection;
 	}
 
-	public static SavedGame loadSavedGame() throws FileNotFoundException,
-			IOException, ClassNotFoundException {
-		List<SavedGame> list = new ArrayList<SavedGame>();
-		loopThruFile(list, new ObjectInputStream(new FileInputStream("Saved Games")));
+	public static ChessBoard loadSavedGame() throws FileNotFoundException, IOException, ClassNotFoundException {
+		List<ChessBoard> list = new ArrayList<ChessBoard>( loopThruFile( new ObjectInputStream(new FileInputStream("Saved Games")) ) );
 		System.out.println("Which game?");
 		for (int i = 0; i < list.size(); i++) {
 			System.out.println((i + 1) + ") " + list.get(i).getName());
 		}
-
 		return list.get(kyb.nextInt() - 1);
 	}
 }

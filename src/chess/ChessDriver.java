@@ -1,6 +1,7 @@
 package chess;
 
 //import java.io.FileNotFoundException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -9,20 +10,20 @@ public class ChessDriver {
 	private static ChessBoard CB;
 	private static String errorMessage;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException, ClassNotFoundException, IOException {
 		System.out.println("Welcome to chess!");
 		initialMenu();
 		kyb.close();
 	}
 
-	public static void initialMenu() {
+	public static void initialMenu() throws FileNotFoundException, ClassNotFoundException, IOException {
 		int choice;
 		boolean debug = false;
 		boolean cpuGame = false;
 		boolean cpuTurn = false;
 		boolean networkGame = false;
 		boolean useJansi = true;
-		SavedGame s = null;
+		//SavedGame s = null;
 		do {
 			System.out.println(
 					"\n\nMain Menu\n\n0. Quit\n1. New Game (Two Player) \n2. New game (One Player)\n3. New networked game"
@@ -63,6 +64,7 @@ public class ChessDriver {
 				// TODO
 				// FIX SAVED GAME
 				// s = SaveGameFunctionality.loadSavedGame();
+				CB = SaveGameFunctionality.loadSavedGame();
 				break;
 			default: // 0, 1, 5
 				break;
@@ -70,8 +72,8 @@ public class ChessDriver {
 			if (CB == null)
 				CB = new ChessBoard(debug, cpuGame, cpuTurn, networkGame, useJansi);
 			if (choice != 0) {
-				if (s != null)
-					CB.loadGame(s);
+				//if (s != null)
+				//	CB.loadGame(s);
 				System.out.println();
 				playGame();
 			}
