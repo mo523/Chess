@@ -50,6 +50,7 @@ public class ChessDriver {
 			case 8:
 				debug = true;
 			case 3:
+				CB = new ChessBoard(false, false, false, true, false);
 				try {
 				networkedGame();
 				networkGame = true;
@@ -69,7 +70,7 @@ public class ChessDriver {
 				break;
 			}
 			CB = new ChessBoard(debug, cpuGame, cpuTurn, networkGame, useJansi);
-			if (choice != 0) {
+			if (choice != 0 && CB == null) {
 				if (s != null)
 					CB.loadGame(s);
 				System.out.println();
