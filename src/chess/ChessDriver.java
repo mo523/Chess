@@ -52,11 +52,9 @@ public class ChessDriver {
 			case 3:
 				CB = new ChessBoard(false, false, false, true, false);
 				try {
-				networkedGame();
-				networkGame = true;
-				}
-				catch (IOException ex)
-				{
+					networkedGame();
+					networkGame = true;
+				} catch (IOException ex) {
 					System.out.println("Error!!\n" + ex);
 					choice = 0;
 				}
@@ -69,8 +67,9 @@ public class ChessDriver {
 			default: // 0, 1, 5
 				break;
 			}
-			CB = new ChessBoard(debug, cpuGame, cpuTurn, networkGame, useJansi);
-			if (choice != 0 && CB == null) {
+			if (CB == null)
+				CB = new ChessBoard(debug, cpuGame, cpuTurn, networkGame, useJansi);
+			if (choice != 0) {
 				if (s != null)
 					CB.loadGame(s);
 				System.out.println();
@@ -174,7 +173,7 @@ public class ChessDriver {
 		}
 		return false;
 	}
-	
+
 	public static void networkedGame() throws IOException {
 		System.out.println("Would you like to:\n1. Host a game\n2. Join a game");
 		int choice;

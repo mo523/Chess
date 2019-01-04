@@ -22,7 +22,8 @@ public class ChessBoard implements Serializable {
 	private int staleTurns = 0;
 	private int fr = -1, fc = -1, tr = -1, tc = -1;
 	private Network net;
-	
+	private boolean forceEnd = false;
+
 	// Constructor
 	public ChessBoard(boolean debug, boolean cpuGame, boolean playerTurn, boolean networkGame, boolean useJansi) {
 		this.debug = debug;
@@ -147,18 +148,19 @@ public class ChessBoard implements Serializable {
 	}
 
 	public boolean gameStatus() {
+		if (forceEnd)
+			return false;
 		if (inCheck())
 			if (checkmate()) {
 				System.out.println("Checkmate, You lost " + (whitesTurn ? "White." : "Black."));
 				return false;
 			} else
 				System.out.println("\nWarning! Your king is in check!\n");
-		if (staleMate())
-		{
+		if (staleMate()) {
 			System.out.println("Game Over. Stalemate");
 			return false;
 		}
-		if(countingTurns)
+		if (countingTurns)
 			System.out.println((18 - staleTurns++) + " turns left before stalemate");
 		return true;
 	}
@@ -251,24 +253,35 @@ public class ChessBoard implements Serializable {
 		this.playerTurn = playerTurn;
 	}
 
-	//Network functionality
-	public void setNet(Network net)
-	{
+	// Network functionality
+	public void setNet(Network net) {
 		this.net = net;
 		playerTurn = net.isServer();
 	}
 
-	public void netMove()
-	{
+	public void netMove() {
 		System.out.println("\nWaiting for other players move");
 		try {
 			int[] data = net.getClientData();
+			int fromRow = data[0];
+			int fromCol = data[1];
+			int toRow = data[2];
+			int toCol = data[3];
+			if (chessBoard[fromRow][fromCol] instanceof Pawn && Math.abs(fromCol - toCol) == Math.abs(fromRow - toRow)
+					&& chessBoard[toRow][toCol] == null) {
+				int direct = toCol == 5 ? -1 : 1;
+				Piece enps = chessBoard[toRow - direct][toCol];
+				chessBoard[toRow][toCol] = enps;
+				chessBoard[enps.getRow()][enps.getCol()] = null;
+				enps.setRowCol(enps.getRow() - direct, enps.getCol());
+			}
 			performMove(data[0], data[1], data[2], data[3]);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (IOException ex) {
+			System.out.println(ex);
+			forceEnd = true;
 		}
 	}
+
 	// Saved game methods
 	public void saveGame() throws FileNotFoundException, ClassNotFoundException, IOException {
 		SaveGameFunctionality.saveGame(chessBoard, debug, whiteKing, blackKing, whitesTurn, cpuGame, playerTurn,
