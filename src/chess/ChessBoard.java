@@ -1,12 +1,14 @@
 package chess;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-@SuppressWarnings("serial")
 public class ChessBoard implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 382550797992205908L;
 	private Piece[][] chessBoard;
 	private ArrayList<ArrayList<Piece>> pieces;
 	private Piece blackKing;
@@ -210,6 +212,9 @@ public class ChessBoard implements Serializable {
 	}
 
 	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol) {
+		// this null check makes sure you dont call isLegalMove on a null piece, which would result in a NullPointerException
+		if(chessBoard[fromRow][fromCol] == null)
+			return false;
 		Piece currPiece = chessBoard[fromRow][fromCol];
 		return currPiece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing);
 	}
@@ -289,10 +294,10 @@ public class ChessBoard implements Serializable {
 		staleTurns = s.getTurns();
 	}*/
 
-	//this method may not be necessary
-	/*public String getName() {
+
+	public String getName() {
 		return name;
-	}*/
+	}
 	/**
 	 * This method is used to reference saved games
 	 */

@@ -16,7 +16,7 @@ public class ChessDriver {
 		kyb.close();
 	}
 
-	public static void initialMenu() throws FileNotFoundException, ClassNotFoundException, IOException {
+	public static void initialMenu() {
 		int choice;
 		boolean debug = false;
 		boolean cpuGame = false;
@@ -64,7 +64,11 @@ public class ChessDriver {
 				// TODO
 				// FIX SAVED GAME
 				// s = SaveGameFunctionality.loadSavedGame();
-				CB = SaveGameFunctionality.loadSavedGame();
+				try {
+					CB = SaveGameFunctionality.loadSavedGame();
+				} catch (ClassNotFoundException | IOException e) {
+					e.printStackTrace();
+				}
 				break;
 			default: // 0, 1, 5
 				break;
@@ -163,6 +167,11 @@ public class ChessDriver {
 		case 1:
 			// TODO implement save game
 			// CB.saveGame();
+			try {
+				SaveGameFunctionality.saveGame(CB);
+			} catch (ClassNotFoundException | IOException e) {
+				e.printStackTrace();
+			}
 			break;
 		case 2:
 			CB.reverseDebug();

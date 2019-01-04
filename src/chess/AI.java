@@ -18,7 +18,7 @@ public class AI
 				toCol = (int) (Math.random() * ((7 - 0) + 1));
 				toRow = (int) (Math.random() * ((7 - 0) + 1));
 			} while ((toCol == fromCol && toRow == fromRow));
-			canPieceMoveThereBasedOnAllItsRules = CB.canMoveThere(fromRow, fromRow, toRow, toCol);
+			canPieceMoveThereBasedOnAllItsRules = CB.canMoveThere(fromRow, fromCol, toRow, toCol);
 
 		} while (!canPieceMoveThereBasedOnAllItsRules);
 //		if (ChessDriver.startCountingTurns)
