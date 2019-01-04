@@ -10,47 +10,29 @@ public class Rook extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
-		int yDiff = Math.abs(toRow - fromRow);
-		int xDiff = Math.abs(toCol - fromCol);
+	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB) {
+		int yDiff = Math.abs(toRow - this.getRow());
+		int xDiff = Math.abs(toCol - this.getCol());
 		if (yDiff > 0 && xDiff > 0)
 			return false;
 		return true;
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
-		int yDiff = toRow - fromRow;
-		int xDiff = toCol - fromCol;
-		if (xDiff == 0) {
-			if (yDiff > 0) {
-				for (int i = fromRow + 1; yDiff != 1; i++) {
-					yDiff--;
-					if (CB[i][fromCol] != null)
-						return false;
-				}
-			} else {
-				for (int i = fromRow - 1; yDiff != -1; i--) {
-					yDiff++;
-					if (CB[i][fromCol] != null)
-						return false;
-				}
-			}
-		} else {
-			if (xDiff > 0) {
-				for (int i = fromCol + 1; xDiff != 1; i++) {
-					xDiff--;
-					if (CB[fromRow][i] != null)
-						return false;
-				}
-			} else {
-				for (int i = fromCol - 1; xDiff != -1; i--) {
-					xDiff++;
-					if (CB[fromRow][i] != null)
-						return false;
-				}
-			}
+	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
+		int fromRow = this.getRow();
+		int fromCol = this.getCol();
+		int rowDiff = toRow - fromRow;
+		int colDiff = toCol - fromCol;
+		int colDirection = colDiff == 0 ? 0 : colDiff > 0 ? 1 : -1;
+		int rowDirection = rowDiff == 0 ? 0 : rowDiff > 0 ? 1 : -1;
+		int distance = Math.abs(rowDiff + colDiff) - 1;
+		while (distance != 0)
+		{
+			if (CB[fromRow + distance * rowDirection][fromCol + distance * colDirection] != null )
+				return true;
+			distance--;
 		}
-		return true;
+		return false;
 	}
 }

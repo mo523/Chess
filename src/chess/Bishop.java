@@ -10,40 +10,30 @@ public class Bishop extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
-		int yDiff = Math.abs(toRow - fromRow);
-		int xDiff = Math.abs(toCol - fromCol);
-		if (yDiff == xDiff)
+	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB) {
+		// Check if the absolute move distance
+		if (Math.abs(this.getRow() - toRow) == Math.abs(this.getCol() - toCol))
 			return true;
 		return false;
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
-		int XMoveDistance = (fromCol - toCol);
-		int YMoveDistance = (fromRow - toRow);
-		boolean done = false;
-		do {
-			if (CB[fromRow - YMoveDistance][fromCol - XMoveDistance] != null
-					&& !(fromRow - YMoveDistance == toRow && fromCol - XMoveDistance == toCol))
-				return false;
-			else {
-				if (XMoveDistance > 0)
-					XMoveDistance--;
-
-				if (XMoveDistance < 0)
-					XMoveDistance++;
-
-				if (YMoveDistance > 0)
-					YMoveDistance--;
-
-				if (YMoveDistance < 0)
-					YMoveDistance++;
-			}
-			if (XMoveDistance == 0)
-				done = true;
-		} while (!done);
-		return true;
+	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
+		// Get the total distance the piece would like to go
+		int fromCol = this.getCol();
+		int fromRow = this.getRow();
+		int distance = Math.abs(fromCol - toCol) - 1;
+		// Get the direction the piece would like to go
+		// for row up is positive and down is negative
+		// for column right is positive and left is negative
+		int rowDirection = toRow - fromRow > 0 ? 1 : -1;
+		int colDirection = toCol - fromCol > 0 ? 1 : -1;
+		while (distance != 0) {
+			if (CB[fromRow + distance * rowDirection][fromCol + distance * colDirection] != null)
+				return true;
+			distance--;
+		}
+		return false;
 	}
 
 }

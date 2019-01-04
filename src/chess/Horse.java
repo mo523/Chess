@@ -10,17 +10,17 @@ public class Horse extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
-		Queen queen = new Queen(isWhite(), -1, -1);
-		if (!queen.canPieceMoveLikeThat(fromRow, fromCol, toRow, toCol, CB) && Math.abs(fromCol - toCol) < 3
-				&& Math.abs(fromRow - toRow) < 3)
+	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB) {
+		Queen queen = new Queen(isWhite(), this.getRow(), this.getCol());
+		if (!queen.canPieceMoveLikeThat(toRow, toCol, CB) && Math.abs(this.getCol() - toCol) < 3
+				&& Math.abs(this.getRow() - toRow) < 3)
 			return true;
 		else
 			return false;
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
-		return true; // because horses jump
+	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
+		return false; // because horses jump
 	}
 }

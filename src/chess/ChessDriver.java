@@ -4,26 +4,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
-import org.fusesource.jansi.AnsiConsole;
-
 public class ChessDriver {
 	private static Scanner kyb = new Scanner(System.in);
 
 	private static ChessBoard CB;
 	private static String errorMessage;
-	private static boolean useJansi = !System.getProperty("user.name").equalsIgnoreCase("moshe");
 	private static Network net;
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
-
-		if (useJansi)
-			AnsiConsole.systemInstall(); // MUST BE ON TOP - PARSES ALL THE UNICODE
-		Display.clear();
 		System.out.println("Welcome to chess!");
 		initialMenu();
 		kyb.close();
-		if (useJansi)
-			AnsiConsole.systemUninstall();
 	}
 
 	public static void initialMenu() throws FileNotFoundException, ClassNotFoundException, IOException {
@@ -32,14 +23,20 @@ public class ChessDriver {
 		boolean cpuGame = false;
 		boolean cpuTurn = false;
 		boolean networkGame = false;
+		boolean useJansi = true;
 		SavedGame s = null;
 		do {
 			System.out.println(
-					"\n\nMain Menu\n\n0. Quit\n1. New Game (Two Player) \n2. New game (One Player)\n3. New networked game\n4. Open saved game\n5. Continue Game\n\n6. 1 with debug\n7. 2 with debug\n8. 3 with debug");
+					"\n\nMain Menu\n\n0. Quit\n1. New Game (Two Player) \n2. New game (One Player)\n3. New networked game"
+							+ "\n4. Open saved game\n5. Continue Game\n\n6. 1 with debug\n7. 2 with debug\n8. 3 with debug"
+							+ "\n9. Zero Players\n-1. no jansi");
 			do {
 				choice = kyb.nextInt();
-			} while (choice < 0 || choice > 8);
+			} while (choice < -1 || choice > 9);
 			switch (choice) {
+			case -1:
+				useJansi = false;
+				break;
 			case 0:
 				break;
 			case 6:
@@ -63,38 +60,27 @@ public class ChessDriver {
 			default: // 0, 1, 5
 				break;
 			}
-			CB = new ChessBoard(debug, cpuGame, cpuTurn, networkGame);
-			if (s != null)
-				CB.loadGame(s);
-			System.out.println();
-			playGame();
+			CB = new ChessBoard(debug, cpuGame, cpuTurn, networkGame, useJansi);
+			if (choice != 0) {
+				if (s != null)
+					CB.loadGame(s);
+				System.out.println();
+				playGame();
+			}
 		} while (choice != 0);
 	}
 
 	public static void playGame() throws FileNotFoundException, IOException, ClassNotFoundException {
-		boolean gameOver = false;
+		CB.displayChoice();
 		do {
 			if (CB.getCpuGame() && CB.getCpuTurn())
-				AI.cpuMovePiece();
+				AI.cpuMovePiece(CB);
 			else if (CB.getNetGame())
 				netMove();
-			else {
-				CB.displayChoice();
-				if (movePiece())
-					break;
-			}
-			gameOver = CB.moved();
-		} while (!gameOver);
-		if (gameOver)
-			endGame();
-	}
-
-	public static void endGame() {
-		CB.displayChoice();
-		if (CB.getEnd())
-			System.out.println("Sorry " + (CB.getWhite() ? "White" : "Black") + ". Checkmate, you lose.");
-		else
-			System.out.println("Stalemate.");
+			else if (movePiece())
+				break;
+			CB.displayChoice();
+		} while (CB.gameStatus());
 	}
 
 	public static boolean movePiece() throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -114,7 +100,7 @@ public class ChessDriver {
 				move = getPosition();
 				if (move.equals("m"))
 					return true;
-				fromCol = 104 - move.charAt(0);
+				fromCol = move.charAt(0) - 97;
 				fromRow = move.charAt(1) - 49;
 				legalMoveInput = CB.isValidPieceThere(fromRow, fromCol);
 			} while (!legalMoveInput);
@@ -123,7 +109,7 @@ public class ChessDriver {
 				move = getPosition();
 				if (move.equals("m"))
 					return true;
-				toCol = 104 - move.charAt(0);
+				toCol = move.charAt(0) - 97;
 				toRow = move.charAt(1) - 49;
 				if (toCol == fromCol && toRow == fromRow)
 					System.out.println("\nCan't move to same place, try again.");

@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.ArrayList;
+
 @SuppressWarnings("serial")
 public class King extends Piece {
 
@@ -10,18 +12,35 @@ public class King extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
-		if (Math.abs(fromCol - toCol) > 1 || Math.abs(fromRow - toRow) > 1)
+	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB) {
+		if (Math.abs(this.getCol() - toCol) > 1 || Math.abs(this.getRow() - toRow) > 1)
 			return false;
 		return true;
 	}
 
 	@Override
-	public boolean noPieceInTheWay(int fromRow, int fromCol, int toRow, int toCol, Piece[][] CB) {
-		if (CB[toRow][toCol] == null)
-			return true;
-		else if (CB[toRow][toCol].isWhite() != this.isWhite())
-			return true;
+	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
+		Piece piece = CB[toRow][toCol];
+		if (piece == null || piece.isWhite() != this.isWhite())
+			return false;
+		return true;
+	}
+
+	// CheckMate methods overriding Piece
+	public boolean checkmate(ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard) {
+		for (Piece piece : pieces.get(this.isWhite() ? 0 : 1))
+			for (int i = 0; i < 8; i++)
+				for (int j = 0; j < 8; j++)
+					if (piece.isLegalMove(i, j, pieces, chessBoard, this))
+						return false;
+		return true;
+	}
+
+	public boolean inCheck(ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard) {
+		for (Piece piece : pieces.get(this.isWhite() ? 1 : 0))
+			if (piece.isLegalCheck(this.getRow(), this.getCol(), pieces, chessBoard, this))
+				return true;
 		return false;
 	}
+
 }
