@@ -23,4 +23,9 @@ public class Horse extends Piece {
 	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
 		return false; // because horses jump
 	}
+
+	@Override
+	public int getAIValue() {
+		return 350;
+	}
 }

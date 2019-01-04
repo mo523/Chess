@@ -1,11 +1,16 @@
 package chess;
- 
+
+import java.util.HashMap;
+
 public class AI
 {
 	public static void cpuMovePiece(ChessBoard CB) {
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
 		boolean legalMoveInput = true;
 		int fromRow, fromCol, toRow, toCol;
+		
+		
+		
 		do {
 
 			do {
@@ -26,7 +31,7 @@ public class AI
 		CB.performMove(fromRow, fromCol, toRow, toCol);
 	}
 	
-	public int pawnMove() {
-		return 0;
-	}
+
+	
+	
 }

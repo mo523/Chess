@@ -36,4 +36,9 @@ public class Bishop extends Piece {
 		return false;
 	}
 
+	@Override
+	public int getAIValue() {
+		return 400;
+	}
+
 }

@@ -35,4 +35,9 @@ public class Rook extends Piece {
 		}
 		return false;
 	}
+
+	@Override
+	public int getAIValue() {
+		return 550;
+	}
 }

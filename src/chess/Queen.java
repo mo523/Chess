@@ -29,4 +29,9 @@ public class Queen extends Piece {
 		else
 			return rook.pieceInTheWay(toRow, toCol, CB);
 	}
+
+	@Override
+	public int getAIValue() {
+		return 1000;
+	}
 }

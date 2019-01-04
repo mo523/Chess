@@ -4,7 +4,6 @@ package chess;
 public class Pawn extends Piece {
 	private int verticalMove;
 	private boolean enPassantAble = false;
-
 	public Pawn(boolean white, int row, int col) {
 		super(white, row, col,
 				new String[] { "            ", "      \u2584\u2584    ", "     \u2580\u2588\u2588\u2580   ",
@@ -77,5 +76,10 @@ public class Pawn extends Piece {
 
 	public void setEnPassant(boolean enp) {
 		enPassantAble = enp;
+	}
+
+	@Override
+	public int getAIValue() {
+		return 100;
 	}
 }

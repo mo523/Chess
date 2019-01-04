@@ -125,5 +125,8 @@ public abstract class Piece implements Serializable {
 
 	public void setEnPassant(boolean enp) {
 	}
+	
+	//Methods needed for slightly smarter AI to be overwritten by each piece
+	public abstract int getAIValue();
 
 }

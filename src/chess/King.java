@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class King extends Piece {
-
 	public King(boolean white, int row, int col) {
 		super(white, row, col, new String[] { "      \u2584\u2584    ", "     \u2580\u2588\u2588\u2580   ",
 				"    \u25A0\u2588\u2588\u2588\u2588\u25A0  ", "     \u2590\u2588\u2588\u258C   ",
@@ -41,6 +40,10 @@ public class King extends Piece {
 			if (piece.isLegalCheck(this.getRow(), this.getCol(), pieces, chessBoard, this))
 				return true;
 		return false;
+	}
+	
+	public int getAIValue() {
+		return 10000;
 	}
 
 }
