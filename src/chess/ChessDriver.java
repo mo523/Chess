@@ -1,23 +1,21 @@
 package chess;
 
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
 public class ChessDriver {
 	private static Scanner kyb = new Scanner(System.in);
-
 	private static ChessBoard CB;
 	private static String errorMessage;
-	private static Network net;
 
-	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
+	public static void main(String[] args) {
 		System.out.println("Welcome to chess!");
 		initialMenu();
 		kyb.close();
 	}
 
-	public static void initialMenu() throws FileNotFoundException, ClassNotFoundException, IOException {
+	public static void initialMenu() {
 		int choice;
 		boolean debug = false;
 		boolean cpuGame = false;
@@ -52,10 +50,20 @@ public class ChessDriver {
 			case 8:
 				debug = true;
 			case 3:
+				try {
+				networkedGame();
 				networkGame = true;
+				}
+				catch (IOException ex)
+				{
+					System.out.println("Error!!\n" + ex);
+					choice = 0;
+				}
 				break;
 			case 4:
-				s = SaveGameFunctionality.loadSavedGame();
+				// TODO
+				// FIX SAVED GAME
+				// s = SaveGameFunctionality.loadSavedGame();
 				break;
 			default: // 0, 1, 5
 				break;
@@ -70,20 +78,20 @@ public class ChessDriver {
 		} while (choice != 0);
 	}
 
-	public static void playGame() throws FileNotFoundException, IOException, ClassNotFoundException {
+	public static void playGame() {
 		CB.displayChoice();
 		do {
-			if (CB.getCpuGame() && CB.getCpuTurn())
+			if (CB.getCpuGame() && !CB.getTurn())
 				AI.cpuMovePiece(CB);
-			else if (CB.getNetGame())
-				netMove();
+			else if (CB.getNetGame() && !CB.getTurn())
+				CB.netMove();
 			else if (movePiece())
 				break;
 			CB.displayChoice();
 		} while (CB.gameStatus());
 	}
 
-	public static boolean movePiece() throws FileNotFoundException, IOException, ClassNotFoundException {
+	public static boolean movePiece() {
 		String name = CB.getWhite() ? "White" : "Black";
 		boolean canMoveThere = true;
 		String move;
@@ -124,7 +132,7 @@ public class ChessDriver {
 		return false;
 	}
 
-	public static String getPosition() throws FileNotFoundException, IOException, ClassNotFoundException {
+	public static String getPosition() {
 		String pos;
 		boolean badInput = false;
 		do {
@@ -143,7 +151,7 @@ public class ChessDriver {
 		return pos;
 	}
 
-	public static boolean menu() throws FileNotFoundException, ClassNotFoundException, IOException {
+	public static boolean menu() {
 		System.out.println(
 				"\n\nMenu\n0. Main menu\n1. Save game\n2. Change debug mode\n3. Change gameplay mode\n4. Continue game");
 		int choice = kyb.nextInt();
@@ -151,7 +159,8 @@ public class ChessDriver {
 		case 0:
 			return true;
 		case 1:
-			CB.saveGame();
+			// TODO implement save game
+			// CB.saveGame();
 			break;
 		case 2:
 			CB.reverseDebug();
@@ -164,46 +173,25 @@ public class ChessDriver {
 		}
 		return false;
 	}
-
-	public static void networkedGame() throws IOException, ClassNotFoundException {
+	
+	public static void networkedGame() throws IOException {
 		System.out.println("Would you like to:\n1. Host a game\n2. Join a game");
 		int choice;
 		do {
 			choice = kyb.nextInt();
+			if (choice != 1 && choice != 2)
+				System.out.println("Bad choice. 1 or 2");
 		} while (choice != 1 && choice != 2);
 		if (choice == 1) {
-			System.out.println("What would you like to call your game?");
+			CB.setNet(new Network());
+		} else {
+			System.out.println("IP Address?\tType '0' to play on same computer");
 			kyb.nextLine();
-			net = new Network(kyb.nextLine());
-		} else {
-			net = new Network("");
-			System.out.println(net.getGames());
-			net.join(kyb.nextInt());
+			String ip = kyb.nextLine();
+			if (ip.equals("0"))
+				ip = "127.0.0.1";
+			CB.setNet(new Network(ip));
 		}
-		CB.setLocal(net.isHost());
-		try {
-			playGame();
-		} catch (IOException ex) {
-			System.out.println(ex.getMessage());
-		} finally {
-			CB.endNet();
-			net.close();
-		}
-	}
-
-	public static boolean netMove() throws IOException, ClassNotFoundException {
-		if (CB.getLocal()) {
-			CB.displayChoice();
-			if (movePiece())
-				return true;
-			// net.sendServerData(fr, fc, tr, tc);
-		} else {
-			CB.displayChoice();
-			System.out.println("\nWaiting for other players move");
-			int[] data = net.getClientData();
-			CB.performMove(data[1], data[0], data[3], data[2]);
-		}
-		return false;
 	}
 
 	public static void promote(int row, int col) {
