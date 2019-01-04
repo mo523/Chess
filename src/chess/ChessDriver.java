@@ -50,7 +50,7 @@ public class ChessDriver {
 			case 8:
 				debug = true;
 			case 3:
-				CB = new ChessBoard(false, false, false, true, false);
+				CB = new ChessBoard(false, false, false, true, !System.getProperty("user.name").equalsIgnoreCase("moshe"));
 				try {
 					networkedGame();
 					networkGame = true;
@@ -190,6 +190,8 @@ public class ChessDriver {
 			String ip = kyb.nextLine();
 			if (ip.equals("0"))
 				ip = "127.0.0.1";
+			if (ip.equals("1"))
+				ip = "192.168.1.100";
 			CB.setNet(new Network(ip));
 		}
 	}

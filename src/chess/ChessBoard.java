@@ -87,7 +87,7 @@ public class ChessBoard implements Serializable {
 		whiteKing = chessBoard[0][4];
 		blackKing = chessBoard[7][4];
 		currKing = whiteKing;
-
+//		chessBoard[3][1] = new Pawn(false, 3, 1);
 //		chessBoard[2][4] = new Pawn(true, 2, 4);
 //		chessBoard[5][0] = new Pawn(false,5,0);
 		// Easy Checkmate test
@@ -263,18 +263,6 @@ public class ChessBoard implements Serializable {
 		System.out.println("\nWaiting for other players move");
 		try {
 			int[] data = net.getClientData();
-			int fromRow = data[0];
-			int fromCol = data[1];
-			int toRow = data[2];
-			int toCol = data[3];
-			if (chessBoard[fromRow][fromCol] instanceof Pawn && Math.abs(fromCol - toCol) == Math.abs(fromRow - toRow)
-					&& chessBoard[toRow][toCol] == null) {
-				int direct = toCol == 5 ? -1 : 1;
-				Piece enps = chessBoard[toRow - direct][toCol];
-				chessBoard[toRow][toCol] = enps;
-				chessBoard[enps.getRow()][enps.getCol()] = null;
-				enps.setRowCol(enps.getRow() - direct, enps.getCol());
-			}
 			performMove(data[0], data[1], data[2], data[3]);
 		} catch (IOException ex) {
 			System.out.println(ex);
