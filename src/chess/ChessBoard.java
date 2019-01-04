@@ -14,20 +14,21 @@ public class ChessBoard implements Serializable {
 	private boolean whitesTurn = true;
 	private boolean debug;
 	private boolean cpuGame;
-	private boolean cpuTurn;
 	private boolean networkGame;
-	private boolean localTurn;
-	boolean useJansi;
+	private boolean playerTurn;
+	private boolean useJansi;
 	private Piece currKing;
 	private boolean countingTurns = false;
-	private int staleTurns = 14;
+	private int staleTurns = 0;
 	private int fr = -1, fc = -1, tr = -1, tc = -1;
+	private Network net;
+	private boolean forceEnd = false;
 
 	// Constructor
-	public ChessBoard(boolean debug, boolean cpuGame, boolean cpuTurn, boolean networkGame, boolean useJansi) {
+	public ChessBoard(boolean debug, boolean cpuGame, boolean playerTurn, boolean networkGame, boolean useJansi) {
 		this.debug = debug;
 		this.cpuGame = cpuGame;
-		this.cpuTurn = cpuTurn;
+		this.playerTurn = playerTurn;
 		this.networkGame = networkGame;
 		this.useJansi = useJansi;
 		setUpBoard();
@@ -86,7 +87,7 @@ public class ChessBoard implements Serializable {
 		whiteKing = chessBoard[0][4];
 		blackKing = chessBoard[7][4];
 		currKing = whiteKing;
-
+//		chessBoard[3][1] = new Pawn(false, 3, 1);
 //		chessBoard[2][4] = new Pawn(true, 2, 4);
 //		chessBoard[5][0] = new Pawn(false,5,0);
 		// Easy Checkmate test
@@ -119,9 +120,15 @@ public class ChessBoard implements Serializable {
 				currPiece.setEnPassant(true);
 			else
 				currPiece.setEnPassant(false);
-		localTurn = !localTurn;
+		if (networkGame && playerTurn)
+			try {
+				net.sendServerData(fromRow, fromCol, toRow, toCol);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		playerTurn = !playerTurn;
 		whitesTurn = !whitesTurn;
-		cpuTurn = !cpuTurn;
 		currKing = whitesTurn ? whiteKing : blackKing;
 		return (currPiece instanceof Pawn && toRow == (whitesTurn ? 0 : 7));
 	}
@@ -141,18 +148,19 @@ public class ChessBoard implements Serializable {
 	}
 
 	public boolean gameStatus() {
+		if (forceEnd)
+			return false;
 		if (inCheck())
 			if (checkmate()) {
 				System.out.println("Checkmate, You lost " + (whitesTurn ? "White." : "Black."));
 				return false;
 			} else
 				System.out.println("\nWarning! Your king is in check!\n");
-		if (staleMate())
-		{
+		if (staleMate()) {
 			System.out.println("Game Over. Stalemate");
 			return false;
 		}
-		if(countingTurns)
+		if (countingTurns)
 			System.out.println((18 - staleTurns++) + " turns left before stalemate");
 		return true;
 	}
@@ -173,16 +181,16 @@ public class ChessBoard implements Serializable {
 			return true;
 		if (white || black)
 			return eighteenMoveStalemate();
-		return canMove(); // if false - stalemate
+		return cannotMove(); // if false - stalemate
 	}
 
-	private boolean canMove() {
+	private boolean cannotMove() {
 		for (Piece piece : pieces.get(whitesTurn ? 0 : 1))
 			for (int toRow = 0; toRow < 8; toRow++)
 				for (int toCol = 0; toCol < 8; toCol++)
 					if (piece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing))
-						return true;
-		return false;
+						return false;
+		return true;
 	}
 
 	private boolean oneKing(boolean white) {
@@ -210,16 +218,12 @@ public class ChessBoard implements Serializable {
 		return cpuGame;
 	}
 
-	public boolean getCpuTurn() {
-		return cpuTurn;
-	}
-
 	public boolean getNetGame() {
 		return networkGame;
 	}
 
-	public boolean getLocal() {
-		return localTurn;
+	public boolean getTurn() {
+		return playerTurn;
 	}
 
 	public boolean getWhite() {
@@ -245,13 +249,30 @@ public class ChessBoard implements Serializable {
 		cpuGame = !cpuGame;
 	}
 
-	public void setLocal(boolean localTurn) {
-		this.localTurn = localTurn;
+	public void setTurn(boolean playerTurn) {
+		this.playerTurn = playerTurn;
+	}
+
+	// Network functionality
+	public void setNet(Network net) {
+		this.net = net;
+		playerTurn = net.isServer();
+	}
+
+	public void netMove() {
+		System.out.println("\nWaiting for other players move");
+		try {
+			int[] data = net.getClientData();
+			performMove(data[0], data[1], data[2], data[3]);
+		} catch (IOException ex) {
+			System.out.println(ex);
+			forceEnd = true;
+		}
 	}
 
 	// Saved game methods
 	public void saveGame() throws FileNotFoundException, ClassNotFoundException, IOException {
-		SaveGameFunctionality.saveGame(chessBoard, debug, whiteKing, blackKing, whitesTurn, cpuGame, cpuTurn,
+		SaveGameFunctionality.saveGame(chessBoard, debug, whiteKing, blackKing, whitesTurn, cpuGame, playerTurn,
 				countingTurns, staleTurns);
 	}
 
@@ -262,7 +283,7 @@ public class ChessBoard implements Serializable {
 		whitesTurn = s.isWhitesTurn();
 		chessBoard = s.getChessBoard();
 		cpuGame = s.isCpuGame();
-		cpuTurn = s.isCpuTurn();
+		playerTurn = s.isCpuTurn();
 		countingTurns = s.isStartCountingTurns();
 		staleTurns = s.getTurns();
 	}

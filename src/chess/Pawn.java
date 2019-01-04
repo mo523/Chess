@@ -47,7 +47,7 @@ public class Pawn extends Piece {
 			if (enps.enPassantAble()) {
 				CB[toRow][toCol] = enps;
 				CB[enps.getRow()][enps.getCol()] = null;
-				enps.setRowCol(enps.getRow() - verticalMove, enps.getCol());
+				enps.setRowCol(enps.getRow() + verticalMove, enps.getCol());
 				return true;
 			}
 		}
