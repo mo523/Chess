@@ -23,7 +23,7 @@ public class AI
 		} while (!canPieceMoveThereBasedOnAllItsRules);
 //		if (ChessDriver.startCountingTurns)
 //			System.out.println("Turns til stalemate : " + (17 - CB.turns++));
-		CB.performMove(fromRow, fromRow, toRow, toCol);
+		CB.performMove(fromRow, fromCol, toRow, toCol);
 	}
 	
 	public int pawnMove() {

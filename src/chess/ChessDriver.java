@@ -20,7 +20,7 @@ public class ChessDriver {
 		int choice;
 		boolean debug = false;
 		boolean cpuGame = false;
-		boolean cpuTurn = false;
+		boolean playerTurn = false;
 		boolean networkGame = false;
 		boolean useJansi = true;
 		//SavedGame s = null;
@@ -44,8 +44,8 @@ public class ChessDriver {
 			case 7:
 				debug = true;
 			case 2:
-				System.out.println("(B)lack or (W)hite?");
-				cpuTurn = kyb.next().toUpperCase().equals("B") ? true : false;
+				System.out.println("(W)hite or (B)lack?");
+				playerTurn = kyb.next().toUpperCase().equals("W") ? true : false;
 				cpuGame = true;
 				break;
 			case 8:
@@ -74,7 +74,7 @@ public class ChessDriver {
 				break;
 			}
 			if (CB == null)
-				CB = new ChessBoard(debug, cpuGame, cpuTurn, networkGame, useJansi);
+				CB = new ChessBoard(debug, cpuGame, playerTurn, networkGame, useJansi);
 			if (choice != 0) {
 				//if (s != null)
 				//	CB.loadGame(s);
