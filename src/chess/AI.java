@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 
-
 public class AI {
 	private static ChessBoard CB;
 
@@ -52,12 +51,13 @@ public class AI {
 		} while ((toCol == fromCol && toRow == fromRow));
 		canPieceMoveThereBasedOnAllItsRules = CB.canMoveThere(fromRow, fromCol, toRow, toCol);
 
-	while(!canPieceMoveThereBasedOnAllItsRules);
+		while (!canPieceMoveThereBasedOnAllItsRules)
+			;
 //	if (ChessDriver.startCountingTurns)
 //		System.out.println("Turns til stalemate : " + (17 - CB.turns++));
-	CB.performMove(fromRow,fromCol,toRow,toCol);
+		CB.performMove(fromRow, fromCol, toRow, toCol);
 
-}
+	}
 
 	public int countPieces(ChessBoard cb) {
 		ArrayList<ArrayList<Piece>> Pieces = cb.getPieces();
@@ -72,20 +72,113 @@ public class AI {
 
 		return value;
 	}
-	
+
 	public ArrayList<Integer> potentialMoves(Piece piece) {
 		ArrayList<Integer> moves = new ArrayList<Integer>();
-		
-		if(piece  instanceof Pawn) {
-			moves.add(piece.getRow()+(piece.getCol()+1)*10);
-			
-			if(piece.getRow()<7)
-			moves.add(piece.getRow()+1+(piece.getCol()+1)*10);
-			
-			if(piece.getRow()>0)
-			moves.add(piece.getRow()-1+(piece.getCol()+1)*10);
+
+		if (piece instanceof Pawn) {
+			moves.add(piece.getRow() + (piece.getCol() + 1) * 10);
+
+			if (piece.getRow() < 7)
+				moves.add(piece.getRow() + 1 + (piece.getCol() + 1) * 10);
+
+			if (piece.getRow() > 0)
+				moves.add(piece.getRow() - 1 + (piece.getCol() + 1) * 10);
 		}
-		
+
+		if (piece instanceof Horse) {
+
+			if (piece.getRow() < 6 && piece.getCol() < 7)
+				moves.add(piece.getRow() + 2 + (piece.getCol() + 1) * 10);
+
+			if (piece.getRow() < 7 && piece.getCol() < 6)
+				moves.add(piece.getRow() + 1 + (piece.getCol() + 2) * 10);
+
+			if (piece.getRow() < 6 && piece.getCol() > 0)
+				moves.add(piece.getRow() + 2 + (piece.getCol() - 1) * 10);
+
+			if (piece.getRow() < 7 && piece.getCol() > 1)
+				moves.add(piece.getRow() + 1 + (piece.getCol() - 2) * 10);
+
+			if (piece.getRow() > 0 && piece.getCol() > 1)
+				moves.add(piece.getRow() - 1 + (piece.getCol() - 2) * 10);
+
+			if (piece.getRow() > 1 && piece.getCol() > 0)
+				moves.add(piece.getRow() - 2 + (piece.getCol() - 1) * 10);
+
+			if (piece.getRow() > 0 && piece.getCol() < 7)
+				moves.add(piece.getRow() - 2 + (piece.getCol() + 1) * 10);
+
+			if (piece.getRow() > 1 && piece.getCol() < 6)
+				moves.add(piece.getRow() - 1 + (piece.getCol() + 2) * 10);
+
+		}
+
+		if (piece instanceof Rook) {
+
+			for (int i = piece.getRow(); i < 8; i++) {
+				moves.add(i + piece.getCol() * 10);
+				if (CB.isValidPieceThere(i, piece.getCol()))
+					break;
+			}
+			for (int i = piece.getRow(); i >= 0; i--) {
+				moves.add(i + piece.getCol() * 10);
+				if (CB.isValidPieceThere(i, piece.getCol()))
+					break;
+			}
+
+			for (int i = piece.getCol(); i < 8; i++) {
+				moves.add(piece.getRow() + i * 10);
+				if (CB.isValidPieceThere(piece.getRow(), i))
+					break;
+			}
+
+			for (int i = piece.getCol(); i >= 0; i--) {
+				moves.add(piece.getRow() + i * 10);
+				if (CB.isValidPieceThere(piece.getRow(), i))
+					break;
+			}
+
+		}
+
+		if (piece instanceof Bishop) {
+			for (int i = 0; i < 8; i++) {
+				if (piece.getRow() + i > 7 || piece.getRow() + i > 7)
+					break;
+
+				moves.add(piece.getRow() + i + (piece.getCol() + i) * 10);
+				if (CB.isValidPieceThere(piece.getRow() + i, piece.getCol() + i))
+					break;
+			}
+
+			for (int i = 0; i < 8; i++) {
+				if (piece.getRow() + i > 7 || piece.getRow() - i < 0)
+					break;
+
+				moves.add(piece.getRow() + i + (piece.getCol() - i) * 10);
+				if (CB.isValidPieceThere(piece.getRow() + i, piece.getCol() - i))
+					break;
+			}
+
+			for (int i = 0; i < 8; i++) {
+				if (piece.getRow() - i < 0 || piece.getRow() + i > 7)
+					break;
+
+				moves.add(piece.getRow() - i + (piece.getCol() + i) * 10);
+				if (CB.isValidPieceThere(piece.getRow() - i, piece.getCol() + i))
+					break;
+			}
+
+			for (int i = 0; i < 8; i++) {
+				if (piece.getRow() - i < 0 || piece.getRow() + -i < 0)
+					break;
+
+				moves.add(piece.getRow() - i + (piece.getCol() - i) * 10);
+				if (CB.isValidPieceThere(piece.getRow() - i, piece.getCol() - i))
+					break;
+			}
+		}
+
 		return moves;
 	}
 
