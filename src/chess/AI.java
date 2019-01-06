@@ -36,9 +36,28 @@ public class AI {
 	}
 
 	public void slightlySmarterAi() {
+		ChessBoard potentialCB = CB;
+		ChessBoard temporaryCB=CB;
 		boolean canPieceMoveThereBasedOnAllItsRules = true;
 		boolean legalMoveInput = true;
 		int fromRow, fromCol, toRow, toCol;
+		
+		int blackOrWhite = (CB.getWhite() && CB.getTurn() ? 0 : 1);
+		for (Piece p : CB.getPieces().get(blackOrWhite))
+		{
+			for(int m : potentialMoves(p))
+			{
+				temporaryCB=CB;
+				if(temporaryCB.canMoveThere(p.getRow(), p.getCol(), m-(m/10), m/10))
+					temporaryCB.performMove(p.getRow(), p.getCol(), m-(m/10), m/10);
+				
+				if(countPieces(temporaryCB)>countPieces(potentialCB))
+					potentialCB=temporaryCB;
+				
+					
+			}
+		}
+			
 		do {
 			fromCol = (int) (Math.random() * ((7 - 0) + 1));
 			fromRow = (int) (Math.random() * ((7 - 0) + 1));
