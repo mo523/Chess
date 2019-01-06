@@ -179,6 +179,67 @@ public class AI {
 			}
 		}
 
+		if (piece instanceof Queen) {
+
+			for (int i = piece.getRow(); i < 8; i++) {
+				moves.add(i + piece.getCol() * 10);
+				if (CB.isValidPieceThere(i, piece.getCol()))
+					break;
+			}
+			for (int i = piece.getRow(); i >= 0; i--) {
+				moves.add(i + piece.getCol() * 10);
+				if (CB.isValidPieceThere(i, piece.getCol()))
+					break;
+			}
+
+			for (int i = piece.getCol(); i < 8; i++) {
+				moves.add(piece.getRow() + i * 10);
+				if (CB.isValidPieceThere(piece.getRow(), i))
+					break;
+			}
+
+			for (int i = piece.getCol(); i >= 0; i--) {
+				moves.add(piece.getRow() + i * 10);
+				if (CB.isValidPieceThere(piece.getRow(), i))
+					break;
+			}
+			for (int i = 0; i < 8; i++) {
+				if (piece.getRow() + i > 7 || piece.getRow() + i > 7)
+					break;
+
+				moves.add(piece.getRow() + i + (piece.getCol() + i) * 10);
+				if (CB.isValidPieceThere(piece.getRow() + i, piece.getCol() + i))
+					break;
+			}
+
+			for (int i = 0; i < 8; i++) {
+				if (piece.getRow() + i > 7 || piece.getRow() - i < 0)
+					break;
+
+				moves.add(piece.getRow() + i + (piece.getCol() - i) * 10);
+				if (CB.isValidPieceThere(piece.getRow() + i, piece.getCol() - i))
+					break;
+			}
+
+			for (int i = 0; i < 8; i++) {
+				if (piece.getRow() - i < 0 || piece.getRow() + i > 7)
+					break;
+
+				moves.add(piece.getRow() - i + (piece.getCol() + i) * 10);
+				if (CB.isValidPieceThere(piece.getRow() - i, piece.getCol() + i))
+					break;
+			}
+
+			for (int i = 0; i < 8; i++) {
+				if (piece.getRow() - i < 0 || piece.getRow() + -i < 0)
+					break;
+
+				moves.add(piece.getRow() - i + (piece.getCol() - i) * 10);
+				if (CB.isValidPieceThere(piece.getRow() - i, piece.getCol() - i))
+					break;
+			}
+		}
+
 		return moves;
 	}
 
