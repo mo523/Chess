@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AI
@@ -30,8 +31,19 @@ public class AI
 //			System.out.println("Turns til stalemate : " + (17 - CB.turns++));
 		CB.performMove(fromRow, fromCol, toRow, toCol);
 	}
-	
+	public int countPieces(ChessBoard cb) {
+	ArrayList<ArrayList<Piece>> Pieces= cb.getPieces();
+	int value= 0;
 
+	int blackOrWhite=(cb.getWhite()&&cb.getTurn()?0:1);
+	for(Piece p : Pieces.get(blackOrWhite))
+		value+=p.getAIValue();
+	
+	for(Piece p : Pieces.get(Math.abs(blackOrWhite-1)))
+		value-=p.getAIValue();
+	
+	return value;
+	}
 	
 	
 }

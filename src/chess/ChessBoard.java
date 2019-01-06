@@ -306,5 +306,9 @@ public class ChessBoard implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public ArrayList<ArrayList<Piece>> getPieces(){
+		return pieces;
+	}
 
 }
