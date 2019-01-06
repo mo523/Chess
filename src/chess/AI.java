@@ -240,6 +240,38 @@ public class AI {
 			}
 		}
 
+		if (piece instanceof King) {
+
+			if (piece.getRow() < 7) {
+				moves.add(piece.getRow() + 1 + piece.getCol() * 10);
+
+				if (piece.getCol() < 7)
+					moves.add(piece.getRow() + 1 + (piece.getCol() + 1 * 10));
+
+				if (piece.getCol() > 0)
+					moves.add(piece.getRow() + 1 + (piece.getCol() - 1 * 10));
+
+			}
+
+			if (piece.getRow() > 0) {
+				moves.add(piece.getRow() - 1 + piece.getCol() * 10);
+
+				if (piece.getCol() < 7)
+					moves.add(piece.getRow() - 1 + (piece.getCol() + 1 * 10));
+
+				if (piece.getCol() > 0)
+					moves.add(piece.getRow() - 1 + (piece.getCol() - 1 * 10));
+
+			}
+
+			if (piece.getCol() < 7)
+				moves.add(piece.getRow() + (piece.getCol() + 1 * 10));
+
+			if (piece.getCol() > 0)
+				moves.add(piece.getRow() + (piece.getCol() - 1 * 10));
+
+		}
+
 		return moves;
 	}
 
