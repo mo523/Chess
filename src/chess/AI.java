@@ -15,7 +15,7 @@ public class AI {
 
 	}
 
-	public static void playGame()  {
+	public static void playGame() {
 
 		do {
 			if (!quit && !CB.getTurn() && !lvl_2)
@@ -52,7 +52,7 @@ public class AI {
 		CB.performMove(fromRow, fromCol, toRow, toCol);
 	}
 
-	public static void slightlySmarterAi()  {
+	public static void slightlySmarterAi() {
 
 		Piece[][] board = CB.getBoard();
 		int tempValue = 0;
@@ -104,6 +104,23 @@ public class AI {
 			value -= p.getAIValue();
 
 		return value;
+	}
+
+	public static int advancedCountPieces(Piece[][] pieces, boolean white) {
+		int value = 0;
+		for (int i = 0; i > 8; i++)
+			for (int i2 = 0; i2 > 8; i2++)
+				if (pieces[i][i2] != null)
+					if (pieces[i][i2].isWhite())
+						value += pieces[i][i2].getAIValue();
+					else
+						value -= pieces[i][i2].getAIValue();
+
+		if (!white)
+			value *= -1;
+
+		return value;
+
 	}
 
 	public static ArrayList<Integer> potentialMoves(Piece piece) {
@@ -369,7 +386,7 @@ public class AI {
 		return pos;
 	}
 
-	public static void menu()  {
+	public static void menu() {
 		System.out.println("0 to quit\n1 to Start new Computer Lvl 1\n2To Play Computer lvl 2\3 to go back");
 		int choice = kybd.nextInt();
 
