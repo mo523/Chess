@@ -339,4 +339,9 @@ public class ChessBoard implements Serializable {
 		this.name = name;
 	}
 
+
+	public Piece[][] getBoard() {
+		return chessBoard;
+	}
+
 }

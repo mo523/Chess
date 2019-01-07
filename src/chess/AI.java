@@ -9,13 +9,13 @@ public class AI {
 	private static boolean quit = false;
 	private static boolean lvl_2 = false;
 
-	public static void cpuMovePiece(ChessBoard cb) throws CloneNotSupportedException {
+	public static void cpuMovePiece(ChessBoard cb) {
 		CB = cb;
 		menu();
 
 	}
 
-	public static void playGame() throws CloneNotSupportedException {
+	public static void playGame()  {
 
 		do {
 			if (!quit && !CB.getTurn() && !lvl_2)
@@ -52,7 +52,7 @@ public class AI {
 		CB.performMove(fromRow, fromCol, toRow, toCol);
 	}
 
-	public static void slightlySmarterAi() throws CloneNotSupportedException {
+	public static void slightlySmarterAi()  {
 
 		Piece[][] board = CB.getBoard();
 		int tempValue = 0;
@@ -369,7 +369,7 @@ public class AI {
 		return pos;
 	}
 
-	public static void menu() throws CloneNotSupportedException {
+	public static void menu()  {
 		System.out.println("0 to quit\n1 to Start new Computer Lvl 1\n2To Play Computer lvl 2\3 to go back");
 		int choice = kybd.nextInt();
 
