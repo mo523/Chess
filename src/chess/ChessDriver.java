@@ -68,6 +68,7 @@ public class ChessDriver {
 				break;
 			}
 
+			
 			if (choice != 0) {
 				if (choice != 6 && choice != 7)
 					CB = new ChessBoard(debug, cpuGame, playerTurn, networkGame, useJansi, randomGame);
@@ -82,8 +83,7 @@ public class ChessDriver {
 		if (CB.getCpuGame()) {
 			AI.cpuMovePiece(CB);
 
-		}
-		else {
+		} else {
 			CB.displayChoice();
 
 			do {

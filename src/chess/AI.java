@@ -64,8 +64,6 @@ public class AI {
 		int tempMoveToCol = 0;
 		int tempMoveFromRow = 0;
 
-		
-
 		int blackOrWhite = (CB.getWhite() && !CB.getTurn() ? 0 : 1);
 		for (Piece p : setUpArray(board).get(blackOrWhite)) {
 			for (int m : potentialMoves(p)) {
@@ -86,7 +84,7 @@ public class AI {
 
 						depthBoard = boardCopy(board);
 					} else {
-						
+
 						depthBoard[m % 10][m / 10] = depthBoard[p.getRow()][p.getCol()];
 						depthBoard[p.getRow()][p.getCol()] = null;
 
@@ -116,13 +114,11 @@ public class AI {
 
 	public static int recursiveMoveCheck(Piece[][] pieces, boolean white, int limit) {
 
-		
-
 		if (limit == 0)
 			return 0;
 
 		Piece[][] board = boardCopy(pieces);
-		Piece[][] tempBoard=boardCopy(board);
+		Piece[][] tempBoard = boardCopy(board);
 		int tempValue = 0;
 
 		int tempMoveToRow = 0;
@@ -133,29 +129,29 @@ public class AI {
 		int blackOrWhite = (white ? 0 : 1);
 		for (Piece p : setUpArray(board).get(blackOrWhite)) {
 			for (int m : potentialMoves(p)) {
-				
-				if(board[p.getRow()][p.getCol()]!=null)
-				if (CB.canMoveThere(p.getRow(), p.getCol(), m % 10, m / 10, board)) {
 
-					if (board[m % 10][m / 10] != null) {
-						if (tempValue < board[m % 10][m / 10].getAIValue()) {
-							tempValue = board[m % 10][m / 10].getAIValue()+(-recursiveMoveCheck(tempBoard, !white, limit-1));
-						
+				if (board[p.getRow()][p.getCol()] != null)
+					if (CB.canMoveThere(p.getRow(), p.getCol(), m % 10, m / 10, board)) {
+
+						if (board[m % 10][m / 10] != null) {
+							if (tempValue < board[m % 10][m / 10].getAIValue()) {
+								tempValue = board[m % 10][m / 10].getAIValue()
+										+ (-recursiveMoveCheck(tempBoard, !white, limit - 1));
+
+							}
+						} else {
+							tempBoard[m % 10][m / 10] = tempBoard[p.getRow()][p.getCol()];
+							tempBoard[p.getRow()][p.getCol()] = null;
+
+							if (tempValue < (-recursiveMoveCheck(tempBoard, !white, limit - 1))) {
+								tempValue = -recursiveMoveCheck(tempBoard, !CB.getWhite(), limit - 1);
+							}
+
+							tempBoard = boardCopy(board);
+
 						}
+
 					}
-					else {
-						tempBoard[m % 10][m / 10] = tempBoard[p.getRow()][p.getCol()];
-						tempBoard[p.getRow()][p.getCol()] = null;
-
-						if (tempValue < (-recursiveMoveCheck(tempBoard, !white, limit-1))) {
-						tempValue=-recursiveMoveCheck(tempBoard, !CB.getWhite(), limit-1);
-						}
-
-						tempBoard = boardCopy(board);
-						
-					}
-
-				}
 
 			}
 
