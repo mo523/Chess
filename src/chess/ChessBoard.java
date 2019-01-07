@@ -3,12 +3,13 @@ package chess;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ChessBoard implements Serializable {
 	/**
 	 * 
 	 */
-	//there is an error without the uid
+	// there is an error without the uid
 	private static final long serialVersionUID = 382550797992205908L;
 	private Piece[][] chessBoard;
 	private ArrayList<ArrayList<Piece>> pieces;
@@ -26,16 +27,21 @@ public class ChessBoard implements Serializable {
 	private int fr = -1, fc = -1, tr = -1, tc = -1;
 	private Network net;
 	private boolean forceEnd = false;
-	private String name;//for saved games
-	
+	private String name;// for saved games
+
 	// Constructor
-	public ChessBoard(boolean debug, boolean cpuGame, boolean playerTurn, boolean networkGame, boolean useJansi) {
+	public ChessBoard(boolean debug, boolean cpuGame, boolean playerTurn, boolean networkGame, boolean useJansi,
+			boolean random) {
 		this.debug = debug;
 		this.cpuGame = cpuGame;
 		this.playerTurn = playerTurn;
 		this.networkGame = networkGame;
 		this.useJansi = useJansi;
-		setUpBoard();
+		chessBoard = new Piece[8][8];
+		if (random)
+			setUpRandomBoard();
+		else
+			setUpBoard();
 		setUpArray();
 	}
 
@@ -54,7 +60,6 @@ public class ChessBoard implements Serializable {
 	private void setUpBoard() {
 		final boolean IS_WHITE = true;
 		final boolean IS_BLACK = false;
-		chessBoard = new Piece[8][8];
 
 		chessBoard[1][0] = new Pawn(IS_WHITE, 1, 0);
 		chessBoard[1][1] = new Pawn(IS_WHITE, 1, 1);
@@ -105,6 +110,63 @@ public class ChessBoard implements Serializable {
 //		chessBoard[6][0] = null;
 //		chessBoard[6][6] = null;
 //		chessBoard[5][6] = new Pawn(true, 5, 6);
+	}
+
+	private void setUpRandomBoard() {
+		Random ran = new Random();
+		int row = ran.nextInt(2);
+		int col = ran.nextInt(8);
+		chessBoard[row][col] = new King(true, row, col);
+		chessBoard[7 - row][col] = new King(false, 7 - row, col);
+		whiteKing = chessBoard[row][col];
+		blackKing = chessBoard[7 - row][col];
+		currKing = whiteKing;
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 8; j++)
+				if (chessBoard[i][j] == null) {
+					Piece piece;
+					int num = ran.nextInt(10);
+					switch (num) {
+					case 1:
+					case 7:
+						piece = new Bishop(true, i, j);
+						break;
+					case 2:
+					case 8:
+						piece = new Rook(true, i, j);
+						break;
+					case 3:
+					case 6:
+						piece = new Horse(true, i, j);
+						break;
+					case 5:
+						piece = new Queen(true, i, j);
+						break;
+					default:
+						piece = new Pawn(true, i, j);
+						break;
+					}
+					chessBoard[i][j] = piece;
+				}
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 8; j++) {
+				int r = 7 - i;
+				Piece blackPiece;
+				Piece whitePiece = chessBoard[i][j];
+				if (whitePiece instanceof Pawn)
+					blackPiece = new Pawn(false, r, j);
+				else if (whitePiece instanceof Horse)
+					blackPiece = new Horse(false, r, j);
+				else if (whitePiece instanceof Rook)
+					blackPiece = new Rook(false, r, j);
+				else if (whitePiece instanceof Bishop)
+					blackPiece = new Bishop(false, r, j);
+				else if (whitePiece instanceof Queen)
+					blackPiece = new Queen(false, r, j);
+				else
+					continue;
+				chessBoard[r][j] = blackPiece;
+			}
 	}
 
 	// Public methods that effect the board
@@ -213,11 +275,12 @@ public class ChessBoard implements Serializable {
 	}
 
 	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol) {
-		// this null check makes sure you dont call isLegalMove on a null piece, which would result in a NullPointerException
+		// this null check makes sure you dont call isLegalMove on a null piece, which
+		// would result in a NullPointerException
 		Piece currPiece;
-		if((currPiece = chessBoard[fromRow][fromCol]) == null)
+		if ((currPiece = chessBoard[fromRow][fromCol]) == null)
 			return false;
-		//Piece currPiece = chessBoard[fromRow][fromCol];
+		// Piece currPiece = chessBoard[fromRow][fromCol];
 		return currPiece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing);
 	}
 
@@ -277,37 +340,31 @@ public class ChessBoard implements Serializable {
 			forceEnd = true;
 		}
 	}
-/*
-	// Saved game methods
-	public void saveGame() throws FileNotFoundException, ClassNotFoundException, IOException {
-		SaveGameFunctionality.saveGame(chessBoard, debug, whiteKing, blackKing, whitesTurn, cpuGame, playerTurn,
-				countingTurns, staleTurns);
-	}
-
-	public void loadGame(SavedGame s) {
-		debug = s.isDebug();
-		whiteKing = s.getWhiteKing();
-		blackKing = s.getBlackKing();
-		whitesTurn = s.isWhitesTurn();
-		chessBoard = s.getChessBoard();
-		cpuGame = s.isCpuGame();
-		playerTurn = s.isCpuTurn();
-		countingTurns = s.isStartCountingTurns();
-		staleTurns = s.getTurns();
-	}*/
-
+	/*
+	 * // Saved game methods public void saveGame() throws FileNotFoundException,
+	 * ClassNotFoundException, IOException {
+	 * SaveGameFunctionality.saveGame(chessBoard, debug, whiteKing, blackKing,
+	 * whitesTurn, cpuGame, playerTurn, countingTurns, staleTurns); }
+	 * 
+	 * public void loadGame(SavedGame s) { debug = s.isDebug(); whiteKing =
+	 * s.getWhiteKing(); blackKing = s.getBlackKing(); whitesTurn =
+	 * s.isWhitesTurn(); chessBoard = s.getChessBoard(); cpuGame = s.isCpuGame();
+	 * playerTurn = s.isCpuTurn(); countingTurns = s.isStartCountingTurns();
+	 * staleTurns = s.getTurns(); }
+	 */
 
 	public String getName() {
 		return name;
 	}
+
 	/**
 	 * This method is used to reference saved games
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public ArrayList<ArrayList<Piece>> getPieces(){
+
+	public ArrayList<ArrayList<Piece>> getPieces() {
 		return pieces;
 	}
 

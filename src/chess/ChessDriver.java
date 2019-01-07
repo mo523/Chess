@@ -23,6 +23,7 @@ public class ChessDriver {
 		boolean playerTurn = false;
 		boolean networkGame = false;
 		boolean useJansi = true;
+		boolean randomGame = false;
 		//SavedGame s = null;
 		do {
 			System.out.println(
@@ -51,7 +52,7 @@ public class ChessDriver {
 			case 8:
 				debug = true;
 			case 3:
-				CB = new ChessBoard(false, false, false, true, !System.getProperty("user.name").equalsIgnoreCase("moshe"));
+				CB = new ChessBoard(false, false, false, true, !System.getProperty("user.name").equalsIgnoreCase("moshe"), false);
 				try {
 					networkedGame();
 					networkGame = true;
@@ -74,7 +75,7 @@ public class ChessDriver {
 				break;
 			}
 			if (CB == null)
-				CB = new ChessBoard(debug, cpuGame, playerTurn, networkGame, useJansi);
+				CB = new ChessBoard(debug, cpuGame, playerTurn, networkGame, useJansi, randomGame);
 			if (choice != 0) {
 				//if (s != null)
 				//	CB.loadGame(s);
