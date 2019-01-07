@@ -11,6 +11,7 @@ public class AI {
 
 	public static void cpuMovePiece(ChessBoard cb) {
 		CB = cb;
+
 		menu();
 
 	}
@@ -21,7 +22,7 @@ public class AI {
 			if (!quit && !CB.getTurn() && !lvl_2)
 				dumbAi();
 			else if (!quit && !CB.getTurn() && lvl_2)
-				slightlySmarterAi();
+				evanSmarterAi(5);
 			else if (movePiece())
 				break;
 			CB.displayChoice();
@@ -50,6 +51,136 @@ public class AI {
 //		if (ChessDriver.startCountingTurns)
 //			System.out.println("Turns til stalemate : " + (17 - CB.turns++));
 		CB.performMove(fromRow, fromCol, toRow, toCol);
+	}
+
+	public static void evanSmarterAi(int depth) {
+
+		Piece[][] board = CB.getBoard();
+		int tempValue = 0;
+		Piece[][] depthBoard = boardCopy(board);
+
+		int tempMoveToRow = 0;
+		int tempMoveFromCol = 0;
+		int tempMoveToCol = 0;
+		int tempMoveFromRow = 0;
+
+		
+
+		int blackOrWhite = (CB.getWhite() && !CB.getTurn() ? 0 : 1);
+		for (Piece p : setUpArray(board).get(blackOrWhite)) {
+			for (int m : potentialMoves(p)) {
+
+				if (CB.canMoveThere(p.getRow(), p.getCol(), m % 10, m / 10)) {
+
+					if (board[m % 10][m / 10] != null) {
+						depthBoard[m % 10][m / 10] = depthBoard[p.getRow()][p.getCol()];
+						depthBoard[p.getRow()][p.getCol()] = null;
+						if (tempValue < (board[m % 10][m / 10].getAIValue()
+								- recursiveMoveCheck(depthBoard, !CB.getWhite(), depth))) {
+							tempValue = board[m % 10][m / 10].getAIValue();
+							tempMoveToRow = m % 10;
+							tempMoveToCol = m / 10;
+							tempMoveFromRow = p.getRow();
+							tempMoveFromCol = p.getCol();
+						}
+
+						depthBoard = boardCopy(board);
+					} else {
+						
+						depthBoard[m % 10][m / 10] = depthBoard[p.getRow()][p.getCol()];
+						depthBoard[p.getRow()][p.getCol()] = null;
+
+						if (tempValue < (-recursiveMoveCheck(depthBoard, !CB.getWhite(), depth))) {
+							tempValue = (-recursiveMoveCheck(depthBoard, !CB.getWhite(), depth));
+							tempMoveToRow = m % 10;
+							tempMoveToCol = m / 10;
+							tempMoveFromRow = p.getRow();
+							tempMoveFromCol = p.getCol();
+						}
+
+						depthBoard = boardCopy(board);
+					}
+
+				}
+
+			}
+
+		}
+
+		if (tempValue > 0) {
+			CB.performMove(tempMoveFromRow, tempMoveFromCol, tempMoveToRow, tempMoveToCol);
+		} else
+			dumbAi();
+
+	}
+
+	public static int recursiveMoveCheck(Piece[][] pieces, boolean white, int limit) {
+
+		
+
+		if (limit == 0)
+			return 0;
+
+		Piece[][] board = boardCopy(pieces);
+		Piece[][] tempBoard=boardCopy(board);
+		int tempValue = 0;
+
+		int tempMoveToRow = 0;
+		int tempMoveFromCol = 0;
+		int tempMoveToCol = 0;
+		int tempMoveFromRow = 0;
+
+		int blackOrWhite = (white ? 0 : 1);
+		for (Piece p : setUpArray(board).get(blackOrWhite)) {
+			for (int m : potentialMoves(p)) {
+				
+				if(board[p.getRow()][p.getCol()]!=null)
+				if (CB.canMoveThere(p.getRow(), p.getCol(), m % 10, m / 10, board)) {
+
+					if (board[m % 10][m / 10] != null) {
+						if (tempValue < board[m % 10][m / 10].getAIValue()) {
+							tempValue = board[m % 10][m / 10].getAIValue()+(-recursiveMoveCheck(tempBoard, !white, limit-1));
+						
+						}
+					}
+					else {
+						tempBoard[m % 10][m / 10] = tempBoard[p.getRow()][p.getCol()];
+						tempBoard[p.getRow()][p.getCol()] = null;
+
+						if (tempValue < (-recursiveMoveCheck(tempBoard, !white, limit-1))) {
+						tempValue=-recursiveMoveCheck(tempBoard, !CB.getWhite(), limit-1);
+						}
+
+						tempBoard = boardCopy(board);
+						
+					}
+
+				}
+
+			}
+
+		}
+
+		if (tempValue > 0) {
+			board[tempMoveToRow][tempMoveToCol] = board[tempMoveFromRow][tempMoveFromCol];
+			board[tempMoveFromRow][tempMoveFromCol] = null;
+		}
+
+		return tempValue - recursiveMoveCheck(board, !white, limit - 1);
+
+	}
+
+	private static ArrayList<ArrayList<Piece>> setUpArray(Piece[][] chessBoard) {
+		ArrayList<ArrayList<Piece>> pieces;
+		pieces = new ArrayList<>();
+		pieces.add(new ArrayList<Piece>());
+		pieces.add(new ArrayList<Piece>());
+		for (Piece[] pa : chessBoard)
+			for (Piece currPiece : pa)
+				if (currPiece != null)
+					pieces.get(currPiece.isWhite() ? 0 : 1).add(currPiece);
+
+		return pieces;
 	}
 
 	public static void slightlySmarterAi() {
@@ -108,19 +239,40 @@ public class AI {
 
 	public static int advancedCountPieces(Piece[][] pieces, boolean white) {
 		int value = 0;
-		for (int i = 0; i > 8; i++)
-			for (int i2 = 0; i2 > 8; i2++)
+		for (int i = 0; i < 8; i++)
+			for (int i2 = 0; i2 < 8; i2++) {
+
 				if (pieces[i][i2] != null)
-					if (pieces[i][i2].isWhite())
+
+				{
+
+					if (pieces[i][i2].isWhite()) {
+
 						value += pieces[i][i2].getAIValue();
-					else
+						System.out.println(value);
+					} else {
+						System.out.println(value);
+
 						value -= pieces[i][i2].getAIValue();
+					}
+				}
+			}
 
 		if (!white)
 			value *= -1;
 
 		return value;
 
+	}
+
+	public static Piece[][] boardCopy(Piece[][] pieces) {
+		Piece[][] newPieces = new Piece[8][8];
+		for (int i = 0; i < 8; i++)
+			for (int i2 = 0; i2 < 8; i2++)
+				if (pieces[i][i2] != null)
+					newPieces[i][i2] = pieces[i][i2];
+
+		return newPieces;
 	}
 
 	public static ArrayList<Integer> potentialMoves(Piece piece) {

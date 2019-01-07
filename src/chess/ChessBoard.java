@@ -343,5 +343,10 @@ public class ChessBoard implements Serializable {
 	public Piece[][] getBoard() {
 		return chessBoard;
 	}
+	
+	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol, Piece[][] board) {
+		Piece currPiece = board[fromRow][fromCol];
+		return currPiece.isLegalMove(toRow, toCol, pieces, board, currKing);
+	}
 
 }

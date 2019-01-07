@@ -78,18 +78,22 @@ public class ChessDriver {
 		} while (choice != 0);
 	}
 
-	public static void playGame()  {
-		if (CB.getCpuGame())
+	public static void playGame() {
+		if (CB.getCpuGame()) {
 			AI.cpuMovePiece(CB);
 
-		CB.displayChoice();
-		do {
-			if (CB.getNetGame() && !CB.getTurn())
-				CB.netMove();
-			else if (movePiece())
-				break;
+		}
+		else {
 			CB.displayChoice();
-		} while (CB.gameStatus());
+
+			do {
+				if (CB.getNetGame() && !CB.getTurn())
+					CB.netMove();
+				else if (movePiece())
+					break;
+				CB.displayChoice();
+			} while (CB.gameStatus());
+		}
 	}
 
 	public static boolean movePiece() {
