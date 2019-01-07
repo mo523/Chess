@@ -68,7 +68,6 @@ public class ChessDriver {
 				break;
 			}
 
-			
 			if (choice != 0) {
 				if (choice != 6 && choice != 7)
 					CB = new ChessBoard(debug, cpuGame, playerTurn, networkGame, useJansi, randomGame);

@@ -13,6 +13,7 @@ public class AI {
 		CB = cb;
 
 		menu();
+		
 
 	}
 
