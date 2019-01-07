@@ -18,68 +18,61 @@ public class ChessDriver {
 
 	public static void initialMenu() {
 		int choice;
-		boolean debug = false;
-		boolean cpuGame = false;
-		boolean playerTurn = false;
-		boolean networkGame = false;
-		boolean useJansi = true;
-		boolean randomGame = false;
-		//SavedGame s = null;
 		do {
+			boolean debug = false;
+			boolean cpuGame = false;
+			boolean playerTurn = false;
+			boolean networkGame = false;
+			boolean useJansi = !System.getProperty("user.name").equalsIgnoreCase("moshe");
+			boolean randomGame = false;
+			Network net = null;
 			System.out.println(
-					"\n\nMain Menu\n\n0. Quit\n1. New Game (Two Player) \n2. New game (One Player)\n3. New networked game"
-							+ "\n4. Open saved game\n5. Continue Game\n\n6. 1 with debug\n7. 2 with debug\n8. 3 with debug"
-							+ "\n9. Zero Players\n-1. no jansi");
+					"\n\nMain Menu\n\n0. Quit\n1. New Game (Two Player Local) \n2. New game (One Player vs. Cpu)\n3. New networked game"
+							+ "\n4. 1 with random board\n5. 2 with random board\n6. Open saved game\n7. Continue Game");
+			// + "\n\n-1..-5. 1..5 with debug");
 			do {
 				choice = kyb.nextInt();
-			} while (choice < -1 || choice > 9);
+			} while (choice < -5 || choice > 7);
+			if (choice < 0) {
+				debug = true;
+				choice *= -1;
+			}
+			if (choice == 4 || choice == 5) {
+				randomGame = true;
+				choice -= 3;
+			}
 			switch (choice) {
-			case -1:
-				useJansi = false;
-				break;
-			case 0:
-				break;
-			case 6:
-				debug = true;
-				break;
-			case 7:
-				debug = true;
 			case 2:
 				System.out.println("(W)hite or (B)lack?");
 				playerTurn = kyb.next().toUpperCase().equals("W") ? true : false;
 				cpuGame = true;
 				break;
-			case 8:
-				debug = true;
 			case 3:
-				CB = new ChessBoard(false, false, false, true, !System.getProperty("user.name").equalsIgnoreCase("moshe"), false);
 				try {
-					networkedGame();
-					networkGame = true;
+					net = networkedGame();
 				} catch (IOException ex) {
-					System.out.println("Error!!\n" + ex);
-					choice = 0;
+					ex.printStackTrace();
+					System.out.println("Error. Network connection failed");
+					continue;
 				}
+				networkGame = true;
 				break;
-			case 4:
-				// TODO
-				// FIX SAVED GAME
-				// s = SaveGameFunctionality.loadSavedGame();
+			case 6:
 				try {
 					CB = SaveGameFunctionality.loadSavedGame();
 				} catch (ClassNotFoundException | IOException e) {
 					e.printStackTrace();
 				}
 				break;
-			default: // 0, 1, 5
+			default: // 0, 1, 7
 				break;
 			}
-			if (CB == null)
-				CB = new ChessBoard(debug, cpuGame, playerTurn, networkGame, useJansi, randomGame);
+
 			if (choice != 0) {
-				//if (s != null)
-				//	CB.loadGame(s);
-				System.out.println();
+				if (choice != 6 && choice != 7)
+					CB = new ChessBoard(debug, cpuGame, playerTurn, networkGame, useJansi, randomGame);
+				if (networkGame)
+					CB.setNet(net);
 				playGame();
 			}
 		} while (choice != 0);
@@ -166,14 +159,12 @@ public class ChessDriver {
 		case 0:
 			return true;
 		case 1:
-			// TODO implement save game
-			// CB.saveGame();
 			try {
 				SaveGameFunctionality.saveGame(CB);
 			} catch (ClassNotFoundException | IOException e) {
 				e.printStackTrace();
 			}
-			break;
+			return true;
 		case 2:
 			CB.reverseDebug();
 			break;
@@ -186,7 +177,7 @@ public class ChessDriver {
 		return false;
 	}
 
-	public static void networkedGame() throws IOException {
+	public static Network networkedGame() throws IOException {
 		System.out.println("Would you like to:\n1. Host a game\n2. Join a game");
 		int choice;
 		do {
@@ -195,7 +186,7 @@ public class ChessDriver {
 				System.out.println("Bad choice. 1 or 2");
 		} while (choice != 1 && choice != 2);
 		if (choice == 1) {
-			CB.setNet(new Network());
+			return new Network();
 		} else {
 			System.out.println("IP Address?\tType '0' to play on same computer");
 			kyb.nextLine();
@@ -204,7 +195,7 @@ public class ChessDriver {
 				ip = "127.0.0.1";
 			if (ip.equals("1"))
 				ip = "192.168.1.100";
-			CB.setNet(new Network(ip));
+			return new Network(ip);
 		}
 	}
 
@@ -224,5 +215,4 @@ public class ChessDriver {
 	public static void setErrorMessage(String errorMessage) {
 		ChessDriver.errorMessage = errorMessage;
 	}
-
 }

@@ -96,20 +96,6 @@ public class ChessBoard implements Serializable {
 		whiteKing = chessBoard[0][4];
 		blackKing = chessBoard[7][4];
 		currKing = whiteKing;
-//		chessBoard[3][1] = new Pawn(false, 3, 1);
-//		chessBoard[2][4] = new Pawn(true, 2, 4);
-//		chessBoard[5][0] = new Pawn(false,5,0);
-		// Easy Checkmate test
-//		chessBoard[5][4] = new King(true, 5, 4);
-//		whiteKing = chessBoard[5][4];
-//		blackKing = chessBoard[7][3];
-//		currKing = whiteKing;
-		// TESTS
-//		chessBoard[3][1] = new Pawn(false, 3, 1);
-//		chessBoard[3][0] = new Pawn(false, 3, 0);
-//		chessBoard[6][0] = null;
-//		chessBoard[6][6] = null;
-//		chessBoard[5][6] = new Pawn(true, 5, 6);
 	}
 
 	private void setUpRandomBoard() {
@@ -190,8 +176,12 @@ public class ChessBoard implements Serializable {
 			try {
 				net.sendServerData(fromRow, fromCol, toRow, toCol);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try {
+					net.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		playerTurn = !playerTurn;
 		whitesTurn = !whitesTurn;
@@ -275,12 +265,7 @@ public class ChessBoard implements Serializable {
 	}
 
 	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol) {
-		// this null check makes sure you dont call isLegalMove on a null piece, which
-		// would result in a NullPointerException
-		Piece currPiece;
-		if ((currPiece = chessBoard[fromRow][fromCol]) == null)
-			return false;
-		// Piece currPiece = chessBoard[fromRow][fromCol];
+		Piece currPiece = chessBoard[fromRow][fromCol];
 		return currPiece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing);
 	}
 
@@ -305,6 +290,10 @@ public class ChessBoard implements Serializable {
 		String move = chessBoard[row][col].toString();
 		move = move.substring(6, move.length() - 9);
 		return move;
+	}
+
+	public ArrayList<ArrayList<Piece>> getPieces() {
+		return pieces;
 	}
 
 	// public setters
@@ -340,32 +329,14 @@ public class ChessBoard implements Serializable {
 			forceEnd = true;
 		}
 	}
-	/*
-	 * // Saved game methods public void saveGame() throws FileNotFoundException,
-	 * ClassNotFoundException, IOException {
-	 * SaveGameFunctionality.saveGame(chessBoard, debug, whiteKing, blackKing,
-	 * whitesTurn, cpuGame, playerTurn, countingTurns, staleTurns); }
-	 * 
-	 * public void loadGame(SavedGame s) { debug = s.isDebug(); whiteKing =
-	 * s.getWhiteKing(); blackKing = s.getBlackKing(); whitesTurn =
-	 * s.isWhitesTurn(); chessBoard = s.getChessBoard(); cpuGame = s.isCpuGame();
-	 * playerTurn = s.isCpuTurn(); countingTurns = s.isStartCountingTurns();
-	 * staleTurns = s.getTurns(); }
-	 */
 
+	// This method is used to reference saved games
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * This method is used to reference saved games
-	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public ArrayList<ArrayList<Piece>> getPieces() {
-		return pieces;
 	}
 
 }
