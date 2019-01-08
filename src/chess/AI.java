@@ -507,7 +507,7 @@ public class AI {
 		do {
 			if (!canMoveThere)
 				System.out.println("Can't Move There");
-			System.out.println("\n" + name + ", Which piece would you like to move?\nType 'm' for menu");
+			System.out.println("\n" + name + ", Which piece would you like to move?");
 			do {
 				if (!legalMoveInput)
 					System.out.println("\nYou do not have a piece there, try again.");
@@ -555,13 +555,13 @@ public class AI {
 	}
 
 	public static void menu() {
-		System.out.println("0 to quit\n1 Play Dumb Computer \n2 Play Easy Computer \n3 Play Moderate Computer"
-				+ "\n4 Play Hard Computer  \n5 To go back \n WARNING!! the harder the computer the "
+		System.out.println("\n1 Play Dumb Computer \n2 Play Easy Computer \n3 Play Moderate Computer"
+				+ "\n4 Pla Hard Computer  \n5 To go back \n WARNING!! the harder the computer the "
 				+ "longer it will take for the computer");
 		int choice = kybd.nextInt();
 
 		switch (choice) {
-		case 0:
+	case 0:
 			quit = true;
 			break;
 
