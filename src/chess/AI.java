@@ -586,7 +586,7 @@ public class AI {
 			playGame();
 			break;
 
-		case 99:
+		case 97:
 			lvl_2 = true;
 			lvl = 4;
 			playGame();
