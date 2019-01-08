@@ -8,25 +8,32 @@ public class AI {
 	private static Scanner kybd = new Scanner(System.in);
 	private static boolean quit = false;
 	private static boolean lvl_2 = false;
+	private static int lvl = 0;
 
 	public static void cpuMovePiece(ChessBoard cb) {
 		CB = cb;
 
 		menu();
-		
 
 	}
 
 	public static void playGame() {
-
+		if (CB.getTurn())
+			CB.displayChoice();
 		do {
 			if (!quit && !CB.getTurn() && !lvl_2)
 				dumbAi();
-			else if (!quit && !CB.getTurn() && lvl_2)
-				evanSmarterAi(5);
-			else if (movePiece())
+			else if (!quit && !CB.getTurn() && lvl_2) {
+				if (lvl == 0)
+					slightlySmarterAi();
+				else
+					evanSmarterAi(lvl);
+			} else if (movePiece()) {
+				menu();
 				break;
-			CB.displayChoice();
+			}
+			if (CB.getTurn())
+				CB.displayChoice();
 		} while (CB.gameStatus() || !quit);
 	}
 
@@ -131,7 +138,7 @@ public class AI {
 		for (Piece p : setUpArray(board).get(blackOrWhite)) {
 			for (int m : potentialMoves(p)) {
 
-				if (board[p.getRow()][p.getCol()] != null)
+				if (board[p.getRow()][p.getCol()] != null && m / 10 < 8 && m % 10 < 8)
 					if (CB.canMoveThere(p.getRow(), p.getCol(), m % 10, m / 10, board)) {
 
 						if (board[m % 10][m / 10] != null) {
@@ -277,14 +284,26 @@ public class AI {
 
 		if (piece instanceof Pawn) {
 
-			if (piece.getRow() < 7)
+			if (piece.getRow() < 7) {
 				moves.add(piece.getRow() + 1 + (piece.getCol()) * 10);
+				moves.add(piece.getRow() - 1 + (piece.getCol()) * 10);
+			}
 
-			if (piece.getRow() < 7 && piece.getCol() < 7)
+			if (piece.getRow() < 7 && piece.getCol() < 7) {
 				moves.add(piece.getRow() + 1 + (piece.getCol() + 1) * 10);
+				moves.add(piece.getRow() - 1 + (piece.getCol() + 1) * 10);
+			}
 
-			if (piece.getRow() < 7 && piece.getCol() > 0)
+			if (piece.getRow() < 7 && piece.getCol() > 0) {
 				moves.add(piece.getRow() + 1 + (piece.getCol() - 1) * 10);
+				moves.add(piece.getRow() - 1 + (piece.getCol() - 1) * 10);
+			}
+
+			if (piece.getRow() == 1) {
+				moves.add(piece.getRow() + 2 + (piece.getCol()) * 10);
+				moves.add(piece.getRow() - 2 + (piece.getCol()) * 10);
+			}
+
 		}
 
 		if (piece instanceof Horse) {
@@ -488,7 +507,7 @@ public class AI {
 		do {
 			if (!canMoveThere)
 				System.out.println("Can't Move There");
-			System.out.println("\n" + name + ", Which piece would you like to move?\nType 'm' for menu");
+			System.out.println("\n" + name + ", Which piece would you like to move?");
 			do {
 				if (!legalMoveInput)
 					System.out.println("\nYou do not have a piece there, try again.");
@@ -536,11 +555,13 @@ public class AI {
 	}
 
 	public static void menu() {
-		System.out.println("0 to quit\n1 to Start new Computer Lvl 1\n2To Play Computer lvl 2\3 to go back");
+		System.out.println("\n1 Play Dumb Computer \n2 Play Easy Computer \n3 Play Moderate Computer"
+				+ "\n4 Pla Hard Computer  \n5 To go back \n WARNING!! the harder the computer the "
+				+ "longer it will take for the computer");
 		int choice = kybd.nextInt();
 
 		switch (choice) {
-		case 0:
+	case 0:
 			quit = true;
 			break;
 
@@ -550,6 +571,24 @@ public class AI {
 
 		case 2:
 			lvl_2 = true;
+			playGame();
+			break;
+
+		case 3:
+			lvl_2 = true;
+			lvl = 2;
+			playGame();
+			break;
+
+		case 4:
+			lvl_2 = true;
+			lvl = 3;
+			playGame();
+			break;
+
+		case 97:
+			lvl_2 = true;
+			lvl = 4;
 			playGame();
 			break;
 
