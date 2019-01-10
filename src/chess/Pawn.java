@@ -24,7 +24,7 @@ public class Pawn extends Piece {
 		// If up is more than 2
 		// If vertical direction is wrong
 
-		if (xDiffAbs > 1 || yDiffAbs > 2 || yDiff / verticalMove < 0) // xDiffAbs > yDiffAbs
+		if (xDiffAbs > 1 || yDiffAbs > 2 || yDiff / verticalMove < 0 || (yDiffAbs > 1 && !firstMove)) // xDiffAbs > yDiffAbs
 			return false;
 
 		// If moving forward one and nothing in the way
