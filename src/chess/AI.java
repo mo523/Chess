@@ -29,7 +29,6 @@ public class AI {
 				else
 					evanSmarterAi(lvl);
 			} else if (movePiece()) {
-				menu();
 				break;
 			}
 			if (CB.getTurn())
@@ -115,13 +114,15 @@ public class AI {
 
 		if (tempValue > 0) {
 			CB.performMove(tempMoveFromRow, tempMoveFromCol, tempMoveToRow, tempMoveToCol);
-		} else
+		} else {
+			System.out.println("C");
 			dumbAi();
+		}
 
 	}
 
 	public static int recursiveMoveCheck(Piece[][] pieces, boolean white, int limit) {
-
+		System.out.println(white + " " + limit);
 		if (limit == 0)
 			return 0;
 
@@ -138,28 +139,30 @@ public class AI {
 		for (Piece p : setUpArray(board).get(blackOrWhite)) {
 			for (int m : potentialMoves(p)) {
 
-				if (board[p.getRow()][p.getCol()] != null && m / 10 < 8 && m % 10 < 8)
-					if (CB.canMoveThere(p.getRow(), p.getCol(), m % 10, m / 10, board)) {
+				if (board[p.getRow()][p.getCol()] != null && p.getRow() < 8 && p.getRow() >= 0 && p.getCol() >= 0
+						&& p.getCol() < 8 && m / 10 >= 0 && m % 10 >= 10 && m / 10 < 8 && m % 10 < 8) {
 
-						if (board[m % 10][m / 10] != null) {
-							if (tempValue < board[m % 10][m / 10].getAIValue()) {
-								tempValue = board[m % 10][m / 10].getAIValue()
-										+ (-recursiveMoveCheck(tempBoard, !white, limit - 1));
-
-							}
-						} else {
-							tempBoard[m % 10][m / 10] = tempBoard[p.getRow()][p.getCol()];
-							tempBoard[p.getRow()][p.getCol()] = null;
-
-							if (tempValue < (-recursiveMoveCheck(tempBoard, !white, limit - 1))) {
-								tempValue = -recursiveMoveCheck(tempBoard, !CB.getWhite(), limit - 1);
-							}
-
-							tempBoard = boardCopy(board);
-
+					if (board[m % 10][m / 10] != null)
+						if (tempValue < board[m % 10][m / 10].getAIValue()) {
+							tempValue = board[m % 10][m / 10].getAIValue()
+									+ (-recursiveMoveCheck(tempBoard, !white, limit - 1));
+							System.out.println("A");
 						}
 
+				}
+				if (p.getRow() < 8 && p.getRow() >= 0 && p.getCol() >= 0 && p.getCol() < 8 && m / 10 >= 0
+						&& m % 10 >= 10 && m / 10 < 8 && m % 10 < 8) {
+					System.out.println("B");
+					tempBoard[m % 10][m / 10] = tempBoard[p.getRow()][p.getCol()];
+					tempBoard[p.getRow()][p.getCol()] = null;
+
+					int place = -recursiveMoveCheck(tempBoard, !white, limit - 1);
+					if (tempValue < place) {
+						tempValue = place;
 					}
+
+				}
+				tempBoard = boardCopy(board);
 
 			}
 
@@ -507,7 +510,7 @@ public class AI {
 		do {
 			if (!canMoveThere)
 				System.out.println("Can't Move There");
-			System.out.println("\n" + name + ", Which piece would you like to move?");
+			System.out.println("\n" + name + ", Which piece would you like to move?(enter m to quit)");
 			do {
 				if (!legalMoveInput)
 					System.out.println("\nYou do not have a piece there, try again.");
@@ -518,7 +521,8 @@ public class AI {
 				fromRow = move.charAt(1) - 49;
 				legalMoveInput = CB.isValidPieceThere(fromRow, fromCol);
 			} while (!legalMoveInput);
-			System.out.println("\nWhere would you like to move your " + CB.getName(fromRow, fromCol) + " to?");
+			System.out.println(
+					"\nWhere would you like to move your " + CB.getName(fromRow, fromCol) + " to?(enter m to quit)");
 			do {
 				move = getPosition();
 				if (move.equals("m"))
@@ -543,9 +547,16 @@ public class AI {
 		boolean badInput = false;
 		do {
 			badInput = true;
-			pos = kybd.next().toLowerCase();
+			pos = kybd.next().trim().toLowerCase();
+
+			if (pos.equalsIgnoreCase("m")) {
+				menu();
+				break;
+			}
+
 			if (pos.length() != 2)
 				System.out.println("\nPosition must be 2 characters, try again.");
+
 			else if (pos.charAt(0) < 97 || pos.charAt(0) > 104 || pos.charAt(1) < 49 || pos.charAt(1) > 56)
 				System.out.println("\nInvalid position entry. It must be a [a-h][1-8], try again.");
 			else
@@ -556,12 +567,12 @@ public class AI {
 
 	public static void menu() {
 		System.out.println("\n1 Play Dumb Computer \n2 Play Easy Computer \n3 Play Moderate Computer"
-				+ "\n4 Pla Hard Computer  \n5 To go back \n WARNING!! the harder the computer the "
+				+ "\n4 Pla Hard Computer  \n5 To go back to main menu \n WARNING!! the harder the computer the "
 				+ "longer it will take for the computer");
 		int choice = kybd.nextInt();
 
 		switch (choice) {
-	case 0:
+		case 0:
 			quit = true;
 			break;
 
@@ -588,7 +599,7 @@ public class AI {
 
 		case 97:
 			lvl_2 = true;
-			lvl = 4;
+			lvl = 100;
 			playGame();
 			break;
 
