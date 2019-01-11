@@ -77,20 +77,21 @@ public class AI {
 
 				if (CB.canMoveThere(p.getRow(), p.getCol(), m % 10, m / 10)) {
 
-					if (board[m % 10][m / 10] != null) {
-						depthBoard[m % 10][m / 10] = depthBoard[p.getRow()][p.getCol()];
-						depthBoard[p.getRow()][p.getCol()] = null;
-						if (tempValue < (board[m % 10][m / 10].getAIValue()
-								- recursiveMoveCheck(depthBoard, !CB.getWhite(), depth))) {
-							tempValue = board[m % 10][m / 10].getAIValue();
-							tempMoveToRow = m % 10;
-							tempMoveToCol = m / 10;
-							tempMoveFromRow = p.getRow();
-							tempMoveFromCol = p.getCol();
-						}
+					int valueHolder = (board[m % 10][m / 10] != null ? board[m % 10][m / 10].getAIValue() : 0);
+					depthBoard[m % 10][m / 10] = depthBoard[p.getRow()][p.getCol()];
+					depthBoard[p.getRow()][p.getCol()] = null;
 
+					if (tempValue < (valueHolder - recursiveMoveCheck(depthBoard, !CB.getWhite(), depth))) {
+
+						tempValue = valueHolder - recursiveMoveCheck(depthBoard, !CB.getWhite(), depth);
+						tempMoveToRow = m % 10;
+						tempMoveToCol = m / 10;
+						tempMoveFromRow = p.getRow();
+						tempMoveFromCol = p.getCol();
 						depthBoard = boardCopy(board);
-					} else {
+					}
+
+					else {
 
 						depthBoard[m % 10][m / 10] = depthBoard[p.getRow()][p.getCol()];
 						depthBoard[p.getRow()][p.getCol()] = null;
@@ -115,16 +116,15 @@ public class AI {
 		if (tempValue > 0) {
 			CB.performMove(tempMoveFromRow, tempMoveFromCol, tempMoveToRow, tempMoveToCol);
 		} else {
-			System.out.println("C");
 			dumbAi();
 		}
 
 	}
 
 	public static int recursiveMoveCheck(Piece[][] pieces, boolean white, int limit) {
-		System.out.println(white + " " + limit);
-		if (limit == 0)
-			return 0;
+		if (limit == 0) {
+			return advancedCountPieces(pieces, white);
+		}
 
 		Piece[][] board = boardCopy(pieces);
 		Piece[][] tempBoard = boardCopy(board);
@@ -139,20 +139,18 @@ public class AI {
 		for (Piece p : setUpArray(board).get(blackOrWhite)) {
 			for (int m : potentialMoves(p)) {
 
-				if (board[p.getRow()][p.getCol()] != null && p.getRow() < 8 && p.getRow() >= 0 && p.getCol() >= 0
-						&& p.getCol() < 8 && m / 10 >= 0 && m % 10 >= 10 && m / 10 < 8 && m % 10 < 8) {
+				if (p.getRow() < 8 && p.getRow() >= 0 && p.getCol() >= 0 && p.getCol() < 8 && m / 10 >= 0 && m % 10 >= 0
+						&& m / 10 < 8 && m % 10 < 8) {
+					int valueHolder = (board[m % 10][m / 10] != null ? board[m % 10][m / 10].getAIValue() : 0);
 
-					if (board[m % 10][m / 10] != null)
-						if (tempValue < board[m % 10][m / 10].getAIValue()) {
-							tempValue = board[m % 10][m / 10].getAIValue()
-									+ (-recursiveMoveCheck(tempBoard, !white, limit - 1));
-							System.out.println("A");
-						}
+					if (tempValue < valueHolder - recursiveMoveCheck(tempBoard, !white, limit - 1)) {
+						tempValue = valueHolder + (-recursiveMoveCheck(tempBoard, !white, limit - 1));
+
+					}
 
 				}
 				if (p.getRow() < 8 && p.getRow() >= 0 && p.getCol() >= 0 && p.getCol() < 8 && m / 10 >= 0
 						&& m % 10 >= 10 && m / 10 < 8 && m % 10 < 8) {
-					System.out.println("B");
 					tempBoard[m % 10][m / 10] = tempBoard[p.getRow()][p.getCol()];
 					tempBoard[p.getRow()][p.getCol()] = null;
 
@@ -205,8 +203,6 @@ public class AI {
 			for (int m : potentialMoves(p)) {
 
 				if (CB.canMoveThere(p.getRow(), p.getCol(), m % 10, m / 10)) {
-					System.out.print(
-							p.getClass() + " " + p.getRow() + " " + p.getCol() + ":" + m % 10 + " " + m / 10 + " \n");
 
 					if (board[m % 10][m / 10] != null)
 						if (tempValue < board[m % 10][m / 10].getAIValue()) {
@@ -256,9 +252,8 @@ public class AI {
 					if (pieces[i][i2].isWhite()) {
 
 						value += pieces[i][i2].getAIValue();
-						System.out.println(value);
+
 					} else {
-						System.out.println(value);
 
 						value -= pieces[i][i2].getAIValue();
 					}
