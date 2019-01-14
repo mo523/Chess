@@ -146,7 +146,7 @@ public class PawnTests {
 		assertFalse(chessBoard[4][0].isLegalMove(0, 4, 1, 3, pieces, chessBoard, blackKing));
 
 	}*/	
-	@Before
+
 	public void setUpPieces() {
 		final boolean IS_WHITE = true;// this is to make what color the pieces are more clear
 		final boolean IS_BLACK = false;// this is to make what color the pieces are more clear
