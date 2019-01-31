@@ -60,23 +60,11 @@ public class ChessBoard implements Serializable {
 	private void setUpBoard() {
 		final boolean IS_WHITE = true;
 		final boolean IS_BLACK = false;
-
-		chessBoard[1][0] = new Pawn(IS_WHITE, 1, 0);
-		chessBoard[1][1] = new Pawn(IS_WHITE, 1, 1);
-		chessBoard[1][2] = new Pawn(IS_WHITE, 1, 2);
-		chessBoard[1][3] = new Pawn(IS_WHITE, 1, 3);
-		chessBoard[1][4] = new Pawn(IS_WHITE, 1, 4);
-		chessBoard[1][5] = new Pawn(IS_WHITE, 1, 5);
-		chessBoard[1][6] = new Pawn(IS_WHITE, 1, 6);
-		chessBoard[1][7] = new Pawn(IS_WHITE, 1, 7);
-		chessBoard[6][0] = new Pawn(IS_BLACK, 6, 0);
-		chessBoard[6][1] = new Pawn(IS_BLACK, 6, 1);
-		chessBoard[6][2] = new Pawn(IS_BLACK, 6, 2);
-		chessBoard[6][3] = new Pawn(IS_BLACK, 6, 3);
-		chessBoard[6][4] = new Pawn(IS_BLACK, 6, 4);
-		chessBoard[6][5] = new Pawn(IS_BLACK, 6, 5);
-		chessBoard[6][6] = new Pawn(IS_BLACK, 6, 6);
-		chessBoard[6][7] = new Pawn(IS_BLACK, 6, 7);
+		
+		for(int i = 0; i < 8; i++)
+			chessBoard[1][i] = new Pawn(IS_WHITE, 1, i);
+		for(int i = 0; i < 8; i++)
+			chessBoard[6][i] = new Pawn(IS_BLACK, 6, i);
 		chessBoard[0][0] = new Rook(IS_WHITE, 0, 0);
 		chessBoard[0][1] = new Horse(IS_WHITE, 0, 1);
 		chessBoard[0][2] = new Bishop(IS_WHITE, 0, 2);
