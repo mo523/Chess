@@ -42,6 +42,7 @@ public class SaveGameFunctionality {
 		saver.close();
 	}
 
+	@SuppressWarnings("resource")
 	private static ChessBoard[] readFile(String fileName) throws IOException, ClassNotFoundException {
 		ObjectInputStream loader = null;
 		boolean found = true;
@@ -71,6 +72,7 @@ public class SaveGameFunctionality {
 		return collection;
 	}
 
+	@SuppressWarnings("resource")
 	public static ChessBoard loadSavedGame() throws FileNotFoundException, IOException, ClassNotFoundException {
 		List<ChessBoard> list = new ArrayList<ChessBoard>( loopThruFile( new ObjectInputStream(new FileInputStream("Saved Games")) ) );
 		System.out.println("Which game?");
