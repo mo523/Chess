@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 @SuppressWarnings("serial")
-public abstract class Piece implements Serializable {
-
+public abstract class Piece implements Serializable
+{
 	private boolean white; // boolean to test if the piece is white or black
 	private String icon[];
 	private int row;
@@ -14,7 +14,8 @@ public abstract class Piece implements Serializable {
 	/**
 	 * @param white tells if the piece is white or black
 	 */
-	public Piece(boolean white, int row, int col, String[] icon) {
+	public Piece(boolean white, int row, int col, String[] icon)
+	{
 		this.white = white;
 		this.row = row;
 		this.col = col;
@@ -22,33 +23,40 @@ public abstract class Piece implements Serializable {
 	}
 
 	// Public getters and setters
-	public boolean isWhite() {
+	public boolean isWhite()
+	{
 		return white;
 	}
 
-	public int getRow() {
+	public int getRow()
+	{
 		return row;
 	}
 
-	public int getCol() {
+	public int getCol()
+	{
 		return col;
 	}
 
-	public void setRowCol(int row, int col) {
+	public void setRowCol(int row, int col)
+	{
 		this.row = row;
 		this.col = col;
 	}
 
-	public String getIcon(int line) {
+	public String getIcon(int line)
+	{
 		return icon[line];
 	}
 
 	// Main legality check
 	public boolean isLegalMove(int toRow, int toCol, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard,
-			Piece King) {
+			Piece King)
+	{
 		if (!isLegalCheck(toRow, toCol, pieces, chessBoard, King))
 			return false;
-		if (leavesKingInCheck(toRow, toCol, pieces, chessBoard, King)) {
+		if (leavesKingInCheck(toRow, toCol, pieces, chessBoard, King))
+		{
 			ChessDriver.setErrorMessage("Warning! Leaves king in check");
 			return false;
 		}
@@ -56,16 +64,20 @@ public abstract class Piece implements Serializable {
 	}
 
 	public boolean isLegalCheck(int toRow, int toCol, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard,
-			Piece King) {
-		if (!canPieceMoveLikeThat(toRow, toCol, chessBoard)) {
+			Piece King)
+	{
+		if (!canPieceMoveLikeThat(toRow, toCol, chessBoard))
+		{
 			ChessDriver.setErrorMessage("WARNING! Piece cannot move like that");
 			return false;
 		}
-		if (sameColor(toRow, toCol, chessBoard)) {
+		if (sameColor(toRow, toCol, chessBoard))
+		{
 			ChessDriver.setErrorMessage("WARNING! Piece will kill same color");
 			return false;
 		}
-		if (pieceInTheWay(toRow, toCol, chessBoard)) {
+		if (pieceInTheWay(toRow, toCol, chessBoard))
+		{
 			ChessDriver.setErrorMessage("WARNING! Piece in the way");
 			return false;
 		}
@@ -73,7 +85,8 @@ public abstract class Piece implements Serializable {
 	}
 
 	// Private methods for legal move check
-	private boolean sameColor(int toRow, int toCol, Piece[][] chessBoard) {
+	private boolean sameColor(int toRow, int toCol, Piece[][] chessBoard)
+	{
 		if (chessBoard[toRow][toCol] == null)
 			return false;
 		if (this.isWhite() == chessBoard[toRow][toCol].isWhite())
@@ -82,7 +95,8 @@ public abstract class Piece implements Serializable {
 	}
 
 	private boolean leavesKingInCheck(int toRow, int toCol, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard,
-			Piece King) {
+			Piece King)
+	{
 		int oldRow = this.getRow();
 		int oldCol = this.getCol();
 		Piece currPiece = this;
@@ -110,23 +124,26 @@ public abstract class Piece implements Serializable {
 	public abstract boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] chessBoard);
 
 	// Methods needed for and overridden by King
-	public boolean checkmate(ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard) {
+	public boolean checkmate(ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard)
+	{
 		return false;
 	}
 
-	public boolean inCheck(ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard) {
+	public boolean inCheck(ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard)
+	{
 		return false;
 	}
 
 	// Methods needed for and overridden by Pawn
-	public boolean enPassantAble() {
+	public boolean enPassantAble()
+	{
 		return false;
 	}
 
-	public void setEnPassant(boolean enp) {
+	public void setEnPassant(boolean enp)
+	{
 	}
-	
-	//Methods needed for slightly smarter AI to be overwritten by each piece
-	public abstract int getAIValue();
 
+	// Methods needed for slightly smarter AI to be overwritten by each piece
+	public abstract int getAIValue();
 }

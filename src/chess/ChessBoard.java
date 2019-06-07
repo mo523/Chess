@@ -5,11 +5,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class ChessBoard implements Serializable {
-	/**
-	 * 
-	 */
-	// there is an error without the uid
+public class ChessBoard implements Serializable
+{
 	private static final long serialVersionUID = 382550797992205908L;
 	private Piece[][] chessBoard;
 	private ArrayList<ArrayList<Piece>> pieces;
@@ -31,7 +28,8 @@ public class ChessBoard implements Serializable {
 
 	// Constructor
 	public ChessBoard(boolean debug, boolean cpuGame, boolean playerTurn, boolean networkGame, boolean useJansi,
-			boolean random) {
+			boolean random)
+	{
 		this.debug = debug;
 		this.cpuGame = cpuGame;
 		this.playerTurn = playerTurn;
@@ -46,7 +44,8 @@ public class ChessBoard implements Serializable {
 	}
 
 	// Board and Array setup
-	private void setUpArray() {
+	private void setUpArray()
+	{
 		pieces = new ArrayList<>();
 		pieces.add(new ArrayList<Piece>());
 		pieces.add(new ArrayList<Piece>());
@@ -57,36 +56,38 @@ public class ChessBoard implements Serializable {
 		System.out.println();
 	}
 
-	private void setUpBoard() {
-		final boolean IS_WHITE = true;
-		final boolean IS_BLACK = false;
-		
-		for(int i = 0; i < 8; i++)
-			chessBoard[1][i] = new Pawn(IS_WHITE, 1, i);
-		for(int i = 0; i < 8; i++)
-			chessBoard[6][i] = new Pawn(IS_BLACK, 6, i);
-		chessBoard[0][0] = new Rook(IS_WHITE, 0, 0);
-		chessBoard[0][1] = new Horse(IS_WHITE, 0, 1);
-		chessBoard[0][2] = new Bishop(IS_WHITE, 0, 2);
-		chessBoard[0][4] = new King(IS_WHITE, 0, 4);
-		chessBoard[0][3] = new Queen(IS_WHITE, 0, 3);
-		chessBoard[0][5] = new Bishop(IS_WHITE, 0, 5);
-		chessBoard[0][6] = new Horse(IS_WHITE, 0, 6);
-		chessBoard[0][7] = new Rook(IS_WHITE, 0, 7);
-		chessBoard[7][0] = new Rook(IS_BLACK, 7, 0);
-		chessBoard[7][1] = new Horse(IS_BLACK, 7, 1);
-		chessBoard[7][2] = new Bishop(IS_BLACK, 7, 2);
-		chessBoard[7][4] = new King(IS_BLACK, 7, 4);
-		chessBoard[7][3] = new Queen(IS_BLACK, 7, 3);
-		chessBoard[7][5] = new Bishop(IS_BLACK, 7, 5);
-		chessBoard[7][6] = new Horse(IS_BLACK, 7, 6);
-		chessBoard[7][7] = new Rook(IS_BLACK, 7, 7);
+	private void setUpBoard()
+	{
+		final boolean WHITE = true;
+		final boolean BLACK = false;
+
+		for (int i = 0; i < 8; i++)
+			chessBoard[1][i] = new Pawn(WHITE, 1, i);
+		for (int i = 0; i < 8; i++)
+			chessBoard[6][i] = new Pawn(BLACK, 6, i);
+		chessBoard[0][0] = new Rook(WHITE, 0, 0);
+		chessBoard[0][1] = new Horse(WHITE, 0, 1);
+		chessBoard[0][2] = new Bishop(WHITE, 0, 2);
+		chessBoard[0][4] = new King(WHITE, 0, 4);
+		chessBoard[0][3] = new Queen(WHITE, 0, 3);
+		chessBoard[0][5] = new Bishop(WHITE, 0, 5);
+		chessBoard[0][6] = new Horse(WHITE, 0, 6);
+		chessBoard[0][7] = new Rook(WHITE, 0, 7);
+		chessBoard[7][0] = new Rook(BLACK, 7, 0);
+		chessBoard[7][1] = new Horse(BLACK, 7, 1);
+		chessBoard[7][2] = new Bishop(BLACK, 7, 2);
+		chessBoard[7][4] = new King(BLACK, 7, 4);
+		chessBoard[7][3] = new Queen(BLACK, 7, 3);
+		chessBoard[7][5] = new Bishop(BLACK, 7, 5);
+		chessBoard[7][6] = new Horse(BLACK, 7, 6);
+		chessBoard[7][7] = new Rook(BLACK, 7, 7);
 		whiteKing = chessBoard[0][4];
 		blackKing = chessBoard[7][4];
 		currKing = whiteKing;
 	}
 
-	private void setUpRandomBoard() {
+	private void setUpRandomBoard()
+	{
 		Random ran = new Random();
 		int row = ran.nextInt(2);
 		int col = ran.nextInt(8);
@@ -97,33 +98,36 @@ public class ChessBoard implements Serializable {
 		currKing = whiteKing;
 		for (int i = 0; i < 2; i++)
 			for (int j = 0; j < 8; j++)
-				if (chessBoard[i][j] == null) {
+				if (chessBoard[i][j] == null)
+				{
 					Piece piece;
 					int num = ran.nextInt(10);
-					switch (num) {
-					case 1:
-					case 7:
-						piece = new Bishop(true, i, j);
-						break;
-					case 2:
-					case 8:
-						piece = new Rook(true, i, j);
-						break;
-					case 3:
-					case 6:
-						piece = new Horse(true, i, j);
-						break;
-					case 5:
-						piece = new Queen(true, i, j);
-						break;
-					default:
-						piece = new Pawn(true, i, j);
-						break;
+					switch (num)
+					{
+						case 1:
+						case 7:
+							piece = new Bishop(true, i, j);
+							break;
+						case 2:
+						case 8:
+							piece = new Rook(true, i, j);
+							break;
+						case 3:
+						case 6:
+							piece = new Horse(true, i, j);
+							break;
+						case 5:
+							piece = new Queen(true, i, j);
+							break;
+						default:
+							piece = new Pawn(true, i, j);
+							break;
 					}
 					chessBoard[i][j] = piece;
 				}
 		for (int i = 0; i < 2; i++)
-			for (int j = 0; j < 8; j++) {
+			for (int j = 0; j < 8; j++)
+			{
 				int r = 7 - i;
 				Piece blackPiece;
 				Piece whitePiece = chessBoard[i][j];
@@ -144,7 +148,8 @@ public class ChessBoard implements Serializable {
 	}
 
 	// Public methods that effect the board
-	public boolean performMove(int fromRow, int fromCol, int toRow, int toCol) {
+	public boolean performMove(int fromRow, int fromCol, int toRow, int toCol)
+	{
 		fr = fromRow;
 		fc = fromCol;
 		tr = toRow;
@@ -161,13 +166,19 @@ public class ChessBoard implements Serializable {
 			else
 				currPiece.setEnPassant(false);
 		if (networkGame && playerTurn)
-			try {
+			try
+			{
 				net.sendServerData(fromRow, fromCol, toRow, toCol);
-			} catch (IOException e) {
+			}
+			catch (IOException e)
+			{
 				e.printStackTrace();
-				try {
+				try
+				{
 					net.close();
-				} catch (IOException e1) {
+				}
+				catch (IOException e1)
+				{
 					e1.printStackTrace();
 				}
 			}
@@ -177,30 +188,36 @@ public class ChessBoard implements Serializable {
 		return (currPiece instanceof Pawn && toRow == (whitesTurn ? 0 : 7));
 	}
 
-	public void promotion(int row, int col, int choice) {
+	public void promotion(int row, int col, int choice)
+	{
 		chessBoard[row][col] = choice == 1 ? new Queen(whitesTurn, row, col)
 				: choice == 2 ? new Bishop(whitesTurn, row, col)
 						: choice == 3 ? new Rook(whitesTurn, row, col) : new Horse(whitesTurn, row, col);
 	}
 
 	// Public methods that effect the driver
-	public void displayChoice() {
+	public void displayChoice()
+	{
 		if (debug)
 			Display.debug(chessBoard);
 		else
 			Display.display(whitesTurn, useJansi, chessBoard, fr, fc, tr, tc);
 	}
 
-	public boolean gameStatus() {
+	public boolean gameStatus()
+	{
 		if (forceEnd)
 			return false;
 		if (inCheck())
-			if (checkmate()) {
+			if (checkmate())
+			{
 				System.out.println("Checkmate, You lost " + (whitesTurn ? "White." : "Black."));
 				return false;
-			} else
+			}
+			else
 				System.out.println("\nWarning! Your king is in check!\n");
-		if (staleMate()) {
+		if (staleMate())
+		{
 			System.out.println("Game Over. Stalemate");
 			return false;
 		}
@@ -210,15 +227,18 @@ public class ChessBoard implements Serializable {
 	}
 
 	// private end game checks
-	private boolean inCheck() {
+	private boolean inCheck()
+	{
 		return currKing.inCheck(pieces, chessBoard);
 	}
 
-	private boolean checkmate() {
+	private boolean checkmate()
+	{
 		return currKing.checkmate(pieces, chessBoard);
 	}
 
-	private boolean staleMate() {
+	private boolean staleMate()
+	{
 		boolean white = oneKing(true);
 		boolean black = oneKing(false);
 		if (white && black)
@@ -228,7 +248,8 @@ public class ChessBoard implements Serializable {
 		return cannotMove(); // if false - stalemate
 	}
 
-	private boolean cannotMove() {
+	private boolean cannotMove()
+	{
 		for (Piece piece : pieces.get(whitesTurn ? 0 : 1))
 			for (int toRow = 0; toRow < 8; toRow++)
 				for (int toCol = 0; toCol < 8; toCol++)
@@ -237,104 +258,125 @@ public class ChessBoard implements Serializable {
 		return true;
 	}
 
-	private boolean oneKing(boolean white) {
+	private boolean oneKing(boolean white)
+	{
 		return pieces.get(white ? 0 : 1).size() == 1;
 	}
 
-	private boolean eighteenMoveStalemate() {
+	private boolean eighteenMoveStalemate()
+	{
 		countingTurns = true;
 		return staleTurns == 18;
 	}
 
 	// public move checks
-	public boolean isValidPieceThere(int row, int col) {
+	public boolean isValidPieceThere(int row, int col)
+	{
 		Piece currPiece = chessBoard[row][col];
 		return currPiece != null && currPiece.isWhite() == whitesTurn;
 	}
 
-	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol) {
+	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol)
+	{
 		Piece currPiece = chessBoard[fromRow][fromCol];
 		return currPiece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing);
 	}
 
 	// public getters
-	public boolean getCpuGame() {
+	public boolean getCpuGame()
+	{
 		return cpuGame;
 	}
 
-	public boolean getNetGame() {
+	public boolean getNetGame()
+	{
 		return networkGame;
 	}
 
-	public boolean getTurn() {
+	public boolean getTurn()
+	{
 		return playerTurn;
 	}
 
-	public boolean getWhite() {
+	public boolean getWhite()
+	{
 		return whitesTurn;
 	}
 
-	public String getName(int row, int col) {
+	public String getName(int row, int col)
+	{
 		String move = chessBoard[row][col].toString();
 		move = move.substring(6, move.length() - 9);
 		return move;
 	}
 
-	public ArrayList<ArrayList<Piece>> getPieces() {
+	public ArrayList<ArrayList<Piece>> getPieces()
+	{
 		return pieces;
 	}
 
 	// public setters
-	public void endNet() {
+	public void endNet()
+	{
 		networkGame = false;
 	}
 
-	public void reverseDebug() {
+	public void reverseDebug()
+	{
 		debug = !debug;
 	}
 
-	public void reverseCpu() {
+	public void reverseCpu()
+	{
 		cpuGame = !cpuGame;
 	}
 
-	public void setTurn(boolean playerTurn) {
+	public void setTurn(boolean playerTurn)
+	{
 		this.playerTurn = playerTurn;
 	}
 
 	// Network functionality
-	public void setNet(Network net) {
+	public void setNet(Network net)
+	{
 		this.net = net;
 		playerTurn = net.isServer();
 	}
 
-	public void netMove() {
+	public void netMove()
+	{
 		System.out.println("\nWaiting for other players move");
-		try {
+		try
+		{
 			int[] data = net.getClientData();
 			performMove(data[0], data[1], data[2], data[3]);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex)
+		{
 			System.out.println(ex);
 			forceEnd = true;
 		}
 	}
 
 	// This method is used to reference saved games
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
-	public Piece[][] getBoard() {
+	public Piece[][] getBoard()
+	{
 		return chessBoard;
 	}
-	
 
-	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol, Piece[][] board) {
+	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol, Piece[][] board)
+	{
 		Piece currPiece = board[fromRow][fromCol];
 		return currPiece.isLegalMove(toRow, toCol, pieces, board, currKing);
 	}
-
 }

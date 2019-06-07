@@ -1,10 +1,13 @@
 package chess;
 
 @SuppressWarnings("serial")
-public class Pawn extends Piece {
+public class Pawn extends Piece
+{
 	private int verticalMove;
 	private boolean enPassantAble = false;
-	public Pawn(boolean white, int row, int col) {
+
+	public Pawn(boolean white, int row, int col)
+	{
 		super(white, row, col,
 				new String[] { "            ", "      \u2584\u2584    ", "     \u2580\u2588\u2588\u2580   ",
 						"    \u2584\u2588\u2588\u2588\u2588\u2584  ", "    \u2580\u2580\u2580\u2580\u2580\u2580  ",
@@ -13,7 +16,8 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB) {
+	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB)
+	{
 		int yDiff = toRow - this.getRow();
 		int xDiff = toCol - this.getCol();
 		int yDiffAbs = Math.abs(yDiff);
@@ -24,7 +28,8 @@ public class Pawn extends Piece {
 		// If up is more than 2
 		// If vertical direction is wrong
 
-		if (xDiffAbs > 1 || yDiffAbs > 2 || yDiff / verticalMove < 0 || (yDiffAbs > 1 && !firstMove)) // xDiffAbs > yDiffAbs
+		if (xDiffAbs > 1 || yDiffAbs > 2 || yDiff / verticalMove < 0 || (yDiffAbs > 1 && !firstMove)) // xDiffAbs > //
+																										 // yDiffAbs
 			return false;
 
 		// If moving forward one and nothing in the way
@@ -41,9 +46,11 @@ public class Pawn extends Piece {
 			return true;
 
 		// If enPassanting
-		if ((toRow == 5 || toRow == 2) && CB[toRow - verticalMove][toCol] instanceof Pawn) {
+		if ((toRow == 5 || toRow == 2) && CB[toRow - verticalMove][toCol] instanceof Pawn)
+		{
 			Piece enps = CB[toRow - verticalMove][toCol];
-			if (enps.enPassantAble()) {
+			if (enps.enPassantAble())
+			{
 				CB[toRow][toCol] = enps;
 				CB[enps.getRow()][enps.getCol()] = null;
 				enps.setRowCol(enps.getRow() + verticalMove, enps.getCol());
@@ -57,29 +64,34 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	protected Pawn clone() throws CloneNotSupportedException {
+	protected Pawn clone() throws CloneNotSupportedException
+	{
 		Pawn p = new Pawn(this.isWhite(), this.getRow(), this.getCol());
 		p.enPassantAble = this.enPassantAble;
 		return p;
 	}
 
 	@Override
-	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
+	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB)
+	{
 		// this is taken care of by canPieceMoveLikeThat
 		return false;
 	}
 
 	// @Override - automatic
-	public boolean enPassantAble() {
+	public boolean enPassantAble()
+	{
 		return enPassantAble;
 	}
 
-	public void setEnPassant(boolean enp) {
+	public void setEnPassant(boolean enp)
+	{
 		enPassantAble = enp;
 	}
 
 	@Override
-	public int getAIValue() {
+	public int getAIValue()
+	{
 		return 100;
 	}
 }

@@ -1,8 +1,10 @@
 package chess;
 
 @SuppressWarnings("serial")
-public class Horse extends Piece {
-	public Horse(boolean white, int row, int col) {
+public class Horse extends Piece
+{
+	public Horse(boolean white, int row, int col)
+	{
 		super(white, row, col,
 				new String[] { "            ", "     \u2584\u2588\u2588\u2584   ",
 						"    \u2588\u2588\u2588\u2584\u2588\u2588  ", "    \u2580\u2588\u2588\u2588\u2584   ",
@@ -10,7 +12,8 @@ public class Horse extends Piece {
 	}
 
 	@Override
-	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB) {
+	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB)
+	{
 		Queen queen = new Queen(isWhite(), this.getRow(), this.getCol());
 		if (!queen.canPieceMoveLikeThat(toRow, toCol, CB) && Math.abs(this.getCol() - toCol) < 3
 				&& Math.abs(this.getRow() - toRow) < 3)
@@ -20,12 +23,14 @@ public class Horse extends Piece {
 	}
 
 	@Override
-	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB) {
+	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB)
+	{
 		return false; // because horses jump
 	}
 
 	@Override
-	public int getAIValue() {
+	public int getAIValue()
+	{
 		return 350;
 	}
 }

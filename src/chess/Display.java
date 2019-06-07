@@ -1,13 +1,12 @@
 package chess;
 
-import org.fusesource.jansi.AnsiConsole;
-
-public class Display {
+public class Display
+{
 	public static void display(boolean whitesTurn, boolean useJansi, Piece[][] chessBoard, int fr, int fc, int tr,
-			int tc) {
+			int tc)
+	{
 		StringBuilder sb = new StringBuilder();
-		if (useJansi)
-			AnsiConsole.systemInstall();
+
 		int out = whitesTurn ? 47 : 0;
 		int in = whitesTurn ? 0 : 7;
 		int minOut = whitesTurn ? -1 : 48;
@@ -27,10 +26,12 @@ public class Display {
 		String fgNumLets = useJansi ? "\u001B[30m" : "\u001B[38;2;241;222;190m";
 
 		sb.append("\n" + bxWhite + fgNumLets + (whitesTurn ? letters1 : letters2) + " " + reset + "\n");
-		for (int i = out; i != minOut; i += chg) {
+		for (int i = out; i != minOut; i += chg)
+		{
 			boolean numRow = i % 6 + 1 == 3;
 			sb.append(bxWhite + fgNumLets + (numRow ? i / 6 + 1 + " " : "  ") + reset);
-			for (int j = in; j != minIn; j -= chg) {
+			for (int j = in; j != minIn; j -= chg)
+			{
 				Boolean isWhite = chessBoard[i / 6][j] != null ? chessBoard[i / 6][j].isWhite() : null;
 				boolean ijTheSame = i / 6 % 2 == j % 2;
 				boolean isNull = chessBoard[i / 6][j] == null;
@@ -46,11 +47,10 @@ public class Display {
 		}
 		sb.append(bxWhite + fgNumLets + (whitesTurn ? letters1 : letters2) + " " + reset + "\n");
 		System.out.println(sb.toString());
-		if (useJansi)
-			AnsiConsole.systemUninstall();
 	}
 
-	public static String PieceSection(int i, int j, boolean whitesTurn, Piece[][] chessBoard, String bg) {
+	public static String PieceSection(int i, int j, boolean whitesTurn, Piece[][] chessBoard, String bg)
+	{
 		boolean numRow = i % 6 == (whitesTurn ? 0 : 5);
 		boolean empty = chessBoard[i / 6][j] == null;
 		String numLet = (char) (65 + j) + "" + (i / 6 + 1);
@@ -59,13 +59,16 @@ public class Display {
 				+ (numRow ? ("\u001B[0m" + bg + "\u001B[30m" + numLet) : "  ");
 	}
 
-	public static void debug(Piece[][] chessBoard) {
+	public static void debug(Piece[][] chessBoard)
+	{
 		String lets = "  | A  | B  | C  | D  | E  | F  | G  | H  |";
 		String dash = "\n--|----|----|----|----|----|----|----|----|";
 		System.out.print(lets);
 		System.out.println(dash);
-		for (int i = 7; i >= 0; i--) {
-			for (int j = 0; j < 8; j++) {
+		for (int i = 7; i >= 0; i--)
+		{
+			for (int j = 0; j < 8; j++)
+			{
 				System.out.print((j == 0 ? (i + 1) : "") + " | "
 						+ (chessBoard[i][j] == null ? "  "
 								: ((chessBoard[i][j].isWhite() ? "w" : "b") + chessBoard[i][j].toString().charAt(6)))
