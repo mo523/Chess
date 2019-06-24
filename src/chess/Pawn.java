@@ -48,7 +48,7 @@ public class Pawn extends Piece
 		// If enPassanting
 		if ((toRow == 5 || toRow == 2) && CB[toRow - verticalMove][toCol] instanceof Pawn)
 		{
-			Piece enps = CB[toRow - verticalMove][toCol];
+			Pawn enps = (Pawn) CB[toRow - verticalMove][toCol];
 			if (enps.enPassantAble())
 			{
 				CB[toRow][toCol] = enps;
@@ -64,21 +64,12 @@ public class Pawn extends Piece
 	}
 
 	@Override
-	protected Pawn clone() throws CloneNotSupportedException
-	{
-		Pawn p = new Pawn(this.isWhite(), this.getRow(), this.getCol());
-		p.enPassantAble = this.enPassantAble;
-		return p;
-	}
-
-	@Override
 	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB)
 	{
 		// this is taken care of by canPieceMoveLikeThat
 		return false;
 	}
 
-	// @Override - automatic
 	public boolean enPassantAble()
 	{
 		return enPassantAble;

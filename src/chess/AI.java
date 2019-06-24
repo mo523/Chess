@@ -1,43 +1,34 @@
 package chess;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class AI
 {
-	private static ChessBoard CB;
-	private static Scanner kybd = new Scanner(System.in);
-	private static boolean quit = false;
-	private static boolean lvl_2 = false;
-	private static int lvl = 0;
+	private ChessBoard CB;
+	private int level;
 
-	public static void cpuMovePiece(ChessBoard cb)
+	public AI(int level, ChessBoard CB)
 	{
-		CB = cb;
-		menu();
+		this.CB = CB;
+		this.level = level;
 	}
 
-	public static void playGame()
+	public void doAIMove()
 	{
-		if (CB.getTurn())
-			CB.displayChoice();
-		do
+		switch (level)
 		{
-			if (!quit && !CB.getTurn() && !lvl_2)
-				dumbAi();
-			else if (!quit && !CB.getTurn() && lvl_2)
-				if (lvl == 0)
-					slightlySmarterAi();
-				else
-					evanSmarterAi(lvl);
-			else if (movePiece())
+			case 1:
+				dumbAI();
 				break;
-			if (CB.getTurn())
-				CB.displayChoice();
-		} while (CB.gameStatus() || !quit);
+			case 2:
+				easyAI();
+				break;
+			default:
+				smartAI();
+		}
 	}
-
-	public static void dumbAi()
+	
+	private void dumbAI()
 	{
 		boolean legalMoveInput;
 		int fromRow, fromCol, toRow, toCol;
@@ -55,11 +46,39 @@ public class AI
 				toCol = (int) (Math.random() * ((7 - 0) + 1));
 				toRow = (int) (Math.random() * ((7 - 0) + 1));
 			} while ((toCol == fromCol && toRow == fromRow));
-		} while (!CB.canMoveThere(fromRow, fromCol, toRow, toCol));
+		} while (!CB.canMoveThere(fromRow, fromCol, toRow, toCol, true));
 		CB.performMove(fromRow, fromCol, toRow, toCol);
 	}
 
-	public static void evanSmarterAi(int depth)
+	private void easyAI()
+	{
+		Piece[][] board = CB.getBoard();
+		int tempValue = 0;
+		int tempMoveToRow = 0;
+		int tempMoveFromCol = 0;
+		int tempMoveToCol = 0;
+		int tempMoveFromRow = 0;
+		int blackOrWhite = (CB.getWhite() && !CB.getTurn() ? 0 : 1);
+
+		for (Piece p : CB.getPieces().get(blackOrWhite))
+			for (int m : potentialMoves(p))
+				if (CB.canMoveThere(p.getRow(), p.getCol(), m % 10, m / 10, true) && board[m % 10][m / 10] != null
+						&& tempValue < board[m % 10][m / 10].getAIValue())
+				{
+					tempValue = board[m % 10][m / 10].getAIValue();
+					tempMoveToRow = m % 10;
+					tempMoveToCol = m / 10;
+					tempMoveFromRow = p.getRow();
+					tempMoveFromCol = p.getCol();
+				}
+
+		if (tempValue > 0)
+			CB.performMove(tempMoveFromRow, tempMoveFromCol, tempMoveToRow, tempMoveToCol);
+		else
+			dumbAI();
+	}
+
+	private void smartAI()
 	{
 		Piece[][] board = CB.getBoard();
 		int tempValue = 0;
@@ -71,21 +90,20 @@ public class AI
 		int tempMoveFromRow = 0;
 
 		int blackOrWhite = (CB.getWhite() && !CB.getTurn() ? 0 : 1);
-		for (Piece p : setUpArray(board).get(blackOrWhite))
+		for (Piece p : CB.getPieces().get(blackOrWhite))
 		{
 			for (int m : potentialMoves(p))
 			{
-
-				if (CB.canMoveThere(p.getRow(), p.getCol(), m % 10, m / 10))
+				if (CB.canMoveThere(p.getRow(), p.getCol(), m % 10, m / 10, true))
 				{
 					int valueHolder = (board[m % 10][m / 10] != null ? board[m % 10][m / 10].getAIValue() : 0);
 					depthBoard[m % 10][m / 10] = depthBoard[p.getRow()][p.getCol()];
 					depthBoard[p.getRow()][p.getCol()] = null;
 
-					if (tempValue < (valueHolder - recursiveMoveCheck(depthBoard, !CB.getWhite(), depth)))
+					if (tempValue < (valueHolder - recursiveMoveCheck(depthBoard, !CB.getWhite(), level)))
 					{
 
-						tempValue = valueHolder - recursiveMoveCheck(depthBoard, !CB.getWhite(), depth);
+						tempValue = valueHolder - recursiveMoveCheck(depthBoard, !CB.getWhite(), level);
 						tempMoveToRow = m % 10;
 						tempMoveToCol = m / 10;
 						tempMoveFromRow = p.getRow();
@@ -97,9 +115,9 @@ public class AI
 						depthBoard[m % 10][m / 10] = depthBoard[p.getRow()][p.getCol()];
 						depthBoard[p.getRow()][p.getCol()] = null;
 
-						if (tempValue < (-recursiveMoveCheck(depthBoard, !CB.getWhite(), depth)))
+						if (tempValue < (-recursiveMoveCheck(depthBoard, !CB.getWhite(), level)))
 						{
-							tempValue = (-recursiveMoveCheck(depthBoard, !CB.getWhite(), depth));
+							tempValue = (-recursiveMoveCheck(depthBoard, !CB.getWhite(), level));
 							tempMoveToRow = m % 10;
 							tempMoveToCol = m / 10;
 							tempMoveFromRow = p.getRow();
@@ -114,10 +132,10 @@ public class AI
 		if (tempValue > 0)
 			CB.performMove(tempMoveFromRow, tempMoveFromCol, tempMoveToRow, tempMoveToCol);
 		else
-			dumbAi();
+			dumbAI();
 	}
 
-	public static int recursiveMoveCheck(Piece[][] pieces, boolean white, int limit)
+	private int recursiveMoveCheck(Piece[][] pieces, boolean white, int limit)
 	{
 		if (limit == 0)
 			return advancedCountPieces(pieces, white);
@@ -164,7 +182,7 @@ public class AI
 		return tempValue - recursiveMoveCheck(board, !white, limit - 1);
 	}
 
-	private static ArrayList<ArrayList<Piece>> setUpArray(Piece[][] chessBoard)
+	private ArrayList<ArrayList<Piece>> setUpArray(Piece[][] chessBoard)
 	{
 		ArrayList<ArrayList<Piece>> pieces;
 		pieces = new ArrayList<>();
@@ -174,51 +192,10 @@ public class AI
 			for (Piece currPiece : pa)
 				if (currPiece != null)
 					pieces.get(currPiece.isWhite() ? 0 : 1).add(currPiece);
-
 		return pieces;
 	}
 
-	public static void slightlySmarterAi()
-	{
-		Piece[][] board = CB.getBoard();
-		int tempValue = 0;
-		int tempMoveToRow = 0;
-		int tempMoveFromCol = 0;
-		int tempMoveToCol = 0;
-		int tempMoveFromRow = 0;
-		int blackOrWhite = (CB.getWhite() && !CB.getTurn() ? 0 : 1);
-
-		for (Piece p : CB.getPieces().get(blackOrWhite))
-			for (int m : potentialMoves(p))
-				if (CB.canMoveThere(p.getRow(), p.getCol(), m % 10, m / 10) && board[m % 10][m / 10] != null
-						&& tempValue < board[m % 10][m / 10].getAIValue())
-				{
-					tempValue = board[m % 10][m / 10].getAIValue();
-					tempMoveToRow = m % 10;
-					tempMoveToCol = m / 10;
-					tempMoveFromRow = p.getRow();
-					tempMoveFromCol = p.getCol();
-				}
-
-		if (tempValue > 0)
-			CB.performMove(tempMoveFromRow, tempMoveFromCol, tempMoveToRow, tempMoveToCol);
-		else
-			dumbAi();
-	}
-
-	public static int countPieces(ChessBoard cb)
-	{
-		ArrayList<ArrayList<Piece>> Pieces = cb.getPieces();
-		int value = 0;
-		int blackOrWhite = (cb.getWhite() && cb.getTurn() ? 0 : 1);
-		for (Piece p : Pieces.get(blackOrWhite))
-			value += p.getAIValue();
-		for (Piece p : Pieces.get(Math.abs(blackOrWhite - 1)))
-			value -= p.getAIValue();
-		return value;
-	}
-
-	public static int advancedCountPieces(Piece[][] pieces, boolean white)
+	private int advancedCountPieces(Piece[][] pieces, boolean white)
 	{
 		int value = 0;
 		for (int i = 0; i < 8; i++)
@@ -236,18 +213,18 @@ public class AI
 
 	}
 
-	public static Piece[][] boardCopy(Piece[][] pieces)
+	private Piece[][] boardCopy(Piece[][] pieces)
 	{
 		Piece[][] newPieces = new Piece[8][8];
 		for (int i = 0; i < 8; i++)
-			for (int i2 = 0; i2 < 8; i2++)
-				if (pieces[i][i2] != null)
-					newPieces[i][i2] = pieces[i][i2];
+			for (int j = 0; j < 8; j++)
+				if (pieces[i][j] != null)
+					newPieces[i][j] = pieces[i][j];
 
 		return newPieces;
 	}
 
-	public static ArrayList<Integer> potentialMoves(Piece piece)
+	private ArrayList<Integer> potentialMoves(Piece piece)
 	{
 		ArrayList<Integer> moves = new ArrayList<Integer>();
 
@@ -490,137 +467,5 @@ public class AI
 		}
 
 		return moves;
-	}
-
-	public static boolean movePiece()
-	{
-		String name = CB.getWhite() ? "White" : "Black";
-		boolean canMoveThere = true;
-		String move;
-		boolean legalMoveInput = true;
-		int fromRow, fromCol, toRow, toCol;
-
-		do
-		{
-			if (!canMoveThere)
-				System.out.println("Can't Move There");
-			System.out.println("\n" + name + ", Which piece would you like to move?(enter m to quit)");
-			do
-			{
-				if (!legalMoveInput)
-					System.out.println("\nYou do not have a piece there, try again.");
-				move = getPosition();
-				if (move.equals("m"))
-					return true;
-				fromCol = move.charAt(0) - 97;
-				fromRow = move.charAt(1) - 49;
-				legalMoveInput = CB.isValidPieceThere(fromRow, fromCol);
-			} while (!legalMoveInput);
-			System.out.println(
-					"\nWhere would you like to move your " + CB.getName(fromRow, fromCol) + " to?(enter m to quit)");
-			do
-			{
-				move = getPosition();
-				if (move.equals("m"))
-					return true;
-				toCol = move.charAt(0) - 97;
-				toRow = move.charAt(1) - 49;
-				if (toCol == fromCol && toRow == fromRow)
-					System.out.println("\nCan't move to same place, try again.");
-			} while ((toCol == fromCol && toRow == fromRow));
-			canMoveThere = CB.canMoveThere(fromRow, fromCol, toRow, toCol);
-		} while (!canMoveThere);
-
-		boolean promote = CB.performMove(fromRow, fromCol, toRow, toCol);
-		if (promote)
-			promote(toRow, toCol);
-
-		return false;
-	}
-
-	public static String getPosition()
-	{
-		String pos;
-		boolean badInput = false;
-		do
-		{
-			badInput = true;
-			pos = kybd.next().trim().toLowerCase();
-
-			if (pos.equalsIgnoreCase("m"))
-			{
-				menu();
-				break;
-			}
-
-			if (pos.length() != 2)
-				System.out.println("\nPosition must be 2 characters, try again.");
-
-			else if (pos.charAt(0) < 97 || pos.charAt(0) > 104 || pos.charAt(1) < 49 || pos.charAt(1) > 56)
-				System.out.println("\nInvalid position entry. It must be a [a-h][1-8], try again.");
-			else
-				badInput = false;
-		} while (badInput);
-		return pos;
-	}
-
-	public static void menu()
-	{
-		System.out.println("\n1 Play Dumb Computer \n2 Play Easy Computer \n3 Play Moderate Computer"
-				+ "\n4 Pla Hard Computer  \n5 To go back to main menu \n WARNING!! the harder the computer the "
-				+ "longer it will take for the computer");
-		int choice = kybd.nextInt();
-
-		switch (choice)
-		{
-			case 0:
-				quit = true;
-				break;
-
-			case 1:
-				playGame();
-				break;
-
-			case 2:
-				lvl_2 = true;
-				playGame();
-				break;
-
-			case 3:
-				lvl_2 = true;
-				lvl = 2;
-				playGame();
-				break;
-
-			case 4:
-				lvl_2 = true;
-				lvl = 3;
-				playGame();
-				break;
-
-			case 97:
-				lvl_2 = true;
-				lvl = 100;
-				playGame();
-				break;
-
-			default:
-				break;
-		}
-	}
-
-	public static void promote(int row, int col)
-	{
-		CB.displayChoice();
-		int choice;
-		do
-		{
-			System.out.println("\nWhat would you like to convert your pawn to?");
-			System.out.println("1. Queen\n2. Bishop\n3. Rook\n4. Horse");
-			choice = kybd.nextInt();
-			if (choice < 1 || choice > 4)
-				System.out.println("Not a valid choice, 1-4");
-		} while (choice < 1 || choice > 4);
-		CB.promotion(row, col, choice);
 	}
 }

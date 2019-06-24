@@ -35,7 +35,7 @@ public class King extends Piece
 		for (Piece piece : pieces.get(this.isWhite() ? 0 : 1))
 			for (int i = 0; i < 8; i++)
 				for (int j = 0; j < 8; j++)
-					if (piece.isLegalMove(i, j, pieces, chessBoard, this))
+					if (piece.isLegalMove(i, j, pieces, chessBoard, this, true))
 						return false;
 		return true;
 	}
@@ -43,7 +43,7 @@ public class King extends Piece
 	public boolean inCheck(ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard)
 	{
 		for (Piece piece : pieces.get(this.isWhite() ? 1 : 0))
-			if (piece.isLegalCheck(this.getRow(), this.getCol(), pieces, chessBoard, this))
+			if (piece.isLegalCheck(this.getRow(), this.getCol(), pieces, chessBoard, this, true))
 				return true;
 		return false;
 	}

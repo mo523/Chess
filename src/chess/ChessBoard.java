@@ -25,13 +25,13 @@ public class ChessBoard implements Serializable
 	private Network net;
 	private boolean forceEnd = false;
 	private String name;// for saved games
+	private AI ai;
 
 	// Constructor
-	public ChessBoard(boolean debug, boolean cpuGame, boolean playerTurn, boolean networkGame, boolean useJansi,
+	public ChessBoard(boolean debug, int AIlevel, boolean playerTurn, boolean networkGame, boolean useJansi,
 			boolean random)
 	{
 		this.debug = debug;
-		this.cpuGame = cpuGame;
 		this.playerTurn = playerTurn;
 		this.networkGame = networkGame;
 		this.useJansi = useJansi;
@@ -41,6 +41,11 @@ public class ChessBoard implements Serializable
 		else
 			setUpBoard();
 		setUpArray();
+		if (AIlevel > 0)
+		{
+			cpuGame = true;
+			ai = new AI(AIlevel, this);
+		}
 	}
 
 	// Board and Array setup
@@ -162,9 +167,9 @@ public class ChessBoard implements Serializable
 		chessBoard[fromRow][fromCol] = null;
 		if (currPiece instanceof Pawn)
 			if (Math.abs(fromRow - toRow) == 2)
-				currPiece.setEnPassant(true);
+				((Pawn) currPiece).setEnPassant(true);
 			else
-				currPiece.setEnPassant(false);
+				((Pawn) currPiece).setEnPassant(false);
 		if (networkGame && playerTurn)
 			try
 			{
@@ -173,14 +178,6 @@ public class ChessBoard implements Serializable
 			catch (IOException e)
 			{
 				e.printStackTrace();
-				try
-				{
-					net.close();
-				}
-				catch (IOException e1)
-				{
-					e1.printStackTrace();
-				}
 			}
 		playerTurn = !playerTurn;
 		whitesTurn = !whitesTurn;
@@ -193,6 +190,11 @@ public class ChessBoard implements Serializable
 		chessBoard[row][col] = choice == 1 ? new Queen(whitesTurn, row, col)
 				: choice == 2 ? new Bishop(whitesTurn, row, col)
 						: choice == 3 ? new Rook(whitesTurn, row, col) : new Horse(whitesTurn, row, col);
+	}
+
+	public void AIMove()
+	{
+		ai.doAIMove();
 	}
 
 	// Public methods that effect the driver
@@ -229,12 +231,12 @@ public class ChessBoard implements Serializable
 	// private end game checks
 	private boolean inCheck()
 	{
-		return currKing.inCheck(pieces, chessBoard);
+		return ((King) currKing).inCheck(pieces, chessBoard);
 	}
 
 	private boolean checkmate()
 	{
-		return currKing.checkmate(pieces, chessBoard);
+		return ((King) currKing).checkmate(pieces, chessBoard);
 	}
 
 	private boolean staleMate()
@@ -253,7 +255,7 @@ public class ChessBoard implements Serializable
 		for (Piece piece : pieces.get(whitesTurn ? 0 : 1))
 			for (int toRow = 0; toRow < 8; toRow++)
 				for (int toCol = 0; toCol < 8; toCol++)
-					if (piece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing))
+					if (piece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing, true))
 						return false;
 		return true;
 	}
@@ -276,10 +278,10 @@ public class ChessBoard implements Serializable
 		return currPiece != null && currPiece.isWhite() == whitesTurn;
 	}
 
-	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol)
+	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol, boolean surpress)
 	{
 		Piece currPiece = chessBoard[fromRow][fromCol];
-		return currPiece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing);
+		return currPiece.isLegalMove(toRow, toCol, pieces, chessBoard, currKing, surpress);
 	}
 
 	// public getters
@@ -316,10 +318,6 @@ public class ChessBoard implements Serializable
 	}
 
 	// public setters
-	public void endNet()
-	{
-		networkGame = false;
-	}
 
 	public void reverseDebug()
 	{
@@ -340,7 +338,7 @@ public class ChessBoard implements Serializable
 	public void setNet(Network net)
 	{
 		this.net = net;
-		playerTurn = net.isServer();
+		playerTurn = true; // TODO figure this out
 	}
 
 	public void netMove()
@@ -351,7 +349,7 @@ public class ChessBoard implements Serializable
 			int[] data = net.getClientData();
 			performMove(data[0], data[1], data[2], data[3]);
 		}
-		catch (IOException ex)
+		catch (IOException | ClassNotFoundException ex)
 		{
 			System.out.println(ex);
 			forceEnd = true;
@@ -372,11 +370,5 @@ public class ChessBoard implements Serializable
 	public Piece[][] getBoard()
 	{
 		return chessBoard;
-	}
-
-	public boolean canMoveThere(int fromRow, int fromCol, int toRow, int toCol, Piece[][] board)
-	{
-		Piece currPiece = board[fromRow][fromCol];
-		return currPiece.isLegalMove(toRow, toCol, pieces, board, currKing);
 	}
 }

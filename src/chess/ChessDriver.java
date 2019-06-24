@@ -6,39 +6,38 @@ import org.fusesource.jansi.AnsiConsole;
 
 public class ChessDriver
 {
-	private static Scanner kyb = new Scanner(System.in);
+	private static Scanner kb = new Scanner(System.in);
 	private static ChessBoard CB;
-	private static String errorMessage;
 
 	public static void main(String[] args)
 	{
 		System.out.println("Welcome to chess!");
 		initialMenu();
-		kyb.close();
+		kb.close();
 	}
 
 	public static void initialMenu()
 	{
 		int choice;
 		boolean useJansi = !System.getProperty("user.name").equalsIgnoreCase("moshe");
+		useJansi = true;
 		if (useJansi)
 			AnsiConsole.systemInstall();
 		do
 		{
+			Network net = null;
 			boolean debug = false;
-			boolean cpuGame = false;
+			int ai = 0;
 			boolean playerTurn = false;
 			boolean networkGame = false;
 			boolean randomGame = false;
-
-			Network net = null;
 			System.out.println(
 					"\n\nMain Menu\n\n0. Quit\n1. New Game (Two Player Local) \n2. New game (One Player vs. Cpu)\n3. New networked game"
 							+ "\n4. 1 with random board\n5. 2 with random board\n6. Open saved game\n7. Continue Game");
 			// + "\n\n-1..-5. 1..5 with debug");
 			do
 			{
-				choice = kyb.nextInt();
+				choice = kb.nextInt();
 			} while (choice < -5 || choice > 7);
 			if (choice < 0)
 			{
@@ -54,13 +53,16 @@ public class ChessDriver
 			{
 				case 2:
 					System.out.println("(W)hite or (B)lack?");
-					playerTurn = kyb.next().toUpperCase().equals("W") ? true : false;
-					cpuGame = true;
+					playerTurn = kb.next().toUpperCase().equals("W") ? true : false;
+					System.out.println("\n1 Play Dumb Computer \n2 Play Easy Computer \n3 Play Moderate Computer"
+							+ "\n4 Play Hard Computer  \n5 To go back to main menu \n WARNING!! the harder the computer the "
+							+ "longer it will take for the computer");
+					ai = kb.nextInt();
 					break;
 				case 3:
 					try
 					{
-						net = networkedGame();
+						net = new Network(kb);
 					}
 					catch (IOException ex)
 					{
@@ -87,7 +89,7 @@ public class ChessDriver
 			if (choice != 0)
 			{
 				if (choice != 6 && choice != 7)
-					CB = new ChessBoard(debug, cpuGame, playerTurn, networkGame, useJansi, randomGame);
+					CB = new ChessBoard(debug, ai, playerTurn, networkGame, useJansi, randomGame);
 				if (networkGame)
 					CB.setNet(net);
 				playGame();
@@ -96,27 +98,21 @@ public class ChessDriver
 		if (useJansi)
 			AnsiConsole.systemUninstall();
 	}
-
+	
 	public static void playGame()
 	{
-		if (CB.getCpuGame())
-		{
-			AI.cpuMovePiece(CB);
 
-		}
-		else
+		CB.displayChoice();
+		do
 		{
+			if (CB.getNetGame() && !CB.getTurn())
+				CB.netMove();
+			else if (CB.getCpuGame() && !CB.getTurn())
+				CB.AIMove();
+			else if (movePiece())
+				break;
 			CB.displayChoice();
-
-			do
-			{
-				if (CB.getNetGame() && !CB.getTurn())
-					CB.netMove();
-				else if (movePiece())
-					break;
-				CB.displayChoice();
-			} while (CB.gameStatus());
-		}
+		} while (CB.gameStatus());
 	}
 
 	public static boolean movePiece()
@@ -129,8 +125,6 @@ public class ChessDriver
 
 		do
 		{
-			if (!canMoveThere)
-				System.out.println(errorMessage);
 			System.out.println("\n" + name + ", Which piece would you like to move?\nType 'm' for menu");
 			do
 			{
@@ -154,7 +148,7 @@ public class ChessDriver
 				if (toCol == fromCol && toRow == fromRow)
 					System.out.println("\nCan't move to same place, try again.");
 			} while ((toCol == fromCol && toRow == fromRow));
-			canMoveThere = CB.canMoveThere(fromRow, fromCol, toRow, toCol);
+			canMoveThere = CB.canMoveThere(fromRow, fromCol, toRow, toCol, false);
 		} while (!canMoveThere);
 
 		boolean promote = CB.performMove(fromRow, fromCol, toRow, toCol);
@@ -171,7 +165,7 @@ public class ChessDriver
 		do
 		{
 			badInput = true;
-			pos = kyb.next().toLowerCase();
+			pos = kb.next().toLowerCase();
 			if (pos.equalsIgnoreCase("m"))
 			{
 				if (menu())
@@ -191,7 +185,7 @@ public class ChessDriver
 	{
 		System.out.println(
 				"\n\nMenu\n0. Main menu\n1. Save game\n2. Change debug mode\n3. Change gameplay mode\n4. Continue game");
-		int choice = kyb.nextInt();
+		int choice = kb.nextInt();
 		switch (choice)
 		{
 			case 0:
@@ -218,33 +212,6 @@ public class ChessDriver
 		return false;
 	}
 
-	public static Network networkedGame() throws IOException
-	{
-		System.out.println("Would you like to:\n1. Host a game\n2. Join a game");
-		int choice;
-		do
-		{
-			choice = kyb.nextInt();
-			if (choice != 1 && choice != 2)
-				System.out.println("Bad choice. 1 or 2");
-		} while (choice != 1 && choice != 2);
-		if (choice == 1)
-		{
-			return new Network();
-		}
-		else
-		{
-			System.out.println("IP Address?\tType '0' to play on same computer");
-			kyb.nextLine();
-			String ip = kyb.nextLine();
-			if (ip.equals("0"))
-				ip = "127.0.0.1";
-			if (ip.equals("1"))
-				ip = "192.168.1.100";
-			return new Network(ip);
-		}
-	}
-
 	public static void promote(int row, int col)
 	{
 		CB.displayChoice();
@@ -253,15 +220,10 @@ public class ChessDriver
 		{
 			System.out.println("\nWhat would you like to convert your pawn to?");
 			System.out.println("1. Queen\n2. Bishop\n3. Rook\n4. Horse");
-			choice = kyb.nextInt();
+			choice = kb.nextInt();
 			if (choice < 1 || choice > 4)
 				System.out.println("Not a valid choice, 1-4");
 		} while (choice < 1 || choice > 4);
 		CB.promotion(row, col, choice);
-	}
-
-	public static void setErrorMessage(String errorMessage)
-	{
-		ChessDriver.errorMessage = errorMessage;
 	}
 }

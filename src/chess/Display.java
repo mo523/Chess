@@ -49,7 +49,7 @@ public class Display
 		System.out.println(sb.toString());
 	}
 
-	public static String PieceSection(int i, int j, boolean whitesTurn, Piece[][] chessBoard, String bg)
+	private static String PieceSection(int i, int j, boolean whitesTurn, Piece[][] chessBoard, String bg)
 	{
 		boolean numRow = i % 6 == (whitesTurn ? 0 : 5);
 		boolean empty = chessBoard[i / 6][j] == null;

@@ -17,21 +17,6 @@ public class SaveGameFunctionality
 {
 	private static Scanner kyb = new Scanner(System.in);
 
-	/**
-	 * 
-	 * @param chessBoard
-	 * @param debug
-	 * @param whiteKing
-	 * @param blackKing
-	 * @param whitesTurn
-	 * @param cpuGame
-	 * @param cpuTurn
-	 * @param startCountingTurns
-	 * @param turns
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
 	public static void saveGame(ChessBoard CB) throws FileNotFoundException, IOException, ClassNotFoundException
 	{
 		ChessBoard[] savedGames = readFile("Saved Games");

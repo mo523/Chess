@@ -21,7 +21,6 @@ public class Queen extends Piece
 	@Override
 	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB)
 	{
-
 		Rook rook = new Rook(isWhite(), this.getRow(), this.getCol());
 		Bishop bishop = new Bishop(isWhite(), this.getRow(), this.getCol());
 

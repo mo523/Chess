@@ -1,58 +1,54 @@
 package chess;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.ServerSocket;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.util.Scanner;
 
-public class Network {
+public class Network
+{
 	private Socket socket;
-	private boolean server;
-	private ServerSocket listener;
+	private ObjectOutputStream out;
+	private ObjectInputStream in;
+	private String username;
 
-	public Network() throws IOException
+	public Network(Scanner kb) throws IOException
 	{
-		server = true;
-		InetAddress localhost = InetAddress.getLocalHost(); 
-		System.out.println("Local IP: " + localhost.getHostAddress());
-		
-		listener= new ServerSocket(9090);
-		socket = listener.accept();
+		System.out.println("Connecting to chess server...");
+		socket = new Socket("https://www.moshehirsch.com", 4368);
+		out = new ObjectOutputStream(socket.getOutputStream());
+		in = new ObjectInputStream(socket.getInputStream());
+		System.out.println("Connected");
+		logIn(kb);
 	}
-	public Network(String adr) throws UnknownHostException, IOException
+
+	private void logIn(Scanner kb) throws IOException
 	{
-		server = false;
-		socket = new Socket(adr, 9090);
+		System.out.println("Please choose a username");
+		String username;
+		boolean good;
+		do
+		{
+			username = kb.nextLine();
+			out.writeUTF(username);
+			out.flush();
+			good = in.readBoolean();
+			if (!good)
+				System.out.println("Username taken, please try another");
+		} while (!good);
+		this.username = username;
 	}
+
 	public void sendServerData(int fr, int fc, int tr, int tc) throws IOException
 	{
-		PrintWriter out =
-                new PrintWriter(socket.getOutputStream(), true);
-            out.println(fr + " " + fc + " " + tr + " " + tc);
+		out.writeObject(new int[] { fr, fc, tr, tc });
+		out.flush();
 	}
-	public int[] getClientData() throws IOException
+
+	public int[] getClientData() throws ClassNotFoundException, IOException
 	{
-		BufferedReader input =
-	            new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		String sin[] = input.readLine().split(" ");
-		
-		int[] ins = new int[4];
-		for (int i = 0; i < 4; i++)
-			ins[i] = Integer.parseInt(sin[i]);
-		return ins;
+		return (int[]) in.readObject();
 	}
-	
-	public void close() throws IOException
-	{
-		socket.close();
-	}
-	
-	public boolean isServer()
-	{
-		return server;
-	}
+
 }
