@@ -1,6 +1,7 @@
 package chess;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -12,24 +13,22 @@ public class ChessDriver
 	public static void main(String[] args)
 	{
 		System.out.println("Welcome to chess!");
+		AnsiConsole.systemInstall();
 		initialMenu();
+		AnsiConsole.systemUninstall();
 		kb.close();
 	}
 
-	public static void initialMenu()
+	private static void initialMenu()
 	{
 		int choice;
-		boolean useJansi = !System.getProperty("user.name").equalsIgnoreCase("moshe");
-		useJansi = true;
-		if (useJansi)
-			AnsiConsole.systemInstall();
+
 		do
 		{
 			Network net = null;
 			boolean debug = false;
 			int ai = 0;
 			boolean playerTurn = false;
-			boolean networkGame = false;
 			boolean randomGame = false;
 			System.out.println(
 					"\n\nMain Menu\n\n0. Quit\n1. New Game (Two Player Local) \n2. New game (One Player vs. Cpu)\n3. New networked game"
@@ -62,15 +61,16 @@ public class ChessDriver
 				case 3:
 					try
 					{
-						net = new Network(kb);
+						if (net == null)
+							net = new Network(kb);
+						playerTurn = netMenu(net);
 					}
-					catch (IOException ex)
+					catch (IOException | ClassNotFoundException ex)
 					{
 						ex.printStackTrace();
 						System.out.println("Error. Network connection failed");
 						continue;
 					}
-					networkGame = true;
 					break;
 				case 6:
 					try
@@ -86,36 +86,59 @@ public class ChessDriver
 					break;
 			}
 
-			if (choice != 0)
+			if (choice != 0 && choice != 6 && choice != 7)
 			{
-				if (choice != 6 && choice != 7)
-					CB = new ChessBoard(debug, ai, playerTurn, networkGame, useJansi, randomGame);
-				if (networkGame)
-					CB.setNet(net);
+				CB = new ChessBoard(debug, ai, playerTurn, net, randomGame);
 				playGame();
 			}
 		} while (choice != 0);
-		if (useJansi)
-			AnsiConsole.systemUninstall();
 	}
-	
-	public static void playGame()
-	{
 
-		CB.displayChoice();
+	private static boolean netMenu(Network net) throws IOException, ClassNotFoundException
+	{
+		int choice;
+		System.out.println("Welcome to the Chess Lobby\n0. Exit lobby\n1. Host game\n2. Join game\n3. Watch game");
+		choice = kb.nextInt();
+		switch (choice)
+		{
+			case 1:
+				net.hostGame();
+				break;
+			case 2:
+				ArrayList<String> players = net.getPlayers();
+				System.out.println("Who would you like to play against");
+				for (int i = 0; i < players.size(); i++)
+					System.out.println((i + 1) + ". " + players.get(i));
+				net.joinGame(players.get(kb.nextInt() - 1));
+				break;
+			case 3:
+
+				break;
+
+			default:
+				break;
+		}
+		return choice == 1;
+	}
+
+	private static void playGame()
+	{
 		do
 		{
 			if (CB.getNetGame() && !CB.getTurn())
 				CB.netMove();
 			else if (CB.getCpuGame() && !CB.getTurn())
 				CB.AIMove();
-			else if (movePiece())
-				break;
-			CB.displayChoice();
+			else
+			{
+				CB.displayChoice();
+				if (movePiece())
+					break;
+			}
 		} while (CB.gameStatus());
 	}
 
-	public static boolean movePiece()
+	private static boolean movePiece()
 	{
 		String name = CB.getWhite() ? "White" : "Black";
 		boolean canMoveThere = true;
@@ -158,7 +181,7 @@ public class ChessDriver
 		return false;
 	}
 
-	public static String getPosition()
+	private static String getPosition()
 	{
 		String pos;
 		boolean badInput = false;
@@ -181,7 +204,7 @@ public class ChessDriver
 		return pos;
 	}
 
-	public static boolean menu()
+	private static boolean menu()
 	{
 		System.out.println(
 				"\n\nMenu\n0. Main menu\n1. Save game\n2. Change debug mode\n3. Change gameplay mode\n4. Continue game");
@@ -212,7 +235,7 @@ public class ChessDriver
 		return false;
 	}
 
-	public static void promote(int row, int col)
+	private static void promote(int row, int col)
 	{
 		CB.displayChoice();
 		int choice;

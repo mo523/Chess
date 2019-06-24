@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class ConnectedClient extends Thread
 {
-	private String userName;
+	private String username;
 	private Socket socket;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
+	private boolean available;
 	private volatile HashMap<String, ConnectedClient> players;
 	private volatile HashMap<String, Game> games;
 
@@ -21,6 +24,7 @@ public class ConnectedClient extends Thread
 		this.players = players;
 		this.socket = socket;
 		this.games = games;
+		available = false;
 		out = new ObjectOutputStream(socket.getOutputStream());
 		in = new ObjectInputStream(socket.getInputStream());
 	}
@@ -28,9 +32,9 @@ public class ConnectedClient extends Thread
 	@Override
 	public void run()
 	{
-		createUserName();
 		try
 		{
+			createUserName();
 			startMenu();
 		}
 		catch (IOException e)
@@ -41,59 +45,73 @@ public class ConnectedClient extends Thread
 		}
 	}
 
-	private void createUserName()
+	private void createUserName() throws IOException
 	{
-		String userName;
+		String username;
 		boolean good = false;
-		try
+
+		do
 		{
 			do
 			{
-				do
+				username = in.readUTF();
+				if (players.containsKey(username))
 				{
-					userName = in.readUTF();
-					if (players.containsKey(userName))
-					{
-						out.writeBoolean(good);
-						out.flush();
-					}
-				} while (players.containsKey(userName));
-				synchronized (players)
-				{
-					if (players.containsKey(userName))
-					{
-						out.writeBoolean(good);
-						out.flush();
-					}
-					else
-					{
-						players.put(userName, this);
-						good = true;
-					}
+					out.writeBoolean(good);
+					out.flush();
 				}
-			} while (!good);
-			out.writeBoolean(good);
-			out.flush();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+			} while (players.containsKey(username));
+			synchronized (players)
+			{
+				if (players.containsKey(username))
+				{
+					out.writeBoolean(good);
+					out.flush();
+				}
+				else
+				{
+					players.put(username, this);
+					good = true;
+				}
+			}
+		} while (!good);
+		this.username = username;
+		out.writeBoolean(good);
+		out.flush();
 	}
 
 	private void startMenu() throws IOException
 	{
-		while (true)
+		int choice = in.readInt();
+		switch (choice)
 		{
-			int choice = in.readInt();
+			case 1:
+				available = true;
+				break;
+			case 2:
+				ArrayList<String> temp = new ArrayList<>();
+				temp.addAll(players.values().stream().filter(s -> s.available).map(s -> s.getUserName())
+						.collect(Collectors.toList()));
+				out.writeObject(temp);
+				out.flush();
+				String opponent = in.readUTF();
+				Game game = new Game(players.get(opponent), this);
+				game.start();
+				games.put(game.toString(), game);
+				break;
+			case 3:
 
+				break;
+
+			default:
+				break;
 		}
 
 	}
 
 	public String getUserName()
 	{
-		return userName;
+		return username;
 	}
 
 	public int[] getMove() throws IOException
@@ -117,7 +135,13 @@ public class ConnectedClient extends Thread
 	@Override
 	public String toString()
 	{
-		return userName + " connected at " + socket.getInetAddress();
+		return username + " connected at " + socket.getInetAddress();
 	}
 
+	public void informClient(String opponent) throws IOException
+	{
+		available = false;
+		out.writeUTF(opponent);
+		out.flush();
+	}
 }

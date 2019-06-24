@@ -17,24 +17,23 @@ public class ChessBoard implements Serializable
 	private boolean cpuGame;
 	private boolean networkGame;
 	private boolean playerTurn;
-	private boolean useJansi;
 	private Piece currKing;
 	private boolean countingTurns = false;
 	private int staleTurns = 0;
 	private int fr = -1, fc = -1, tr = -1, tc = -1;
-	private Network net;
+	private Network network;
 	private boolean forceEnd = false;
 	private String name;// for saved games
 	private AI ai;
 
 	// Constructor
-	public ChessBoard(boolean debug, int AIlevel, boolean playerTurn, boolean networkGame, boolean useJansi,
+	public ChessBoard(boolean debug, int AIlevel, boolean playerTurn, Network network,
 			boolean random)
 	{
 		this.debug = debug;
 		this.playerTurn = playerTurn;
-		this.networkGame = networkGame;
-		this.useJansi = useJansi;
+		this.networkGame = network != null;
+		this.network = network;
 		chessBoard = new Piece[8][8];
 		if (random)
 			setUpRandomBoard();
@@ -173,7 +172,7 @@ public class ChessBoard implements Serializable
 		if (networkGame && playerTurn)
 			try
 			{
-				net.sendServerData(fromRow, fromCol, toRow, toCol);
+				network.sendMove(fromRow, fromCol, toRow, toCol);
 			}
 			catch (IOException e)
 			{
@@ -203,7 +202,8 @@ public class ChessBoard implements Serializable
 		if (debug)
 			Display.debug(chessBoard);
 		else
-			Display.display(whitesTurn, useJansi, chessBoard, fr, fc, tr, tc);
+			//TODO false is old jansi variable
+			Display.display(whitesTurn, true, chessBoard, fr, fc, tr, tc);
 	}
 
 	public boolean gameStatus()
@@ -308,7 +308,8 @@ public class ChessBoard implements Serializable
 	public String getName(int row, int col)
 	{
 		String move = chessBoard[row][col].toString();
-		move = move.substring(6, move.length() - 9);
+		move = move.substring(6);
+		move = move.split("@")[0];
 		return move;
 	}
 
@@ -335,18 +336,13 @@ public class ChessBoard implements Serializable
 	}
 
 	// Network functionality
-	public void setNet(Network net)
-	{
-		this.net = net;
-		playerTurn = true; // TODO figure this out
-	}
 
 	public void netMove()
 	{
 		System.out.println("\nWaiting for other players move");
 		try
 		{
-			int[] data = net.getClientData();
+			int[] data = network.getMove();
 			performMove(data[0], data[1], data[2], data[3]);
 		}
 		catch (IOException | ClassNotFoundException ex)

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
-public class Game
+public class Game extends Thread
 {
 	private volatile ConnectedClient p1;
 	private volatile ConnectedClient p2;
@@ -20,10 +20,24 @@ public class Game
 		observers = new HashSet<>();
 	}
 
+	@Override
+	public void run()
+	{
+		try
+		{
+			p1.informClient(p2.getName());
+			playGame();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void playGame() throws IOException
 	{
-		boolean p1sTurn = new Random().nextBoolean();
-
+		boolean p1sTurn = true;
 		do
 		{
 			int[] move;
@@ -37,7 +51,7 @@ public class Game
 				move = p2.getMove();
 				p1.sendMove(move);
 			}
-			new Thread(() -> sendMovesToObservers(move)).start();
+//			new Thread(() -> sendMovesToObservers(move)).start();
 			p1sTurn = !p1sTurn;
 		} while (true);
 	}
