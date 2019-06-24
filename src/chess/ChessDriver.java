@@ -112,7 +112,7 @@ public class ChessDriver
 				net.joinGame(players.get(kb.nextInt() - 1));
 				break;
 			case 3:
-
+				//TODO add observer to chessboard
 				break;
 
 			default:

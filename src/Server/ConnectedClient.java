@@ -144,4 +144,10 @@ public class ConnectedClient extends Thread
 		out.writeUTF(opponent);
 		out.flush();
 	}
+
+	public void sendAllMoves(ArrayList<int[]> moves)
+	{
+		// TODO Auto-generated method stub
+
+	}
 }

@@ -3,7 +3,6 @@ package Server;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Random;
 
 public class Game extends Thread
 {
@@ -51,7 +50,8 @@ public class Game extends Thread
 				move = p2.getMove();
 				p1.sendMove(move);
 			}
-//			new Thread(() -> sendMovesToObservers(move)).start();
+			moves.add(move);
+			new Thread(() -> sendMovesToObservers(move)).start();
 			p1sTurn = !p1sTurn;
 		} while (true);
 	}
@@ -68,7 +68,13 @@ public class Game extends Thread
 				e.printStackTrace();
 			}
 	}
-
+	
+	public void addObserver(ConnectedClient c)
+	{
+		c.sendAllMoves(moves);
+		observers.add(c);
+	}
+	
 	@Override
 	public String toString()
 	{

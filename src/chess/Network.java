@@ -12,12 +12,18 @@ public class Network
 	private Socket socket;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
-	private String username;
+
 	public Network(Scanner kb) throws IOException
 	{
 		System.out.println("Connecting to chess server...");
-		//socket = new Socket("https://www.moshehirsch.com", 4368);
-		socket = new Socket("127.0.0.1", 4368);
+		try
+		{
+			socket = new Socket("https://www.moshehirsch.com", 4368);
+		}
+		catch (IOException e)
+		{
+			socket = new Socket("127.0.0.1", 4368);
+		}
 		out = new ObjectOutputStream(socket.getOutputStream());
 		in = new ObjectInputStream(socket.getInputStream());
 		System.out.println("Connected");
@@ -39,9 +45,7 @@ public class Network
 			if (!good)
 				System.out.println("Username taken, please try another");
 		} while (!good);
-		this.username = username;
 	}
-
 
 	public void sendMove(int fr, int fc, int tr, int tc) throws IOException
 	{
@@ -53,11 +57,6 @@ public class Network
 	{
 		return (int[]) in.readObject();
 	}
-
-//	public ChessBoard getCurrentBoard()
-//	{
-//		
-//	}
 
 	public void hostGame() throws IOException
 	{
