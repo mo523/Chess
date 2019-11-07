@@ -71,11 +71,14 @@ public class ChessDriver
 				case 6:
 					try
 					{
-						CB = SaveGameFunctionality.loadSavedGame();
+						CB = saveMenu();
+						if (CB == null)
+							continue;
 					}
-					catch (ClassNotFoundException | IOException e)
+					catch (IOException e)
 					{
-						e.printStackTrace();
+						System.out.println("Sorry, something went wrong");
+						continue;
 					}
 					break;
 				default: // 0, 1, 7
@@ -113,6 +116,26 @@ public class ChessDriver
 				break;
 		}
 		return choice == 1;
+	}
+
+	private static ChessBoard saveMenu() throws IOException
+	{
+		ArrayList<String> names = FileFunc.getNames();
+		if (names.isEmpty())
+		{
+			System.out.println("No saved games found");
+			return null;
+		}
+		System.out.println("Which game would you like to continue?");
+		for (int i = 0; i < names.size(); i++)
+			System.out.println((i + 1) + ". " + names.get(i));
+
+		int game;
+		do
+			game = kb.nextInt();
+		while (game > 0 && game <= names.size());
+		
+		return FileFunc.loadGame(names.get(game));
 	}
 
 	private static void playGame()
@@ -210,9 +233,9 @@ public class ChessDriver
 			case 1:
 				try
 				{
-					SaveGameFunctionality.saveGame(CB);
+					FileFunc.saveGame(CB, "test");
 				}
-				catch (ClassNotFoundException | IOException e)
+				catch (IOException e)
 				{
 					e.printStackTrace();
 				}

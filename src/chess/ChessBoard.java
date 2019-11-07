@@ -46,6 +46,61 @@ public class ChessBoard implements Serializable
 		}
 	}
 
+	public ChessBoard(boolean white, int ail, boolean playerTurn, int stale, int[] ft, int[][][] pieces)
+	{
+		this.whitesTurn = white;
+		this.playerTurn = playerTurn;
+		this.networkGame = false;
+		chessBoard = new Piece[8][8];
+		fr = ft[0];
+		fc = ft[1];
+		tr = ft[2];
+		tc = ft[3];
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < pieces[i].length; j++)
+			{
+				boolean w = i == 0;
+				int p = pieces[i][j][0];
+				int r = pieces[i][j][1];
+				int c = pieces[i][j][2];
+				Piece piece;
+
+				switch (p)
+				{
+					case 0:
+						piece = new Pawn(w, r, c);
+						break;
+					case 1:
+						piece = new Rook(w, r, c);
+						break;
+					case 2:
+						piece = new Bishop(w, r, c);
+						break;
+					case 3:
+						piece = new Horse(w, r, c);
+						break;
+					case 4:
+						piece = new Queen(w, r, c);
+						break;
+					case 5:
+						piece = new King(w, r, c);
+						break;
+
+					default:
+						piece = null;
+						break;
+				}
+
+				chessBoard[r][c] = piece;
+			}
+		setUpArray();
+		if (ail > 0)
+		{
+			cpuGame = true;
+			ai = new AI(ail, this);
+		}
+	}
+
 	// Board and Array setup
 	private void setUpArray()
 	{
@@ -200,7 +255,8 @@ public class ChessBoard implements Serializable
 	{
 		if (debug)
 			Display.debug(chessBoard);
-		Display.display(whitesTurn, chessBoard, fr, fc, tr, tc);
+		else
+			Display.display(whitesTurn, chessBoard, fr, fc, tr, tc);
 	}
 
 	public boolean gameStatus()
@@ -304,10 +360,7 @@ public class ChessBoard implements Serializable
 
 	public String getName(int row, int col)
 	{
-		String move = chessBoard[row][col].toString();
-		move = move.substring(6);
-		move = move.split("@")[0];
-		return move;
+		return chessBoard[row][col].toString();
 	}
 
 	public ArrayList<ArrayList<Piece>> getPieces()
@@ -363,5 +416,15 @@ public class ChessBoard implements Serializable
 	public Piece[][] getBoard()
 	{
 		return chessBoard;
+	}
+
+	public int getStale()
+	{
+		return staleTurns;
+	}
+
+	public int[] getFT()
+	{
+		return new int[] { fr, fc, tr, tc };
 	}
 }

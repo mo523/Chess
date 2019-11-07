@@ -71,7 +71,7 @@ public class Display
 			{
 				System.out.print((j == 0 ? (i + 1) : "") + " | "
 						+ (chessBoard[i][j] == null ? "  "
-								: ((chessBoard[i][j].isWhite() ? "w" : "b") + chessBoard[i][j].toString().charAt(6)))
+								: ((chessBoard[i][j].isWhite() ? "w" : "b") + chessBoard[i][j].toString().charAt(0)))
 						+ (j == 7 ? " |" : ""));
 			}
 			System.out.println(dash);

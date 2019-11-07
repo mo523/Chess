@@ -45,7 +45,13 @@ public abstract class Piece implements Serializable
 	{
 		return icon[line];
 	}
-
+	
+	//get piece name
+	@Override
+	public String toString()
+	{
+		return this.getClass().toString().substring(12);
+	}
 	// Main legality check
 	public boolean isLegalMove(int toRow, int toCol, ArrayList<ArrayList<Piece>> pieces, Piece[][] chessBoard,
 			Piece King, boolean surpress)
@@ -118,4 +124,6 @@ public abstract class Piece implements Serializable
 	public abstract boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] chessBoard);
 
 	public abstract int getAIValue();
+	
+
 }
