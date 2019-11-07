@@ -14,7 +14,7 @@ public class Bishop extends Piece
 	@Override
 	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB)
 	{
-		// Check if the absolute move distance
+		// Check if the absolute move distance of each axis is equal
 		if (Math.abs(this.getRow() - toRow) == Math.abs(this.getCol() - toCol))
 			return true;
 		return false;

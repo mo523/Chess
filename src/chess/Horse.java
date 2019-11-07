@@ -14,18 +14,20 @@ public class Horse extends Piece
 	@Override
 	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB)
 	{
+		//Horses can only move where queens cannot
+		//and they are limited to a distance of 2
 		Queen queen = new Queen(isWhite(), this.getRow(), this.getCol());
 		if (!queen.canPieceMoveLikeThat(toRow, toCol, CB) && Math.abs(this.getCol() - toCol) < 3
 				&& Math.abs(this.getRow() - toRow) < 3)
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	@Override
 	public boolean pieceInTheWay(int toRow, int toCol, Piece[][] CB)
 	{
-		return false; // because horses jump
+		//Horses jump
+		return false;
 	}
 
 	@Override

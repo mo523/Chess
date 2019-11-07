@@ -27,8 +27,7 @@ public class ChessBoard implements Serializable
 	private AI ai;
 
 	// Constructor
-	public ChessBoard(boolean debug, int AIlevel, boolean playerTurn, Network network,
-			boolean random)
+	public ChessBoard(boolean debug, int AIlevel, boolean playerTurn, Network network, boolean random)
 	{
 		this.debug = debug;
 		this.playerTurn = playerTurn;
@@ -201,9 +200,7 @@ public class ChessBoard implements Serializable
 	{
 		if (debug)
 			Display.debug(chessBoard);
-		else
-			//TODO false is old jansi variable
-			Display.display(whitesTurn, true, chessBoard, fr, fc, tr, tc);
+		Display.display(whitesTurn, chessBoard, fr, fc, tr, tc);
 	}
 
 	public boolean gameStatus()

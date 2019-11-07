@@ -3,7 +3,6 @@ package chess;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import org.fusesource.jansi.AnsiConsole;
 
 public class ChessDriver
 {
@@ -12,10 +11,8 @@ public class ChessDriver
 
 	public static void main(String[] args)
 	{
-		System.out.println("Welcome to chess!");
-		AnsiConsole.systemInstall();
+		System.out.println("Welcome to command line chess!");
 		initialMenu();
-		AnsiConsole.systemUninstall();
 		kb.close();
 	}
 
@@ -35,9 +32,8 @@ public class ChessDriver
 							+ "\n4. 1 with random board\n5. 2 with random board\n6. Open saved game\n7. Continue Game");
 			// + "\n\n-1..-5. 1..5 with debug");
 			do
-			{
 				choice = kb.nextInt();
-			} while (choice < -5 || choice > 7);
+			while (choice < -5 || choice > 7);
 			if (choice < 0)
 			{
 				debug = true;
@@ -86,6 +82,8 @@ public class ChessDriver
 					break;
 			}
 
+			if (choice == 7)
+				playGame();
 			if (choice != 0 && choice != 6 && choice != 7)
 			{
 				CB = new ChessBoard(debug, ai, playerTurn, net, randomGame);
@@ -97,7 +95,7 @@ public class ChessDriver
 	private static boolean netMenu(Network net) throws IOException, ClassNotFoundException
 	{
 		int choice;
-		System.out.println("Welcome to the Chess Lobby\n0. Exit lobby\n1. Host game\n2. Join game\n3. Watch game");
+		System.out.println("Welcome to the Chess Lobby\n0. Exit lobby\n1. Host game\n2. Join game");
 		choice = kb.nextInt();
 		switch (choice)
 		{
@@ -111,10 +109,6 @@ public class ChessDriver
 					System.out.println((i + 1) + ". " + players.get(i));
 				net.joinGame(players.get(kb.nextInt() - 1));
 				break;
-			case 3:
-				//TODO add observer to chessboard
-				break;
-
 			default:
 				break;
 		}

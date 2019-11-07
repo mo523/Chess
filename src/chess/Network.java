@@ -22,7 +22,14 @@ public class Network
 		}
 		catch (IOException e)
 		{
-			socket = new Socket("127.0.0.1", 4368);
+			try
+			{
+				socket = new Socket("192.168.1.100", 4368);
+			}
+			catch (IOException e1)
+			{
+				socket = new Socket("127.0.0.1", 4368);
+			}
 		}
 		out = new ObjectOutputStream(socket.getOutputStream());
 		in = new ObjectInputStream(socket.getInputStream());

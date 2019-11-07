@@ -13,6 +13,7 @@ public class Queen extends Piece
 	@Override
 	public boolean canPieceMoveLikeThat(int toRow, int toCol, Piece[][] CB)
 	{
+		// A queen's moveset is a combination of a rook and a horse
 		Rook rook = new Rook(isWhite(), this.getRow(), this.getCol());
 		Bishop bishop = new Bishop(isWhite(), this.getRow(), this.getCol());
 		return (rook.canPieceMoveLikeThat(toRow, toCol, CB) || bishop.canPieceMoveLikeThat(toRow, toCol, CB));
@@ -28,8 +29,7 @@ public class Queen extends Piece
 		int xDiff = Math.abs(toCol - this.getCol());
 		if (yDiff == xDiff)
 			return bishop.pieceInTheWay(toRow, toCol, CB);
-		else
-			return rook.pieceInTheWay(toRow, toCol, CB);
+		return rook.pieceInTheWay(toRow, toCol, CB);
 	}
 
 	@Override

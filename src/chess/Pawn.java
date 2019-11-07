@@ -24,12 +24,11 @@ public class Pawn extends Piece
 		int xDiffAbs = Math.abs(xDiff);
 		boolean firstMove = this.getRow() == (this.isWhite() ? 1 : 6);
 
-		// If left or right is > 1
-		// If up is more than 2
+		// If horizontal distance is > 1
+		// If if vertical distance is > 2
 		// If vertical direction is wrong
-
-		if (xDiffAbs > 1 || yDiffAbs > 2 || yDiff / verticalMove < 0 || (yDiffAbs > 1 && !firstMove)) // xDiffAbs > //
-																										 // yDiffAbs
+		// xDiffAbs >  yDiffAbs
+		if (xDiffAbs > 1 || yDiffAbs > 2 || yDiff / verticalMove < 0 || (yDiffAbs > 1 && !firstMove))
 			return false;
 
 		// If moving forward one and nothing in the way
