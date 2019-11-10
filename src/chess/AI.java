@@ -27,7 +27,12 @@ public class AI
 				smartAI();
 		}
 	}
-	
+
+	public int getLevel()
+	{
+		return level;
+	}
+
 	private void dumbAI()
 	{
 		boolean legalMoveInput;

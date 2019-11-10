@@ -11,6 +11,7 @@ public class FileFunc
 {
 	private static final Path SAVE = Paths.get("savedgames");
 	private static final String LS = System.lineSeparator();
+	private static final String S = " ";
 
 	public static void saveGame(ChessBoard CB, String name) throws IOException
 	{
@@ -22,14 +23,12 @@ public class FileFunc
 
 		StringBuilder data = new StringBuilder();
 		data.append("$" + name + LS);
-		data.append(CB.getWhite() + LS);
-		data.append(CB.getCpuGame() + LS);
-		data.append(CB.getTurn() + LS);
-		data.append(CB.getStale() + LS);
+		data.append(CB.getDebug() + S + CB.getWhite() + S + CB.getAILevel() + S + CB.getTurn() + S + CB.getStale() + LS);
 		int[] FT = CB.getFT();
-		data.append(FT[0] + " " + FT[1] + " " + FT[2] + " " + FT[3] + LS);
-		CB.getPieces().forEach(ia -> ia.forEach(
-				p -> data.append(p.isWhite() + " " + p.toString() + " " + p.getRow() + " " + p.getCol() + LS)));
+		data.append(FT[0] + S + FT[1] + S + FT[2] + S + FT[3] + LS);
+		data.append((CB.getPieces().get(0).size() + CB.getPieces().get(1).size()) + LS);
+		CB.getPieces().forEach(ia -> ia
+				.forEach(p -> data.append(p.isWhite() + S + p.toString() + S + p.getRow() + S + p.getCol() + LS)));
 		Files.write(SAVE, data.toString().getBytes(), StandardOpenOption.APPEND);
 	}
 
@@ -54,24 +53,54 @@ public class FileFunc
 				gameloc = i + 1;
 				break;
 			}
+		if (gameloc == -1)
+			throw new IOException("Game not found");
+		String la[] = games.get(gameloc++).split(S);
+		boolean debug = la[0].equals("true");
+		boolean white = la[1].equals("true");
+		int ai = Integer.parseInt(la[2]);
+		boolean turn = la[3].equals("true");
+		int stale = Integer.parseInt(la[4]);
+
 		int[] ft = new int[4];
-		String[] la = games.get(gameloc + 5).split(" ");
+		la = games.get(gameloc++).split(S);
 		ft[0] = Integer.parseInt(la[0]);
 		ft[1] = Integer.parseInt(la[1]);
 		ft[2] = Integer.parseInt(la[2]);
 		ft[3] = Integer.parseInt(la[3]);
+		int[][] pieces = new int[Integer.parseInt(games.get(gameloc++))][4];
+		while (gameloc < games.size() && !(la = games.get(gameloc++).split(S))[0].startsWith("$"))
+		{
+			pieces[gameloc - 6][0] = la[0].equals("true") ? 1 : 0;
 
-		la = games.get(gameloc + 5).split(" ");
-		int[][][] pieces = new int[Integer.parseInt(la[0])][Integer.parseInt(la[1])][3];
-		for (int i = 0; i < 2; i++)
-			for (int j = gameloc + 5 + i * Integer.parseInt(la[0]); j < 0; j++)
+			switch (la[1].charAt(0))
 			{
-				la = games.get(j).split(" ");
-				pieces[i][j/* no */][0] = Integer.parseInt(la[0]);
-				pieces[i][j/* no */][1] = Integer.parseInt(la[1]);
-				pieces[i][j/* no */][2] = Integer.parseInt(la[2]);
+				case 'P':
+					pieces[gameloc - 6][1] = 0;
+					break;
+				case 'R':
+					pieces[gameloc - 6][1] = 1;
+					break;
+				case 'B':
+					pieces[gameloc - 6][1] = 2;
+					break;
+				case 'H':
+					pieces[gameloc - 6][1] = 3;
+					break;
+				case 'Q':
+					pieces[gameloc - 6][1] = 4;
+					break;
+				case 'K':
+					pieces[gameloc - 6][1] = 5;
+					break;
+				default:
+					pieces[gameloc - 6][1] = -1;
+					break;
 			}
+			pieces[gameloc - 6][2] = Integer.parseInt(la[2]);
+			pieces[gameloc - 6][3] = Integer.parseInt(la[3]);
+		}
 
-		return new ChessBoard(true, 0, true, 0, ft, pieces);
+		return new ChessBoard(debug, white, ai, turn, stale, ft, pieces);
 	}
 }

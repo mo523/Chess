@@ -46,8 +46,9 @@ public class ChessBoard implements Serializable
 		}
 	}
 
-	public ChessBoard(boolean white, int ail, boolean playerTurn, int stale, int[] ft, int[][][] pieces)
+	public ChessBoard(Boolean debug, boolean white, int ail, boolean playerTurn, int stale, int[] ft, int[][] pieces)
 	{
+		this.debug = debug;
 		this.whitesTurn = white;
 		this.playerTurn = playerTurn;
 		this.networkGame = false;
@@ -56,43 +57,47 @@ public class ChessBoard implements Serializable
 		fc = ft[1];
 		tr = ft[2];
 		tc = ft[3];
-		for (int i = 0; i < 2; i++)
-			for (int j = 0; j < pieces[i].length; j++)
+		for (int i = 0; i < pieces.length; i++)
+		{
+			boolean w = pieces[i][0] == 1;
+			int p = pieces[i][1];
+			int r = pieces[i][2];
+			int c = pieces[i][3];
+			Piece piece;
+
+			switch (p)
 			{
-				boolean w = i == 0;
-				int p = pieces[i][j][0];
-				int r = pieces[i][j][1];
-				int c = pieces[i][j][2];
-				Piece piece;
+				case 0:
+					piece = new Pawn(w, r, c);
+					break;
+				case 1:
+					piece = new Rook(w, r, c);
+					break;
+				case 2:
+					piece = new Bishop(w, r, c);
+					break;
+				case 3:
+					piece = new Horse(w, r, c);
+					break;
+				case 4:
+					piece = new Queen(w, r, c);
+					break;
+				case 5:
+					piece = new King(w, r, c);
+					if (w)
+						whiteKing = piece;
+					else
+						blackKing = piece;
+					break;
 
-				switch (p)
-				{
-					case 0:
-						piece = new Pawn(w, r, c);
-						break;
-					case 1:
-						piece = new Rook(w, r, c);
-						break;
-					case 2:
-						piece = new Bishop(w, r, c);
-						break;
-					case 3:
-						piece = new Horse(w, r, c);
-						break;
-					case 4:
-						piece = new Queen(w, r, c);
-						break;
-					case 5:
-						piece = new King(w, r, c);
-						break;
-
-					default:
-						piece = null;
-						break;
-				}
-
-				chessBoard[r][c] = piece;
+				default:
+					piece = null;
+					break;
 			}
+
+			chessBoard[r][c] = piece;
+		}
+		currKing = whitesTurn ? whiteKing : blackKing;
 		setUpArray();
 		if (ail > 0)
 		{
@@ -338,9 +343,19 @@ public class ChessBoard implements Serializable
 	}
 
 	// public getters
+	public boolean getDebug()
+	{
+		return debug;
+	}
+
 	public boolean getCpuGame()
 	{
 		return cpuGame;
+	}
+
+	public int getAILevel()
+	{
+		return ai == null ? 0 : ai.getLevel();
 	}
 
 	public boolean getNetGame()

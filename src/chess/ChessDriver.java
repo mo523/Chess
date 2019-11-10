@@ -73,7 +73,7 @@ public class ChessDriver
 					{
 						CB = saveMenu();
 						if (CB == null)
-							continue;
+							throw new IOException();
 					}
 					catch (IOException e)
 					{
@@ -85,7 +85,7 @@ public class ChessDriver
 					break;
 			}
 
-			if (choice == 7)
+			if (choice == 7 || choice == 6)
 				playGame();
 			if (choice != 0 && choice != 6 && choice != 7)
 			{
@@ -133,9 +133,9 @@ public class ChessDriver
 		int game;
 		do
 			game = kb.nextInt();
-		while (game > 0 && game <= names.size());
-		
-		return FileFunc.loadGame(names.get(game));
+		while (game < 1 || game > names.size());
+
+		return FileFunc.loadGame(names.get(game - 1));
 	}
 
 	private static void playGame()
@@ -233,13 +233,24 @@ public class ChessDriver
 			case 1:
 				try
 				{
-					FileFunc.saveGame(CB, "test");
+					ArrayList<String> names = FileFunc.getNames();
+					System.out.println("What would you like to name your game?");
+					String name;
+					kb.nextLine();
+					do
+					{
+						name = kb.nextLine();
+						if (names.contains(name))
+							System.out.println("Name already used, try again");
+					} while (names.contains(name));
+					FileFunc.saveGame(CB, name);
+					System.out.println("Game saved");
 				}
 				catch (IOException e)
 				{
-					e.printStackTrace();
+					System.out.println("Sorry something went wrong. Try again");
 				}
-				return true;
+				break;
 			case 2:
 				CB.reverseDebug();
 				break;
