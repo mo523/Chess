@@ -37,7 +37,7 @@ public class Pawn extends Piece
 
 		// If moving forward 2 and first move and nothing in the way
 		if (xDiffAbs == 0 && yDiffAbs == 2 && firstMove && CB[toRow][toCol] == null
-				&& CB[toRow + verticalMove][toCol] == null)
+				&& CB[toRow - verticalMove][toCol] == null)
 			return true;
 
 		// If killing by one diagonal
